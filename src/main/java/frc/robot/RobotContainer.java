@@ -16,7 +16,9 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -24,8 +26,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DriveCommand;
+import frc.robot.controls.ControlSchemeManager;
+import frc.robot.controls.Controls;
 import frc.robot.subsystems.DriveSubsystem;
+
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -34,19 +39,27 @@ import frc.robot.subsystems.DriveSubsystem;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 
-public class RobotContainer {
+public class RobotContainer extends TimedRobot{
   private final Joystick leftJoystick = new Joystick(0);
   private final Joystick rightJoystick = new Joystick(1);
   // The robot's subsystems
     // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final ControlSchemeManager controls = new ControlSchemeManager();
+  private final Robot robot = new Robot();
 
-  private final DriveCommand m_robotDriveCommand = new DriveCommand(m_robotDrive, 
-  leftJoystick::getX, leftJoystick::getY, rightJoystick::getY, leftJoystick::getTrigger,
-  rightJoystick::getTrigger);
-
-
+  @Override 
+  public void robotInit()
+  {
+    System.out.println("Using Wpilib Version " + WPILibVersion.Version);
+    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.COMPETITION);
+		this.addPeriodic(
+			this.controls.genLoopableRunContinuous(),
+			0.5
+		);
+    super.robotInit();
+  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -56,17 +69,10 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
-    m_robotDrive.setDefaultCommand(m_robotDriveCommand
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        // new RunCommand(
-        //     () -> m_robotDrive.drive(
-        //         -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-        //         -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-        //         -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-        //         true, true),
-        //     m_robotDrive)
-        );
+    // m_robotDrive.setDefaultCommand(m_robotDriveCommand
+    //     // The left stick controls translation of the robot.
+    //     // Turning is controlled by the X axis of the right stick.
+    //     );
   }
 
   /**

@@ -30,6 +30,16 @@ public class DriveCommand extends CommandBase {
     this.addRequirements(m_driveSubsystem);
   }
 
+  public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier, DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier, DoubleSupplier m_angularBoostSupplier) {
+    this.m_driveSubsystem = subsystem;
+    this.m_linearXSupplier = m_linearXSupplier;
+    this.m_linearYSupplier = m_linearYSupplier;
+    this.m_angularSpeedSupplier = m_angularSpeedSupplier;
+    this.m_angularSpeedBoostSupplier = ()->m_angularBoostSupplier.getAsDouble()>=0.5;
+    this.m_speedBoostSupplier = ()->m_linearBoostSupplier.getAsDouble()>=0.5;
+    this.addRequirements(m_driveSubsystem);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}

@@ -10,6 +10,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
+import frc.robot.controls.Input.DigitalMap;
+import frc.robot.controls.Input.InputMap;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -29,6 +33,14 @@ public final class Constants {
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
+
+    public static final double
+    DRIVE_INPUT_DEADZONE = 0.05,
+		DRIVE_INPUT_VEL_SCALE = -kMaxSpeedMetersPerSecond,
+		DRIVE_INPUT_EXP_POWER = 1.0,
+		DRIVE_ROT_RATE_SCALE = 0.5,
+		DRIVE_BOOST_SCALE = 1.5,
+		DRIVE_FINE_SCALE = 0.5;
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 0.5; // percent per second (1 = 100%)
@@ -143,4 +155,28 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+  
+  public static class ButtonBox extends InputMap {
+		public static enum Digital implements DigitalMap {
+			B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
+			S1(7), S2(8),
+			TOTAL(16);	// whatever interface board the bbox is using apparently has 12 buttons and 1 POV
+
+			public final int value;
+			private Digital(int v) { this.value = v; }
+
+			public int getValue() { return this.value; }
+			public int getTotal() { return TOTAL.value; }
+		}
+
+		private ButtonBox() {}
+		public static final ButtonBox Map = new ButtonBox();
+		public static final int AXIS_COUNT = 5;		// see the last comment --> the bbox apparently has 5 axis
+
+		public boolean compatible(GenericHID i)
+			{ return Digital.TOTAL.compatible(i) && i.getAxisCount() == AXIS_COUNT; }
+		public boolean compatible(int p)
+			{ return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT; }
+	}
+
 }
