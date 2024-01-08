@@ -4,19 +4,29 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
   public final DriveSubsystem m_driveSubsystem;
-  public final XboxController m_driverController;
+  private final BooleanSupplier m_speedBoostSupplier;
+  private final BooleanSupplier m_angularSpeedBoostSupplier;
+  private final DoubleSupplier m_linearXSupplier;
+  private final DoubleSupplier m_linearYSupplier;
+  private final DoubleSupplier m_angularSpeedSupplier;
 
-  public DriveCommand(DriveSubsystem subsystem, XboxController controller) {
+  public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier, DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier, BooleanSupplier m_angularBoostSupplier) {
     this.m_driveSubsystem = subsystem;
-    this.m_driverController = controller;
+    this.m_linearXSupplier = m_linearXSupplier;
+    this.m_linearYSupplier = m_linearYSupplier;
+    this.m_angularSpeedSupplier = m_angularSpeedSupplier;
+    this.m_angularSpeedBoostSupplier = m_angularBoostSupplier;
+    this.m_speedBoostSupplier = m_linearBoostSupplier;
     this.addRequirements(m_driveSubsystem);
   }
 
@@ -28,9 +38,12 @@ public class DriveCommand extends CommandBase {
   @Override
   public void execute() {
     m_driveSubsystem.drive(
-      -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(m_linearYSupplier.getAsDouble()/2.25*(m_speedBoostSupplier.getAsBoolean()==true?1.5:1)
+      *(m_speedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(m_linearXSupplier.getAsDouble()/2.25*(m_speedBoostSupplier.getAsBoolean()==true?1.5:1)
+      *(m_speedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble()/2.25*(m_angularSpeedBoostSupplier.getAsBoolean()==true?1.5:1)
+      *(m_angularSpeedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
       true, true);
   }
 

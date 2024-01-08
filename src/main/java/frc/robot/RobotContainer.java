@@ -4,7 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
+import java.util.List;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,18 +14,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,12 +33,18 @@ import java.util.List;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
+  private final Joystick leftJoystick = new Joystick(0);
+  private final Joystick rightJoystick = new Joystick(1);
   // The robot's subsystems
     // The driver's controller
-    XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final DriveCommand m_robotDriveCommand = new DriveCommand(m_robotDrive, m_driverController);
+
+  private final DriveCommand m_robotDriveCommand = new DriveCommand(m_robotDrive, 
+  leftJoystick::getX, leftJoystick::getY, rightJoystick::getY, leftJoystick::getTrigger,
+  rightJoystick::getTrigger);
 
 
 
