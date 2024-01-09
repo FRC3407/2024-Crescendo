@@ -67,12 +67,6 @@ public class RobotContainer extends TimedRobot{
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
-    // Configure default commands
-    // m_robotDrive.setDefaultCommand(m_robotDriveCommand
-    //     // The left stick controls translation of the robot.
-    //     // Turning is controlled by the X axis of the right stick.
-    //     );
   }
 
   /**

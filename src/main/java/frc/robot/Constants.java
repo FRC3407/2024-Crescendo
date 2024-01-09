@@ -34,14 +34,6 @@ public final class Constants {
     public static final double kMaxSpeedMetersPerSecond = 4.8;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
-    public static final double
-    DRIVE_INPUT_DEADZONE = 0.05,
-		DRIVE_INPUT_VEL_SCALE = -kMaxSpeedMetersPerSecond,
-		DRIVE_INPUT_EXP_POWER = 1.0,
-		DRIVE_ROT_RATE_SCALE = 0.5,
-		DRIVE_BOOST_SCALE = 1.5,
-		DRIVE_FINE_SCALE = 0.5;
-
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 0.5; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)

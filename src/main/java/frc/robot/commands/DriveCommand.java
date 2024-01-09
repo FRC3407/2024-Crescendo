@@ -7,9 +7,7 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
@@ -47,14 +45,15 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveSubsystem.drive(
-      -MathUtil.applyDeadband(m_linearYSupplier.getAsDouble()/2.25*(m_speedBoostSupplier.getAsBoolean()==true?1.5:1)
-      *(m_speedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_linearXSupplier.getAsDouble()/2.25*(m_speedBoostSupplier.getAsBoolean()==true?1.5:1)
-      *(m_speedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble()/2.25*(m_angularSpeedBoostSupplier.getAsBoolean()==true?1.5:1)
-      *(m_angularSpeedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
-      true, true);
+    // m_driveSubsystem.drive(
+    //   -MathUtil.applyDeadband(m_linearYSupplier.getAsDouble()/2.25*(m_speedBoostSupplier.getAsBoolean()==true?1.5:1)
+    //   *(m_speedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
+    //   -MathUtil.applyDeadband(m_linearXSupplier.getAsDouble()/2.25*(m_speedBoostSupplier.getAsBoolean()==true?1.5:1)
+    //   *(m_speedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
+    //   -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble()/2.25*(m_angularSpeedBoostSupplier.getAsBoolean()==true?1.5:1)
+    //   *(m_angularSpeedBoostSupplier.getAsBoolean()==true?1.5:1), OIConstants.kDriveDeadband),
+    //   true, true);
+    System.out.println("linear"+m_linearYSupplier.getAsDouble()/2.25*(m_speedBoostSupplier.getAsBoolean()==true?1.5:1));
   }
 
   // Called once the command ends or is interrupted.

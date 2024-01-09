@@ -121,6 +121,7 @@ public final class Controls {
 			Attack3.Digital.TRI.getSupplier(lstick),
 			Attack3.Digital.TRI.getSupplier(rstick));
 		RobotContainer.m_robotDrive.setDefaultCommand(drive_control);
+		System.out.println("controlSchemeRegistered");
 	}
 
 	// 2 joysticks plus the buttonbox
