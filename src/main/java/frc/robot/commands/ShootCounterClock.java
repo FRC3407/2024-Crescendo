@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
 
-public class ShootCounterClock extends CommandBase {
+public class ShootCounterClock extends Command {
 
   private final Shooter m_shooter;
 
