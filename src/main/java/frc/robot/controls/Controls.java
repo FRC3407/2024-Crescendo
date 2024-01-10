@@ -1,7 +1,7 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ButtonBox;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -88,7 +88,7 @@ public final class Controls {
 	// single xbox controller
 	private static void singleXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		InputDevice controller = inputs[0];
-		CommandBase drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
+		Command drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
 			Xbox.Analog.LX.getDriveInputSupplier(controller, 0, -1.0, 1.0), 
 			Xbox.Analog.LY.getDriveInputSupplier(controller, 0, -1.0, 1.0), 
 			Xbox.Analog.RY.getDriveInputSupplier(controller, 0, -1.0, 1.0), 
@@ -101,7 +101,7 @@ public final class Controls {
 	private static void dualXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {	
 		InputDevice controller1 = inputs[0];
 		InputDevice controller2 = inputs[1];
-		CommandBase drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
+		Command drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
 			Xbox.Analog.LX.getDriveInputSupplier(controller2, 0, -1.0, 1.0), 
 			Xbox.Analog.LY.getDriveInputSupplier(controller2, 0, -1.0, 1.0), 
 			Xbox.Analog.RY.getDriveInputSupplier(controller2, 0, -1.0, 1.0), 
@@ -114,7 +114,7 @@ public final class Controls {
 	private static void arcadeBoardSimple(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
-		CommandBase drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
+		Command drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
 			Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0), 
 			Attack3.Analog.Y.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 			Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
@@ -129,7 +129,7 @@ public final class Controls {
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
 		InputDevice bbox = inputs[2];
-		CommandBase drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
+		Command drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
 			Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0), 
 			Attack3.Analog.Y.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 			Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
@@ -144,7 +144,7 @@ public final class Controls {
 		InputDevice rstick = inputs[1];
 		InputDevice bbox = inputs[2];
 		InputDevice controller = inputs[3];
-		CommandBase drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
+		Command drive_control = new DriveCommand(RobotContainer.m_robotDrive, 
 			Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0), 
 			Attack3.Analog.Y.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 			Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
