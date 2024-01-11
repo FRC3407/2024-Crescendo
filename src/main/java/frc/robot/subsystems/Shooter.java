@@ -1,18 +1,18 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
 
-    private WPI_TalonFX shooterMotorTop;
-    private WPI_TalonFX shooterMotorBot;
+    private TalonFX shooterMotorTop;
+    private TalonFX shooterMotorBot;
 
     public Shooter() {
-        //shooterMotorTop = new WPI_TalonFX(Constants.IDTalon.kShootTop);
-        //shooterMotorBot = new WPI_TalonFX(Constants.IDTalon.kShootBot);
+        //shooterMotorTop = new TalonFX(Constants.IDTalon.kShootTop);
+        //shooterMotorBot = new TalonFX(Constants.IDTalon.kShootBot);
     }
 
     @Override
