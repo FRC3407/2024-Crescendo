@@ -13,4 +13,4 @@ The FRC 2024 competition code for 3407 Wildcards. This robot uses a wheel and tr
 
 ## Configuration
 
-It is possible that this project will not work for robots right out of the box. Various things like the CAN IDs, PIDF gains, chassis configuration, etc. must be determined and adjusted in the `Constants.java` file. All controls and control schemes are editable using the Controls.java file, for adding new controler types see ControlSchemes.java and Input.java.
+It is possible that this project will not work for robots right out of the box. Various things like the CAN IDs, PIDF gains, chassis configuration, etc. must be determined and adjusted in the `Constants.java` file. All controls and control schemes are editable using the Controls.java file, for adding new controler types, changing bindings or deadzones see ControlSchemes.java and Input.java.
