@@ -1,9 +1,9 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -31,6 +31,6 @@ public class Intake extends SubsystemBase {
      * @param speed
      */
     public void intake(double speed){
-        intakeMotor.set(TalonFXControlMode.Current, speed);
+        intakeMotor.set(speed);
     }
 }
