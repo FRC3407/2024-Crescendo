@@ -1,9 +1,6 @@
 
 package frc.robot.subsystems;
-
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -32,7 +29,7 @@ public class Shooter extends SubsystemBase {
      * @param speed
      */
     public void shoot(double speed){
-        shooterMotorTop.set(TalonFXControlMode.Current,speed);
-        shooterMotorBot.set(TalonFXControlMode.Current,-speed);
+        shooterMotorTop.set(speed);
+        shooterMotorBot.set(-speed);
     }
 }
