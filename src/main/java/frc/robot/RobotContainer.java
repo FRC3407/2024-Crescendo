@@ -30,8 +30,6 @@ import frc.robot.controls.ControlSchemeManager;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.DriveSubsystem;
 
-
-
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -40,54 +38,23 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 
 public class RobotContainer extends TimedRobot{
-  private final Joystick leftJoystick = new Joystick(0);
-  private final Joystick rightJoystick = new Joystick(1);
-  // The robot's subsystems
-    // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-  public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
+
   private final ControlSchemeManager controls = new ControlSchemeManager();
   private final Robot robot = new Robot();
-
-  @Override 
-  public void robotInit()
-  {
-    System.out.println("Using Wpilib Version " + WPILibVersion.Version);
-    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.COMPETITION);
-		this.addPeriodic(
-			this.controls.genLoopableRunContinuous(),
-			0.5
-		);
-    super.robotInit();
-  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
-  }
-
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
-    
-    new JoystickButton(m_driverController, Button.kL1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.zeroHeading(),
-            m_robotDrive));
+    System.out.println("Using Wpilib Version " + WPILibVersion.Version);
+    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.TESTING);
+    this.controls.runInitialThread();
+    this.controls.runContinuousThread();
+    this.controls.genLoopableRunContinuous();
+		this.addPeriodic(
+			this.controls.genLoopableRunContinuous(),
+			0.5
+		);
   }
 
   /**
@@ -119,20 +86,20 @@ public class RobotContainer extends TimedRobot{
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
+        Controls.m_driveTrain::getPose, // Functional interface to feed supplier
         DriveConstants.kDriveKinematics,
 
         // Position controllers
         new PIDController(AutoConstants.kPXController, 0, 0),
         new PIDController(AutoConstants.kPYController, 0, 0),
         thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
+        Controls.m_driveTrain::setModuleStates,
+        Controls.m_driveTrain);
 
     // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+    Controls.m_driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+    return swerveControllerCommand.andThen(() -> Controls.m_driveTrain.drive(0, 0, 0, false, false));
   }
 }
