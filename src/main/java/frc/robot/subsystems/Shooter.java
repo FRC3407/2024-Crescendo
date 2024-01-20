@@ -1,5 +1,6 @@
 
 package frc.robot.subsystems;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,7 +17,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
+
     }
 
     @Override
@@ -26,9 +27,10 @@ public class Shooter extends SubsystemBase {
 
     /**
      * Spins the shooter, positive speed shoots the ring out
+     * 
      * @param speed
      */
-    public void shoot(double speed){
+    public void shoot(double speed) {
         shooterMotorTop.set(speed);
         shooterMotorBot.set(-speed);
     }

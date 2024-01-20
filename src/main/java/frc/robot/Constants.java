@@ -89,14 +89,16 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T.
+    // This changes the drive speed of the module (a pinion gear with more teeth
+    // will result in a
     // robot that drives faster).
-
     //get pinion gear configuration from build team
     public static final int kDrivingMotorPinionTeeth = 14;
 
-    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
+    // Invert the turning encoder, since the output shaft rotates in the opposite
+    // direction of
     // the steering motor in the MAXSwerve Module.
     public static final boolean kTurningEncoderInverted = true;
 
@@ -104,7 +106,8 @@ public final class Constants {
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = 0.0762;
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+    // teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
@@ -142,8 +145,8 @@ public final class Constants {
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.10;
+    public static final double kDriveDeadband = 0.1;
+    public static final double kTriggerDeadband = 0.2;
   }
 
   public static final class AutoConstants {
@@ -164,28 +167,42 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
-  
+
   public static class ButtonBox extends InputMap {
-		public static enum Digital implements DigitalMap {
-			B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
-			S1(7), S2(8),
-			TOTAL(16);	// whatever interface board the bbox is using apparently has 12 buttons and 1 POV
+    public static enum Digital implements DigitalMap {
+      B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
+      S1(7), S2(8),
+      TOTAL(16); // whatever interface board the bbox is using apparently has 12 buttons and 1
+                 // POV
 
-			public final int value;
-			private Digital(int v) { this.value = v; }
+      public final int value;
 
-			public int getValue() { return this.value; }
-			public int getTotal() { return TOTAL.value; }
-		}
+      private Digital(int v) {
+        this.value = v;
+      }
 
-		private ButtonBox() {}
-		public static final ButtonBox Map = new ButtonBox();
-		public static final int AXIS_COUNT = 5;		// see the last comment --> the bbox apparently has 5 axis
+      public int getValue() {
+        return this.value;
+      }
 
-		public boolean compatible(GenericHID i)
-			{ return Digital.TOTAL.compatible(i) && i.getAxisCount() == AXIS_COUNT; }
-		public boolean compatible(int p)
-			{ return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT; }
-	}
+      public int getTotal() {
+        return TOTAL.value;
+      }
+    }
+
+    private ButtonBox() {
+    }
+
+    public static final ButtonBox Map = new ButtonBox();
+    public static final int AXIS_COUNT = 5; // see the last comment --> the bbox apparently has 5 axis
+
+    public boolean compatible(GenericHID i) {
+      return Digital.TOTAL.compatible(i) && i.getAxisCount() == AXIS_COUNT;
+    }
+
+    public boolean compatible(int p) {
+      return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT;
+    }
+  }
 
 }
