@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ButtonBox;
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
@@ -103,18 +104,18 @@ public final class Controls {
 		Command drive_control = new DriveCommand(m_driveTrain, 
 			Xbox.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
 			Xbox.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
-			Xbox.Analog.LY.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
-			Xbox.Digital.LB.getSupplier(controller),
-			Xbox.Digital.RB.getSupplier(controller),
+			Xbox.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
+			Xbox.Analog.LT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
+			Xbox.Analog.RT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
 			Xbox.Digital.A.getSupplier(controller),
 			Xbox.Digital.B.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
 		Command intake_control = new IntakeCommand(m_intake, 
-		Xbox.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0));
+		Xbox.Digital.LB.getSupplier(controller));
 		m_intake.setDefaultCommand(intake_control);
 		Command shooter_control = new ShootCommand(m_shooter, 
-		Xbox.Analog.RT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-		Xbox.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0));
+		Xbox.Digital.RB.getSupplier(controller),
+		Xbox.Digital.LB.getSupplier(controller));
 		m_shooter.setDefaultCommand(shooter_control);
 		System.out.println("Single Xbox Control Scheme Registered");
 	}
@@ -128,18 +129,18 @@ public final class Controls {
 		Command drive_control = new DriveCommand(m_driveTrain, 
 			PlayStation.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
 			PlayStation.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
-			PlayStation.Analog.LY.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
-			PlayStation.Digital.LB.getSupplier(controller),
-			PlayStation.Digital.RB.getSupplier(controller),
+			PlayStation.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0), 
+			PlayStation.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
+			PlayStation.Analog.RT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 			PlayStation.Digital.X.getSupplier(controller),
 			PlayStation.Digital.O.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
 		Command intake_control = new IntakeCommand(m_intake, 
-		PlayStation.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0));
+		PlayStation.Digital.LB.getSupplier(controller));
 		m_intake.setDefaultCommand(intake_control);
 		Command shooter_control = new ShootCommand(m_shooter, 
-		PlayStation.Analog.RT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-		PlayStation.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0));
+		PlayStation.Digital.RB.getSupplier(controller),
+		PlayStation.Digital.LB.getSupplier(controller));
 		m_shooter.setDefaultCommand(shooter_control);
 		System.out.println("Single PlayStation Control Scheme Registered");
 	}
@@ -154,18 +155,18 @@ public final class Controls {
 		Command drive_control = new DriveCommand(m_driveTrain, 
 			Xbox.Analog.RX.getDriveInputSupplier(controller1, 0, 1.0, 1.0), 
 			Xbox.Analog.RY.getDriveInputSupplier(controller1, 0, 1.0, 1.0), 
-			Xbox.Analog.LY.getDriveInputSupplier(controller1, 0, 1.0, 1.0), 
-			Xbox.Digital.LB.getSupplier(controller1),
-			Xbox.Digital.RB.getSupplier(controller1),
+			Xbox.Analog.LX.getDriveInputSupplier(controller1, 0, 1.0, 1.0), 
+			Xbox.Analog.LT.getDriveInputSupplier(controller1, OIConstants.kTriggerDeadband, 1.0, 1.0),
+			Xbox.Analog.RT.getDriveInputSupplier(controller1, OIConstants.kTriggerDeadband, 1.0, 1.0),
 			Xbox.Digital.A.getSupplier(controller1),
 			Xbox.Digital.B.getSupplier(controller1));
 		m_driveTrain.setDefaultCommand(drive_control);
 		Command intake_control = new IntakeCommand(m_intake, 
-		Xbox.Analog.LT.getDriveInputSupplier(controller2, 0, 1.0, 1.0));
+		Xbox.Digital.LB.getSupplier(controller2));
 		m_intake.setDefaultCommand(intake_control);
 		Command shooter_control = new ShootCommand(m_shooter, 
-		Xbox.Analog.RT.getDriveInputSupplier(controller2, 0, 1.0, 1.0),
-		Xbox.Analog.LT.getDriveInputSupplier(controller2, 0, 1.0, 1.0));
+		Xbox.Digital.RB.getSupplier(controller2),
+		Xbox.Digital.LB.getSupplier(controller2));
 		m_shooter.setDefaultCommand(shooter_control);
 		System.out.println("Dual Xbox Control Scheme Registered");
 	}
@@ -179,8 +180,8 @@ public final class Controls {
 		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain, 
 		Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-		Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 		Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
+		Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 		Attack3.Digital.TRI.getSupplier(lstick),
 		Attack3.Digital.TRI.getSupplier(rstick),
 		Attack3.Digital.B2.getSupplier(lstick),
@@ -206,8 +207,8 @@ public final class Controls {
 		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain, 
 		Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-		Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 		Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
+		Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 		Attack3.Digital.TRI.getSupplier(lstick),
 		Attack3.Digital.TRI.getSupplier(rstick),
 		Attack3.Digital.B2.getSupplier(lstick),
@@ -234,8 +235,8 @@ public final class Controls {
 		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain, 
 		Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-		Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 		Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
+		Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 		Attack3.Digital.TRI.getSupplier(lstick),
 		Attack3.Digital.TRI.getSupplier(rstick),
 		Attack3.Digital.B2.getSupplier(lstick),

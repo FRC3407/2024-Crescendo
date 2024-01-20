@@ -382,6 +382,7 @@ public class ControlSchemeManager implements Sendable {
 	 * @return A Runnable that continuously schedules the continuous worker for control scheme selection.
 	 */
 	public synchronized Runnable genLoopableRunContinuous() {
+		System.out.println("running genLoopableRunContinuous");
 		if(this.searcher == DUMMY_THREAD || (this.searcher != null && this.searcher.isAlive())) {
 			System.out.println("ControlSchemeManager: Search not begun due to possible extraneous runners.");
 			return ()->{};
