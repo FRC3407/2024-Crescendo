@@ -51,11 +51,6 @@ public class RobotContainer extends TimedRobot {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
     Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.TESTING);
     this.controls.runInitialThread();
-    this.controls.runContinuousThread();
-    this.controls.genLoopableRunContinuous();
-    this.addPeriodic(
-        this.controls.genLoopableRunContinuous(),
-        0.5);
   }
   
   public Command getAutonomousCommand() {
