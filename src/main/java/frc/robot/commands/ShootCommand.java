@@ -12,22 +12,24 @@ public class ShootCommand extends Command {
     private final Shooter m_shooter;
     private final BooleanSupplier supplierShoot;
     private final BooleanSupplier supplierIntake;
-    
+
     /**
      * Spins the shooter
+     * 
      * @param shooter
      * @param supplierShoot
      * @param supplierIntake
      */
     public ShootCommand(Shooter shooter, DoubleSupplier supplierShoot, DoubleSupplier supplierIntake) {
         this.m_shooter = shooter;
-        this.supplierShoot = ()->(supplierShoot.getAsDouble()>=0.2);
-        this.supplierIntake = ()->(supplierIntake.getAsDouble()>=0.2);
+        this.supplierShoot = () -> (supplierShoot.getAsDouble() >= 0.2);
+        this.supplierIntake = () -> (supplierIntake.getAsDouble() >= 0.2);
         addRequirements(m_shooter);
     }
 
     /**
      * Spins the shooter
+     * 
      * @param shooter
      * @param supplierShoot
      * @param supplierIntake
@@ -45,16 +47,11 @@ public class ShootCommand extends Command {
 
     @Override
     public void execute() {
-        if(supplierShoot.getAsBoolean()&&!supplierIntake.getAsBoolean())
-        {
+        if (supplierShoot.getAsBoolean() && !supplierIntake.getAsBoolean()) {
             this.m_shooter.shoot(Constants.ShooterConstants.SHOOTER_SHOOT_SPEED);
-        }
-        else if(!supplierShoot.getAsBoolean()&&supplierIntake.getAsBoolean())
-        {
-            this.m_shooter.shoot(Constants.ShooterConstants.SHOOTER_INTAKE_SPEED);        
-        }
-        else
-        {
+        } else if (!supplierShoot.getAsBoolean() && supplierIntake.getAsBoolean()) {
+            this.m_shooter.shoot(Constants.ShooterConstants.SHOOTER_INTAKE_SPEED);
+        } else {
             this.m_shooter.shoot(0);
         }
     }

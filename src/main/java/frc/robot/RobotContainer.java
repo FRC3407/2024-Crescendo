@@ -37,7 +37,7 @@ import frc.robot.subsystems.DriveSubsystem;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 
-public class RobotContainer extends TimedRobot{
+public class RobotContainer extends TimedRobot {
 
   private final ControlSchemeManager controls = new ControlSchemeManager();
   private final Robot robot = new Robot();
@@ -51,10 +51,9 @@ public class RobotContainer extends TimedRobot{
     this.controls.runInitialThread();
     this.controls.runContinuousThread();
     this.controls.genLoopableRunContinuous();
-		this.addPeriodic(
-			this.controls.genLoopableRunContinuous(),
-			0.5
-		);
+    this.addPeriodic(
+        this.controls.genLoopableRunContinuous(),
+        0.5);
   }
 
   /**

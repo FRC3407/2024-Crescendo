@@ -1,8 +1,6 @@
 
 package frc.robot.subsystems;
 
-
-
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,7 +16,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
+
     }
 
     @Override
@@ -28,9 +26,10 @@ public class Intake extends SubsystemBase {
 
     /**
      * Spins the intake, positive is clockwise
+     * 
      * @param speed
      */
-    public void intake(double speed){
+    public void intake(double speed) {
         intakeMotor.set(speed);
     }
 }

@@ -12,19 +12,21 @@ public class IntakeCommand extends Command {
 
     private final Intake m_intake;
     private BooleanSupplier intakeSupplier;
-    
+
     /**
      * Runs the intake
+     * 
      * @param shooter
      */
     public IntakeCommand(Intake intake, DoubleSupplier intakeSupplier) {
         this.m_intake = intake;
-        this.intakeSupplier = ()->(intakeSupplier.getAsDouble()>=0.2);
+        this.intakeSupplier = () -> (intakeSupplier.getAsDouble() >= 0.2);
         addRequirements(m_intake);
     }
 
     /**
      * Runs the intake
+     * 
      * @param shooter
      */
     public IntakeCommand(Intake intake, BooleanSupplier intakeSupplier) {
@@ -39,8 +41,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if(intakeSupplier.getAsBoolean())
-        {
+        if (intakeSupplier.getAsBoolean()) {
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         }
     }
