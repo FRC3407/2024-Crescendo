@@ -44,7 +44,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 6.9;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
@@ -140,6 +140,15 @@ public final class Constants {
 
     public static final int kDrivingMotorCurrentLimit = 50; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
+
+    // PP(PathPlanner) PID Constants
+    public static final double kPPDrivingP = 0.752;
+    public static final double kPPDrivingI = 1.858;
+    public static final double kPPDrivingD = 0.00;
+
+    public static final double kPPTurningP = 2.5;
+    public static final double kPPTurningI = 0;
+    public static final double kPPTurningD = 0;
   }
 
   public static final class OIConstants {
