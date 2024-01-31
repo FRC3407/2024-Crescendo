@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.List;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -69,10 +71,7 @@ public class RobotContainer extends TimedRobot{
     // Configure the button bindings
     configureButtonBindings();
     }
-    public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Example Auto");
-    }
-  }
+  
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -95,9 +94,9 @@ public class RobotContainer extends TimedRobot{
             m_robotDrive));
   }
 
-  public driveForwards getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+   public Command getAutonomousCommand() {
+        return new PathPlannerAuto("driveForwards");
+    }
 
   // /**
   //  * Use this to pass the autonomous command to the main {@link Robot} class.

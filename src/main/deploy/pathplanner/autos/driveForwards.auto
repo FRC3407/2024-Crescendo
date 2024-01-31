@@ -16,6 +16,31 @@
           "data": {
             "pathName": "T1"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "T2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "T1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "T2"
+                }
+              }
+            ]
+          }
         }
       ]
     }
