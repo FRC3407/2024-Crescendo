@@ -38,7 +38,7 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double INTAKE_SPEED = 1.0;
-    public static final int kIntake = 12;
+    public static final int motorCanID = 12;
   }
 
   public static final class DriveConstants {

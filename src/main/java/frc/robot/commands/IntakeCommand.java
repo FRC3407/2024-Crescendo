@@ -12,6 +12,7 @@ public class IntakeCommand extends Command {
 
     private final Intake m_intake;
     private BooleanSupplier intakeSupplier;
+    private int selector = 0;
 
     /**
      * Runs the intake
@@ -42,8 +43,23 @@ public class IntakeCommand extends Command {
     @Override
     public void execute() {
         if (intakeSupplier.getAsBoolean()) {
+            if (selector == 0) {
+                selector = 1;
+            }
+        }
+        if (selector == 1) {
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         }
+        if (this.m_intake.getStopSenser()) {
+            if (this.m_intake.getStarterSenser()) {
+            this.m_intake.intake(0);
+            selector = 3;
+            }
+            else {
+                this.m_intake.intake(-Constants.IntakeConstants.INTAKE_SPEED);
+            }
+        }
+
     }
 
     @Override
