@@ -1,6 +1,9 @@
 package frc.robot.controls;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonBox;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
@@ -114,12 +117,23 @@ public final class Controls {
 		}
 	}
 
-	// single xbox controller
-	private static void singleXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
-		InputDevice controller = inputs[0];
+	private static ArrayList<Trigger> triggerList = new ArrayList();
+
+	private static void setupNewScheme()
+	{
 		m_driveTrain.removeDefaultCommand();
 		m_shooter.removeDefaultCommand();
 		m_intake.removeDefaultCommand();
+		for (Trigger trigger : triggerList) {
+			trigger.onTrue(null);
+			trigger.onFalse(null);
+		}
+	}
+
+	// single xbox controller
+	private static void singleXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		setupNewScheme();
+		InputDevice controller = inputs[0];
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Xbox.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				Xbox.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
@@ -136,15 +150,16 @@ public final class Controls {
 				Xbox.Digital.RB.getSupplier(controller),
 				Xbox.Digital.LB.getSupplier(controller));
 		m_shooter.setDefaultCommand(shooter_control);
+		// Trigger trigger = new Trigger(buttonYouWant.getSupplier());
+		// triggerList.add(trigger);
+		// trigger.onTrue(command);
 		System.out.println("Single Xbox Control Scheme Registered");
 	}
 
 	// single PlayStation controller
 	private static void singlePlayStation(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		setupNewScheme();
 		InputDevice controller = inputs[0];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				PlayStation.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
@@ -166,11 +181,9 @@ public final class Controls {
 
 	// dual xbox controllers
 	private static void dualXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		setupNewScheme();
 		InputDevice controller1 = inputs[0];
 		InputDevice controller2 = inputs[1];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Xbox.Analog.RX.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
 				Xbox.Analog.RY.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
@@ -192,11 +205,9 @@ public final class Controls {
 
 	// simple 2-joystick arcade board
 	private static void arcadeBoardSimple(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		setupNewScheme();
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
@@ -218,12 +229,10 @@ public final class Controls {
 
 	// 2 joysticks plus the buttonbox
 	private static void arcadeBoardFull(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		setupNewScheme();
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
 		InputDevice bbox = inputs[2];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
@@ -245,13 +254,11 @@ public final class Controls {
 
 	// full control board plus an extra controller
 	private static void competitionBoard(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		setupNewScheme();
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
 		InputDevice bbox = inputs[2];
 		InputDevice controller = inputs[3];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
