@@ -117,7 +117,7 @@ public final class Controls {
 		}
 	}
 
-	private static ArrayList<Trigger> triggerList = new ArrayList();
+	private static ArrayList<Trigger> triggerList = new ArrayList<Trigger>();
 
 	private static void setupNewScheme()
 	{
