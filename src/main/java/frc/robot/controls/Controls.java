@@ -137,6 +137,7 @@ public final class Controls {
 				Xbox.Digital.LB.getSupplier(controller));
 		m_shooter.setDefaultCommand(shooter_control);
 		System.out.println("Single Xbox Control Scheme Registered");
+		
 	}
 
 	// single PlayStation controller
