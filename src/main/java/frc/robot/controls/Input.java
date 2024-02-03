@@ -319,7 +319,7 @@ public class Input {
 	 * AnalogMap defines all functions available to Analog enums (defined below)
 	 */
 	public static interface AnalogMap {
-		int getValue();
+		int getPortValue();
 
 		int getTotal();
 
@@ -333,63 +333,63 @@ public class Input {
 
 		default double getValueOf(GenericHID i) {
 			if (this.compatible(i)) {
-				return i.getRawAxis(this.getValue());
+				return i.getRawAxis(this.getPortValue());
 			}
 			return 0.0;
 		}
 
 		default double getValueOf(int p) {
 			if (this.compatible(p)) {
-				return DriverStation.getStickAxis(p, this.getValue());
+				return DriverStation.getStickAxis(p, this.getPortValue());
 			}
 			return 0.0;
 		}
 
 		default AnalogSupplier getSupplier(InputDevice i) {
 			if (this.compatible(i)) {
-				return () -> i.getRawAxis(this.getValue());
+				return () -> i.getRawAxis(this.getPortValue());
 			}
 			return () -> 0.0;
 		}
 
 		default AnalogSupplier getSupplier(int p) {
 			if (this.compatible(p)) {
-				return () -> DriverStation.getStickAxis(p, this.getValue());
+				return () -> DriverStation.getStickAxis(p, this.getPortValue());
 			}
 			return () -> 0.0;
 		}
 
 		default AnalogSlewSupplier getLimitedSupplier(InputDevice i, double mrate) {
 			if (this.compatible(i)) {
-				return new AnalogSlewSupplier(() -> i.getRawAxis(this.getValue()), mrate);
+				return new AnalogSlewSupplier(() -> i.getRawAxis(this.getPortValue()), mrate);
 			}
 			return new AnalogSlewSupplier(() -> 0.0);
 		}
 
 		default AnalogSlewSupplier getLimitedSupplier(int p, double mrate) {
 			if (this.compatible(p)) {
-				return new AnalogSlewSupplier(() -> DriverStation.getStickAxis(p, this.getValue()), mrate);
+				return new AnalogSlewSupplier(() -> DriverStation.getStickAxis(p, this.getPortValue()), mrate);
 			}
 			return new AnalogSlewSupplier(() -> 0.0);
 		}
 
 		default AnalogExponential getExponentialSupplier(InputDevice i, double pow) {
 			if (this.compatible(i)) {
-				return new AnalogExponential(() -> i.getRawAxis(this.getValue()), pow);
+				return new AnalogExponential(() -> i.getRawAxis(this.getPortValue()), pow);
 			}
 			return new AnalogExponential(() -> 0.0, 1.0);
 		}
 
 		default AnalogExponential getExponentialSupplier(int p, double pow) {
 			if (this.compatible(p)) {
-				return new AnalogExponential(() -> DriverStation.getStickAxis(p, this.getValue()), pow);
+				return new AnalogExponential(() -> DriverStation.getStickAxis(p, this.getPortValue()), pow);
 			}
 			return new AnalogExponential(() -> 0.0, 1.0);
 		}
 
 		default AnalogSupplier getExponentialLimitedSupplier(InputDevice i, double mrate, double pow) {
 			if (this.compatible(i)) {
-				return new AnalogSlewSupplier(new AnalogExponential(() -> i.getRawAxis(this.getValue()), pow), mrate);
+				return new AnalogSlewSupplier(new AnalogExponential(() -> i.getRawAxis(this.getPortValue()), pow), mrate);
 			}
 			return () -> 0.0;
 		}
@@ -397,21 +397,21 @@ public class Input {
 		default AnalogSupplier getExponentialLimitedSupplier(int p, double mrate, double pow) {
 			if (this.compatible(p)) {
 				return new AnalogSlewSupplier(
-						new AnalogExponential(() -> DriverStation.getStickAxis(p, this.getValue()), pow), mrate);
+						new AnalogExponential(() -> DriverStation.getStickAxis(p, this.getPortValue()), pow), mrate);
 			}
 			return () -> 0.0;
 		}
 
 		default AnalogSupplier getDriveInputSupplier(InputDevice i, double deadzone, double scale, double exp) {
 			if (this.compatible(i)) {
-				return new DriveInputSupplier(() -> i.getRawAxis(this.getValue()), deadzone, scale, exp);
+				return new DriveInputSupplier(() -> i.getRawAxis(this.getPortValue()), deadzone, scale, exp);
 			}
 			return () -> 0.0;
 		}
 
 		default AnalogSupplier getDriveInputSupplier(int p, double deadzone, double scale, double exp) {
 			if (this.compatible(p)) {
-				return new DriveInputSupplier(() -> DriverStation.getStickAxis(p, this.getValue()), deadzone, scale,
+				return new DriveInputSupplier(() -> DriverStation.getStickAxis(p, this.getPortValue()), deadzone, scale,
 						exp);
 			}
 			return () -> 0.0;
@@ -649,7 +649,7 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			public int getPortValue() {
 				return this.value;
 			}
 
@@ -708,7 +708,7 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			public int getPortValue() {
 				return this.value;
 			}
 
@@ -767,7 +767,7 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			public int getPortValue() {
 				return this.value;
 			}
 
@@ -824,7 +824,7 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			public int getPortValue() {
 				return this.value;
 			}
 

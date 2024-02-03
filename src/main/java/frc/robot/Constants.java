@@ -29,16 +29,15 @@ import frc.robot.controls.Input.InputMap;
  */
 public final class Constants {
 
-  public static final class ShooterConstants {
-    public static final double SHOOTER_SHOOT_SPEED = 3.0;
-    public static final double SHOOTER_INTAKE_SPEED = 1.0;
-    public static final int kShootBot = 10;
-    public static final int kShootTop = 11;
+  public static final class FlingerConstants {
+    public static final double FLINGER_SHOOT_SPEED = 3.0;
+    public static final double FLINGER_INTAKE_SPEED = 1.0;
+    public static final int flingerCanID = 11;
   }
 
   public static final class IntakeConstants {
     public static final double INTAKE_SPEED = 1.0;
-    public static final int kIntake = 12;
+    public static final int motorCanID = 12;
   }
 
   public static final class DriveConstants {
