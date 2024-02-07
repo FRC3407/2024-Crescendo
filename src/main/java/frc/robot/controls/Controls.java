@@ -23,6 +23,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
+//import org.apache.commons.math;
 public final class Controls {
 
 	public static final Shooter m_shooter = new Shooter();
@@ -119,8 +120,7 @@ public final class Controls {
 
 	private static ArrayList<Trigger> triggerList = new ArrayList<Trigger>();
 
-	private static void setupNewScheme()
-	{
+	private static void setupNewScheme() {
 		m_driveTrain.removeDefaultCommand();
 		m_shooter.removeDefaultCommand();
 		m_intake.removeDefaultCommand();
@@ -150,10 +150,8 @@ public final class Controls {
 				Xbox.Digital.RB.getSupplier(controller),
 				Xbox.Digital.LB.getSupplier(controller));
 		m_shooter.setDefaultCommand(shooter_control);
-		// Trigger trigger = new Trigger(buttonYouWant.getSupplier());
-		// triggerList.add(trigger);
-		// trigger.onTrue(command);
 		System.out.println("Single Xbox Control Scheme Registered");
+
 	}
 
 	// single PlayStation controller
