@@ -36,7 +36,9 @@ public class IntakeCommand extends Command {
             this.m_intake.intake(-Constants.IntakeConstants.INTAKE_SPEED * 0.5);
         } else {
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
+
         }
+
     }
 
     @Override
