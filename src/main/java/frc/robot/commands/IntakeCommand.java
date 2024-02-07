@@ -12,8 +12,6 @@ public class IntakeCommand extends Command {
 
     private final Intake m_intake;
 
-
-
     /**
      * Runs the intake
      * 

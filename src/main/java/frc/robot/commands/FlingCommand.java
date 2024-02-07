@@ -39,10 +39,9 @@ public class FlingCommand extends Command {
             if(this.m_intake.getStarterSenser()){
                 
             }
-            this.m_intake.intake(-0.2);
+            this.m_intake.intake(-0.1);
             notReady = false;
             timer.reset();
-            timer.start();
         } else {
             notReady = true;
         }
@@ -50,11 +49,14 @@ public class FlingCommand extends Command {
 
     @Override
     public void execute() {
-
+        if(!this.m_intake.getStopSenser())
+        {
+            timer.start();
+            this.m_intake.intake(0);
+        }
         if(timer.hasElapsed(0.2))
         {
-            this.m_intake.intake(0);
-            this.m_flinger.fling(0);
+            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
         }
         if (timer.hasElapsed(2)) {
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
@@ -69,7 +71,7 @@ public class FlingCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (!(this.m_intake.getShooterSenser() || this.m_intake.getStopSenser()) || notReady) {
+        if (!(this.m_intake.getShooterSenser() || this.m_intake.getStopSenser() || this.m_intake.getStarterSenser()) || notReady) {
             return true;
         } else {
             return false;
