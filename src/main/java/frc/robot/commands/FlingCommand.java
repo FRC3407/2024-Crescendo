@@ -13,10 +13,8 @@ public class FlingCommand extends Command {
 
     private final Flinger m_flinger;
     private final Intake m_intake;
-    private boolean notReady;
+    private boolean ringLoaded;
     private Timer timer;
-    private boolean loadedState = false;
-
 
     /**
      * Spins the flinger
@@ -35,30 +33,29 @@ public class FlingCommand extends Command {
     @Override
     public void initialize() {
         this.m_intake.intake(0);
-        if (this.m_intake.getStarterSenser() && this.m_intake.getStopSenser()) {
-            if(this.m_intake.getStarterSenser()){
-                
-            }
+        if (this.m_intake.getBotSensor() && this.m_intake.getMidSensor()) {
+            // If a ring is in the correct position start backing up the ring
             this.m_intake.intake(-0.1);
-            notReady = false;
+            ringLoaded = true;
             timer.reset();
         } else {
-            notReady = true;
+            ringLoaded = false;
         }
     }
 
     @Override
     public void execute() {
-        if(!this.m_intake.getStopSenser())
-        {
+        if (!this.m_intake.getMidSensor()&&timer.hasElapsed(0)) {
+            //Backs the ring until the mid sensor is false, then starts timer
             timer.start();
             this.m_intake.intake(0);
         }
-        if(timer.hasElapsed(0.2))
-        {
+        if (timer.hasElapsed(0.05)) {
+            //Starts the flinger
             this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
         }
-        if (timer.hasElapsed(2)) {
+        if (timer.hasElapsed(1)) {
+            //Transfers
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         }
     }
@@ -71,10 +68,8 @@ public class FlingCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (!(this.m_intake.getShooterSenser() || this.m_intake.getStopSenser() || this.m_intake.getStarterSenser()) || notReady) {
-            return true;
-        } else {
-            return false;
-        }
+        // Ends the command if all sensors are false or if a ring isn't loaded
+        return (!(this.m_intake.getTopSensor() || this.m_intake.getMidSensor()
+                || this.m_intake.getBotSensor()) || !ringLoaded);
     }
 }

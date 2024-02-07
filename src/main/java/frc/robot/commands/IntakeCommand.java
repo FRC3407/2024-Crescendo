@@ -24,20 +24,19 @@ public class IntakeCommand extends Command {
 
     @Override
     public void initialize() {
-        if (!this.m_intake.getStopSenser()) {
+        if (!this.m_intake.getMidSensor()) {
+            //If there isn't a ring loaded, start intake
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         }
     }
 
     @Override
     public void execute() {
-        if (this.m_intake.getStopSenser() && !this.m_intake.getStarterSenser()) {
+        if (this.m_intake.getMidSensor() && !this.m_intake.getBotSensor()) {
             this.m_intake.intake(-Constants.IntakeConstants.INTAKE_SPEED * 0.5);
         } else {
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
-
         }
-
     }
 
     @Override
@@ -47,7 +46,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (this.m_intake.getStopSenser() && this.m_intake.getStarterSenser()) {
+        if (this.m_intake.getMidSensor() && this.m_intake.getBotSensor()) {
             return true;
         } else {
             return false;

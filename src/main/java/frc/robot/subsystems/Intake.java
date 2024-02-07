@@ -14,9 +14,9 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
 
     private CANSparkMax intakeMotor;
-    private DigitalInput senseStart = new DigitalInput(1);
-    private DigitalInput senseStop = new DigitalInput(2);
-    private DigitalInput senseShoot = new DigitalInput(3);
+    private DigitalInput sensorBot = new DigitalInput(1);
+    private DigitalInput sensorMid = new DigitalInput(2);
+    private DigitalInput sensorTop = new DigitalInput(3);
 
     public Intake() {
         intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
@@ -42,16 +42,30 @@ public class Intake extends SubsystemBase {
         intakeMotor.set(speed);
     }
 
-    // Gets the value of the start senser
-    public boolean getStarterSenser() {
-        return senseStart.get();
+    /**
+     * Gets the value of the bottom senser
+     * 
+     * @return The value of the bottom sensor
+     */
+    public boolean getBotSensor() {
+        return sensorBot.get();
     }
-    // gets the value of the middle senser
-    public boolean getStopSenser() {
-        return senseStop.get();
+
+    /**
+     * Gets the value of the middle senser
+     * 
+     * @return The value of the middle sensor
+     */
+    public boolean getMidSensor() {
+        return sensorMid.get();
     }
-    // gets the value of the shooter senser
-    public boolean getShooterSenser() {
-        return senseStop.get();
+
+    /**
+     * Gets the value of the top senser
+     * 
+     * @return The value of the top sensor
+     */
+    public boolean getTopSensor() {
+        return sensorTop.get();
     }
 }
