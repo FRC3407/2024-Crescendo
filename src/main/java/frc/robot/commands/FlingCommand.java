@@ -15,6 +15,8 @@ public class FlingCommand extends Command {
     private final Intake m_intake;
     private boolean notReady;
     private Timer timer;
+    private boolean loadedState = false;
+
 
     /**
      * Spins the flinger
@@ -27,13 +29,17 @@ public class FlingCommand extends Command {
         this.m_flinger = flinger;
         this.m_intake = intake;
         addRequirements(m_flinger, m_intake);
+        timer = new Timer();
     }
 
     @Override
     public void initialize() {
         this.m_intake.intake(0);
         if (this.m_intake.getStarterSenser() && this.m_intake.getStopSenser()) {
-            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
+            if(this.m_intake.getStarterSenser()){
+                
+            }
+            this.m_intake.intake(-0.2);
             notReady = false;
             timer.reset();
             timer.start();
@@ -44,7 +50,13 @@ public class FlingCommand extends Command {
 
     @Override
     public void execute() {
-        if (timer.hasElapsed(0.5)) {
+
+        if(timer.hasElapsed(0.2))
+        {
+            this.m_intake.intake(0);
+            this.m_flinger.fling(0);
+        }
+        if (timer.hasElapsed(2)) {
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         }
     }

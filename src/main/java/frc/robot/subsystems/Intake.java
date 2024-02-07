@@ -14,14 +14,13 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
 
     private CANSparkMax intakeMotor;
-    private DigitalInput senseStart = new DigitalInput(0);
-    private DigitalInput senseStop = new DigitalInput(1);
-    private DigitalInput senseShoot = new DigitalInput(2);
+    private DigitalInput senseStart = new DigitalInput(1);
+    private DigitalInput senseStop = new DigitalInput(2);
+    private DigitalInput senseShoot = new DigitalInput(3);
 
     public Intake() {
         intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
-        
-
+        intakeMotor.setInverted(true);
     }
 
     @Override

@@ -13,6 +13,7 @@ public class Flinger extends SubsystemBase {
 
     public Flinger() {
         flingerMotor = new CANSparkMax(Constants.FlingerConstants.flingerCanID, MotorType.kBrushless);
+        flingerMotor.setInverted(true);
     }
 
     @Override

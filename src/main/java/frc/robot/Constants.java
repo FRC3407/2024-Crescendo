@@ -36,8 +36,11 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 1.0;
-    public static final int motorCanID = 12;
+    public static final double INTAKE_SPEED = 0.25;
+    public static final int motorCanID = 10;
+    public static final int bottomDIOSensor = 1;
+    public static final int middleDIOSensor = 2;
+    public static final int topDIOSensor = 3;
   }
 
   public static final class DriveConstants {

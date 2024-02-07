@@ -124,12 +124,12 @@ public final class Controls {
 		m_driveTrain.removeDefaultCommand();
 		m_flinger.removeDefaultCommand();
 		m_intake.removeDefaultCommand();
-		for (Trigger trigger : triggerList) {
-			trigger.onTrue(null);
-			trigger.onFalse(null);
-			trigger.whileFalse(null);
-			trigger.whileTrue(null);
-		}
+		// for (Trigger trigger : triggerList) {
+		// 	trigger.onTrue(null);
+		// 	trigger.onFalse(null);
+		// 	trigger.whileFalse(null);
+		// 	trigger.whileTrue(null);
+		// }
 	}
 
 	// single xbox controller
@@ -218,7 +218,12 @@ public final class Controls {
 				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
-
+		Trigger flingTrigger = new Trigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		Trigger intakeTrigger = new Trigger(() -> Attack3.Digital.TB.getValueOf(rstick));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_intake));
 		System.out.println("Arcade Board Full Control Scheme Registered");
 	}
 
