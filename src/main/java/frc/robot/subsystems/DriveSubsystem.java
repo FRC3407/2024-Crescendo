@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.*;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -16,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.*;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,6 +29,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -89,12 +93,12 @@ public class DriveSubsystem extends SubsystemBase {
       this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-        new PIDConstants(Constants.ModuleConstants.kDrivingP, 
-          Constants.ModuleConstants.kDrivingI, Constants.ModuleConstants.kDrivingD), // Translation PID constants
-        new PIDConstants(Constants.ModuleConstants.kTurningP, 
-          Constants.ModuleConstants.kTurningI, Constants.ModuleConstants.kTurningD), // Rotation PID constants
+        new PIDConstants(Constants.ModuleConstants.kPPDrivingP, 
+          Constants.ModuleConstants.kPPDrivingI, Constants.ModuleConstants.kPPDrivingD), // Translation PID constants
+        new PIDConstants(Constants.ModuleConstants.kPPTurningP, 
+          Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD), // Rotation PID constants
         Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-        Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
+        Constants.DriveConstants.kBaseRadius, // Drive base radius in metbers. Distance from robot center to furthest module.
         new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
       () -> {
@@ -110,6 +114,21 @@ public class DriveSubsystem extends SubsystemBase {
       },
       this // Reference to this subsystem to set requirements
     );
+    // Load the path we want to pathfind to and follow
+    PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
+
+    // Create the constraints to use while pathfinding. The constraints defined in the path will only be used for the path.
+    PathConstraints constraints = new PathConstraints(
+        3.0, 4.0,
+        Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+    // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
+        path,
+        constraints,
+        3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+    );
+
   }
 
   @Override
@@ -125,6 +144,7 @@ public class DriveSubsystem extends SubsystemBase {
         }));
     SmartDashboard.putNumber("X in meters", getPose().getX());
     SmartDashboard.putNumber("Y in meters", getPose().getY());
+    SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0)));
   }
 
   /**

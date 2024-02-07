@@ -29,22 +29,24 @@ import frc.robot.controls.Input.InputMap;
  */
 public final class Constants {
 
-  public static final class ShooterConstants {
-    public static final double SHOOTER_SHOOT_SPEED = 3.0;
-    public static final double SHOOTER_INTAKE_SPEED = 1.0;
-    public static final int kShootBot = 10;
-    public static final int kShootTop = 11;
+  public static final class FlingerConstants {
+    public static final double FLINGER_SHOOT_SPEED = 3.0;
+    public static final double FLINGER_INTAKE_SPEED = 1.0;
+    public static final int flingerCanID = 11;
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 1.0;
-    public static final int kIntake = 12;
+    public static final double INTAKE_SPEED = 0.25;
+    public static final int motorCanID = 10;
+    public static final int bottomDIOSensor = 1;
+    public static final int middleDIOSensor = 2;
+    public static final int topDIOSensor = 3;
   }
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 6.9;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
@@ -52,13 +54,11 @@ public final class Constants {
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(18.5);
+    public static final double kTrackWidth = Units.inchesToMeters(22.5);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(18.5);
+    public static final double kWheelBase = Units.inchesToMeters(22.5);
     // Distance between front and back wheels on robot
-    public static final double kBaseRadius = Units.inchesToMeters(
-      Math.sqrt(Math.pow((kTrackWidth/2), 2) + Math.pow((kWheelBase/2), 2))
-    );
+    public static final double kBaseRadius = Math.sqrt(Math.pow((kTrackWidth/2), 2) + Math.pow((kWheelBase/2), 2));
     // Distance from middle of robot to a wheel
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -142,6 +142,15 @@ public final class Constants {
 
     public static final int kDrivingMotorCurrentLimit = 50; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
+
+    // PP(PathPlanner) PID Constants
+    public static final double kPPDrivingP = 0.752;
+    public static final double kPPDrivingI = 1.858;
+    public static final double kPPDrivingD = 0.00;
+
+    public static final double kPPTurningP = 2.5;
+    public static final double kPPTurningI = 0;
+    public static final double kPPTurningD = 0;
   }
 
   public static final class OIConstants {
