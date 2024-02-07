@@ -23,6 +23,7 @@ import org.apache.commons.math3.optimization.direct.NelderMeadSimplex;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.*;
 
@@ -45,6 +46,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -363,11 +365,28 @@ public class DriveSubsystem extends SubsystemBase {
     return new Pose2d(solution.getPoint()[0], solution.getPoint()[1], rotationPlaceHolder);
   }
 
-  public PathPlannerPath calcPath(Pose2d targetPose)
+  public Command calcPath(Pose2d targetPose)
   {
     ArrayList<Translation2d> list = new ArrayList<Translation2d>();
     list.add(new Translation2d(getPose().getX(), getPose().getY()));
     list.add(new Translation2d(targetPose.getX(),targetPose.getY()));
-    return new PathPlannerPath(list, null, null);
+    return new PathfindHolonomic(
+        targetPose,
+        null,
+        this::getPose, // Robot pose supplier
+        this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelative,
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants(Constants.ModuleConstants.kDrivingP,
+                Constants.ModuleConstants.kDrivingI, Constants.ModuleConstants.kDrivingD), // Translation PID constants
+            new PIDConstants(Constants.ModuleConstants.kTurningP,
+                Constants.ModuleConstants.kTurningI, Constants.ModuleConstants.kTurningD), // Rotation PID constants
+            Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+            Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest
+                                                  // module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options here
+        ),
+        this // Reference to this subsystem to set requirements
+    );
   }
 }
