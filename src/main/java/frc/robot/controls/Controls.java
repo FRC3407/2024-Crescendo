@@ -1,5 +1,11 @@
 package frc.robot.controls;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ButtonBox;
 import frc.robot.Constants.OIConstants;
@@ -128,6 +134,7 @@ public final class Controls {
 				Xbox.Analog.RT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
 				Xbox.Digital.A.getSupplier(controller),
 				Xbox.Digital.B.getSupplier(controller));
+		// Command path = new PathCommand(m_driveTrain,)
 		m_driveTrain.setDefaultCommand(drive_control);
 		Command intake_control = new IntakeCommand(m_intake,
 				Xbox.Digital.LB.getSupplier(controller));
@@ -137,6 +144,8 @@ public final class Controls {
 				Xbox.Digital.LB.getSupplier(controller));
 		m_shooter.setDefaultCommand(shooter_control);
 		System.out.println("Single Xbox Control Scheme Registered");
+		Xbox.Digital.X.
+
 	}
 
 	// single PlayStation controller
