@@ -35,28 +35,26 @@ public class FlingCommand extends Command {
     @Override
     public void initialize() {
         this.m_intake.intake(0);
-        if (this.m_intake.getStarterSenser() && this.m_intake.getStopSenser()) {
-            if(this.m_intake.getStarterSenser()){
-                
-            }
+        if (this.m_intake.getBotSensor() && this.m_intake.getMidSensor()) {
+            // If a ring is in the correct position start backing up the ring
             this.m_intake.intake(-0.1);
-            notReady = false;
+            ringLoaded = true;
             timer.reset();
             postShotTimer.reset();
         } else {
-            notReady = true;
+            ringLoaded = false;
         }
     }
 
     @Override
     public void execute() {
-        if(!this.m_intake.getStopSenser())
-        {
+        if (!this.m_intake.getMidSensor()&&timer.hasElapsed(0)) {
+            //Backs the ring until the mid sensor is false, then starts timer
             timer.start();
             this.m_intake.intake(0);
         }
-        if(timer.hasElapsed(0.2))
-        {
+        if (timer.hasElapsed(0.05)) {
+            //Starts the flinger
             this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
         }
         if (timer.hasElapsed(2)) {
