@@ -20,13 +20,14 @@ import frc.robot.controls.Input.InputMap;
 import frc.robot.controls.Input.PlayStation;
 import frc.robot.controls.Input.Xbox;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.FloorIntake;
+import frc.utils.DebindableTrigger;
 import frc.robot.subsystems.Flinger;
 
 public final class Controls {
 
 	public static final Flinger m_flinger = new Flinger();
-	public static final Intake m_intake = new Intake();
+	public static final FloorIntake m_intake = new FloorIntake();
 	public final static DriveSubsystem m_driveTrain = new DriveSubsystem();
 
 	public static enum FeatureLevel {
@@ -147,6 +148,9 @@ public final class Controls {
 		Trigger flingTrigger = new Trigger(() -> Xbox.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
 		triggerList.add(flingTrigger);
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Single Xbox Control Scheme Registered");
 		
 	}
@@ -163,6 +167,12 @@ public final class Controls {
 				PlayStation.Digital.X.getSupplier(controller),
 				PlayStation.Digital.O.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> PlayStation.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> PlayStation.Digital.RB.getValueOf(controller));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Single PlayStation Control Scheme Registered");
 	}
 
@@ -179,6 +189,12 @@ public final class Controls {
 				Xbox.Digital.A.getSupplier(controller1),
 				Xbox.Digital.B.getSupplier(controller1));
 		m_driveTrain.setDefaultCommand(drive_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Xbox.Analog.RT.getValueOf(controller1)>=OIConstants.kTriggerDeadband);
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller1));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Dual Xbox Control Scheme Registered");
 	}
 
@@ -200,7 +216,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		Trigger intakeTrigger = new Trigger(() -> Attack3.Digital.B2.getValueOf(rstick));
 		triggerList.add(intakeTrigger);
-		flingTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Arcade Board Simple Control Scheme Registered");
 	}
 
@@ -223,7 +239,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		Trigger intakeTrigger = new Trigger(() -> Attack3.Digital.TB.getValueOf(rstick));
 		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Arcade Board Full Control Scheme Registered");
 	}
 
@@ -242,6 +258,12 @@ public final class Controls {
 				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.TB.getValueOf(rstick));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Competition Board Control Scheme Registered");
 	}
 }

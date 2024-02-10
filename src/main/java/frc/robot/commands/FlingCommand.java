@@ -7,16 +7,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Flinger;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.FloorIntake;
 
 public class FlingCommand extends Command {
 
     private final Flinger m_flinger;
-    private final Intake m_intake;
-    private boolean notReady;
+    private final FloorIntake m_intake;
+    private boolean ringLoaded;
     private Timer timer;
-    private boolean loadedState = false;
-
+    private Timer postShotTimer;
 
     /**
      * Spins the flinger
@@ -25,11 +24,12 @@ public class FlingCommand extends Command {
      * @param supplierfling
      * @param supplierIntake
      */
-    public FlingCommand(Flinger flinger, Intake intake) {
+    public FlingCommand(Flinger flinger, FloorIntake intake) {
         this.m_flinger = flinger;
         this.m_intake = intake;
         addRequirements(m_flinger, m_intake);
         timer = new Timer();
+        postShotTimer = new Timer();
     }
 
     @Override
@@ -42,6 +42,7 @@ public class FlingCommand extends Command {
             this.m_intake.intake(-0.1);
             notReady = false;
             timer.reset();
+            postShotTimer.reset();
         } else {
             notReady = true;
         }
@@ -59,22 +60,31 @@ public class FlingCommand extends Command {
             this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
         }
         if (timer.hasElapsed(2)) {
+            //Transfers
             this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         }
+        if(!(this.m_intake.getTopSensor() || this.m_intake.getMidSensor()
+        || this.m_intake.getBotSensor()))
+        {
+            postShotTimer.start();
+        }
+
     }
 
     @Override
     public void end(boolean interrupted) {
         this.m_flinger.fling(0);
         this.m_intake.intake(0);
+        timer.stop();
+        postShotTimer.stop();
+        timer.reset();
+        postShotTimer.reset();
+        ringLoaded = false;
     }
 
     @Override
     public boolean isFinished() {
-        if (!(this.m_intake.getShooterSenser() || this.m_intake.getStopSenser() || this.m_intake.getStarterSenser()) || notReady) {
-            return true;
-        } else {
-            return false;
-        }
+        // Ends the command if all sensors are false or if a ring isn't loaded
+        return (postShotTimer.hasElapsed(0.25) || !ringLoaded);
     }
 }
