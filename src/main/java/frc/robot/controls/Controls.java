@@ -26,6 +26,7 @@ import frc.robot.subsystems.FloorIntake;
 import frc.utils.DebindableTrigger;
 import frc.robot.subsystems.Flinger;
 
+//import org.apache.commons.math;
 public final class Controls {
 
 	public static final Flinger m_flinger = new Flinger();
@@ -145,7 +146,6 @@ public final class Controls {
 		triggerList.add(intakeTrigger);
 		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Single Xbox Control Scheme Registered");
-		
 	}
 
 	// single PlayStation controller

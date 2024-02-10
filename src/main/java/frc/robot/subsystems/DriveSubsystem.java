@@ -4,6 +4,23 @@
 
 package frc.robot.subsystems;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import org.apache.commons.math3.analysis.MultivariateFunction;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.math3.optim.InitialGuess;
+import org.apache.commons.math3.optim.OptimizationData;
+import org.apache.commons.math3.optim.PointValuePair;
+import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
+import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
+import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
+import org.apache.commons.math3.optim.univariate.UnivariateObjectiveFunction;
+import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
+import org.apache.commons.math3.optimization.direct.NelderMeadSimplex;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -13,6 +30,7 @@ import com.pathplanner.lib.util.*;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -101,18 +119,19 @@ public class DriveSubsystem extends SubsystemBase {
         Constants.DriveConstants.kBaseRadius, // Drive base radius in metbers. Distance from robot center to furthest module.
         new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
-      () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          return alliance.get() == DriverStation.Alliance.Red;
-        }
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
           return false;
-      },
-      this // Reference to this subsystem to set requirements
+        },
+        this // Reference to this subsystem to set requirements
     );
     // Load the path we want to pathfind to and follow
     PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
@@ -188,7 +207,7 @@ public class DriveSubsystem extends SubsystemBase {
     double xSpeedCommanded;
     double ySpeedCommanded;
     final boolean isStopped = Math.abs(xSpeed) <= (OIConstants.kDriveDeadband / 2.0)
-            && Math.abs(ySpeed) <= (OIConstants.kDriveDeadband / 2.0);
+        && Math.abs(ySpeed) <= (OIConstants.kDriveDeadband / 2.0);
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
@@ -314,19 +333,76 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public ChassisSpeeds getChassisSpeeds() {
     ChassisSpeeds chassis_speed = Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(
-      m_frontLeft.getState(), 
-      m_frontRight.getState(), 
-      m_rearLeft.getState(), 
-      m_rearRight.getState()
-      );
-      
+        m_frontLeft.getState(),
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState());
+
     return chassis_speed;
   }
 
   /**
    * Method that will drive the robot Robot Relative.
    */
-  public void driveRobotRelative(ChassisSpeeds speeds){
-    this.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond,false,false);
+  public void driveRobotRelative(ChassisSpeeds speeds) {
+    this.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false, false);
+  }
+
+  public class UnivariateFunctionArcDistance implements UnivariateFunction {
+    double h;
+    double k;
+    double r;
+
+    UnivariateFunctionArcDistance(double[] arc) {
+      this.h = arc[0];
+      this.k = arc[1];
+      this.r = arc[2];
+    }
+
+    public double value(double x) {
+      double yValue1 = +(Math.sqrt(r * r - (x - h) * (x - h))) + k;
+      double yValue2 = -(Math.sqrt(r * r - (x - h) * (x - h))) + k;
+      double distanceValue1 = Math.sqrt((x - getPose().getX()) * (x - getPose().getX()) +
+          (yValue1 - getPose().getY()) * (yValue1 - getPose().getY()));
+      double distanceValue2 = Math.sqrt((x - getPose().getX()) * (x - getPose().getX()) +
+          (yValue2 - getPose().getY()) * (yValue2 - getPose().getY()));
+      return distanceValue1 >= distanceValue2 ? distanceValue1 : distanceValue2;
+    }
+  }
+
+  double[] arc = new double[] {1,1,1};
+
+  SimplexOptimizer optimizer = new SimplexOptimizer(1e-10, 1e-30);
+
+  public Pose2d calcPoint(double[] arc) {
+    PointValuePair solution = optimizer.optimize((OptimizationData) new UnivariateObjectiveFunction(new UnivariateFunctionArcDistance(arc)), (OptimizationData) GoalType.MINIMIZE,
+        (OptimizationData) new NelderMeadSimplex(5), (OptimizationData) new InitialGuess(arc));
+    Rotation2d rotationPlaceHolder = new Rotation2d(0.0, 0.0); // placeholder
+    return new Pose2d(solution.getPoint()[0], solution.getPoint()[1], rotationPlaceHolder);
+  }
+
+  public Command calcPath(Pose2d targetPose)
+  {
+    ArrayList<Translation2d> list = new ArrayList<Translation2d>();
+    list.add(new Translation2d(getPose().getX(), getPose().getY()));
+    list.add(new Translation2d(targetPose.getX(),targetPose.getY()));
+    return new PathfindHolonomic(
+        targetPose,
+        null,
+        this::getPose, // Robot pose supplier
+        this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelative,
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants(Constants.ModuleConstants.kDrivingP,
+                Constants.ModuleConstants.kDrivingI, Constants.ModuleConstants.kDrivingD), // Translation PID constants
+            new PIDConstants(Constants.ModuleConstants.kTurningP,
+                Constants.ModuleConstants.kTurningI, Constants.ModuleConstants.kTurningD), // Rotation PID constants
+            Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+            Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest
+                                                  // module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options here
+        ),
+        this // Reference to this subsystem to set requirements
+    );
   }
 }
