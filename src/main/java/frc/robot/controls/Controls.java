@@ -22,14 +22,14 @@ import frc.robot.controls.Input.InputMap;
 import frc.robot.controls.Input.PlayStation;
 import frc.robot.controls.Input.Xbox;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.FloorIntake;
 import frc.utils.DebindableTrigger;
 import frc.robot.subsystems.Flinger;
 
 public final class Controls {
 
 	public static final Flinger m_flinger = new Flinger();
-	public static final Intake m_intake = new Intake();
+	public static final FloorIntake m_intake = new FloorIntake();
 	public final static DriveSubsystem m_driveTrain = new DriveSubsystem();
 
 	public static enum FeatureLevel {
@@ -143,7 +143,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller));
 		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Single Xbox Control Scheme Registered");
 		
 	}
@@ -165,7 +165,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> PlayStation.Digital.RB.getValueOf(controller));
 		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Single PlayStation Control Scheme Registered");
 	}
 
@@ -187,7 +187,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller1));
 		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Dual Xbox Control Scheme Registered");
 	}
 
@@ -209,7 +209,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.B2.getValueOf(rstick));
 		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Arcade Board Simple Control Scheme Registered");
 	}
 
@@ -232,7 +232,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.TB.getValueOf(rstick));
 		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Arcade Board Full Control Scheme Registered");
 	}
 
@@ -256,7 +256,7 @@ public final class Controls {
 		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
 		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.TB.getValueOf(rstick));
 		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_intake));
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Competition Board Control Scheme Registered");
 	}
 }

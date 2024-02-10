@@ -42,7 +42,7 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param command the command to start
      * @return this trigger, so calls can be chained
      */
-    public DebindableTrigger onTrue(Command command) {
+    public Trigger onTrue(Command command) {
       requireNonNullParam(command, "command", "onTrue");
       m_loop.bind(
           new Runnable() {
@@ -59,7 +59,7 @@ public class DebindableTrigger implements BooleanSupplier{
               m_pressedLast = pressed;
             }
           });
-        return this;
+        return getAsTrigger();
     }
   
     /**
@@ -68,7 +68,7 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param command the command to start
      * @return this trigger, so calls can be chained
      */
-    public DebindableTrigger onFalse(Command command) {
+    public Trigger onFalse(Command command) {
       requireNonNullParam(command, "command", "onFalse");
       m_loop.bind(
           new Runnable() {
@@ -85,7 +85,7 @@ public class DebindableTrigger implements BooleanSupplier{
               m_pressedLast = pressed;
             }
           });
-        return this;
+        return getAsTrigger();
     }
   
     /**
@@ -98,7 +98,7 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param command the command to start
      * @return this trigger, so calls can be chained
      */
-    public DebindableTrigger whileTrue(Command command) {
+    public Trigger whileTrue(Command command) {
       requireNonNullParam(command, "command", "whileTrue");
       m_loop.bind(
           new Runnable() {
@@ -117,7 +117,7 @@ public class DebindableTrigger implements BooleanSupplier{
               m_pressedLast = pressed;
             }
           });
-        return this;
+        return getAsTrigger();
     }
   
     /**
@@ -130,7 +130,7 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param command the command to start
      * @return this trigger, so calls can be chained
      */
-    public DebindableTrigger whileFalse(Command command) {
+    public Trigger whileFalse(Command command) {
       requireNonNullParam(command, "command", "whileFalse");
       m_loop.bind(
           new Runnable() {
@@ -149,7 +149,7 @@ public class DebindableTrigger implements BooleanSupplier{
               m_pressedLast = pressed;
             }
           });
-        return this;
+        return getAsTrigger();
     }
   
     /**
@@ -158,7 +158,7 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param command the command to toggle
      * @return this trigger, so calls can be chained
      */
-    public DebindableTrigger toggleOnTrue(Command command) {
+    public Trigger toggleOnTrue(Command command) {
       requireNonNullParam(command, "command", "toggleOnTrue");
       m_loop.bind(
           new Runnable() {
@@ -179,7 +179,7 @@ public class DebindableTrigger implements BooleanSupplier{
               m_pressedLast = pressed;
             }
           });
-      return this;
+      return getAsTrigger();
     }
   
     /**
@@ -188,7 +188,7 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param command the command to toggle
      * @return this trigger, so calls can be chained
      */
-    public DebindableTrigger toggleOnFalse(Command command) {
+    public Trigger toggleOnFalse(Command command) {
       requireNonNullParam(command, "command", "toggleOnFalse");
       m_loop.bind(
           new Runnable() {
@@ -209,7 +209,7 @@ public class DebindableTrigger implements BooleanSupplier{
               m_pressedLast = pressed;
             }
           });
-      return this;
+      return getAsTrigger();
     }
     
     public Trigger getAsTrigger()
@@ -228,8 +228,8 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param trigger the condition to compose with
      * @return A trigger which is active when both component triggers are active.
      */
-    public DebindableTrigger and(BooleanSupplier trigger) {
-      return new DebindableTrigger(() -> m_condition.getAsBoolean() && trigger.getAsBoolean());
+    public Trigger and(BooleanSupplier trigger) {
+      return new Trigger(() -> m_condition.getAsBoolean() && trigger.getAsBoolean());
     }
   
     /**
@@ -238,8 +238,8 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param trigger the condition to compose with
      * @return A trigger which is active when either component trigger is active.
      */
-    public DebindableTrigger or(BooleanSupplier trigger) {
-      return new DebindableTrigger(() -> m_condition.getAsBoolean() || trigger.getAsBoolean());
+    public Trigger or(BooleanSupplier trigger) {
+      return new Trigger(() -> m_condition.getAsBoolean() || trigger.getAsBoolean());
     }
   
     /**
@@ -248,8 +248,8 @@ public class DebindableTrigger implements BooleanSupplier{
      *
      * @return the negated trigger
      */
-    public DebindableTrigger negate() {
-      return new DebindableTrigger(() -> !m_condition.getAsBoolean());
+    public Trigger negate() {
+      return new Trigger(() -> !m_condition.getAsBoolean());
     }
   
     /**
@@ -259,7 +259,7 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param seconds The debounce period.
      * @return The debounced trigger (rising edges debounced only)
      */
-    public DebindableTrigger debounce(double seconds) {
+    public Trigger debounce(double seconds) {
       return debounce(seconds, Debouncer.DebounceType.kRising);
     }
   
@@ -271,8 +271,8 @@ public class DebindableTrigger implements BooleanSupplier{
      * @param type The debounce type.
      * @return The debounced trigger.
      */
-    public DebindableTrigger debounce(double seconds, Debouncer.DebounceType type) {
-      return new DebindableTrigger(
+    public Trigger debounce(double seconds, Debouncer.DebounceType type) {
+      return new Trigger(
           new BooleanSupplier() {
             final Debouncer m_debouncer = new Debouncer(seconds, type);
   
