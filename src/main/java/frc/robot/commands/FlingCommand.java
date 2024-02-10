@@ -48,7 +48,7 @@ public class FlingCommand extends Command {
 
     @Override
     public void execute() {
-        if (!this.m_intake.getMidSensor()&&timer.hasElapsed(0)) {
+        if (!this.m_intake.getMidSensor()&&!timer.hasElapsed(2)) {
             //Backs the ring until the mid sensor is false, then starts timer
             timer.start();
             this.m_intake.intake(0);

@@ -121,9 +121,9 @@ public final class Controls {
 		m_driveTrain.removeDefaultCommand();
 		m_flinger.removeDefaultCommand();
 		m_intake.removeDefaultCommand();
-		for (DebindableTrigger trigger : triggerList) {
+		/*for (DebindableTrigger trigger : triggerList) {
 			trigger.debind();
-		}
+		}*/
 	}
 
 	// single xbox controller
