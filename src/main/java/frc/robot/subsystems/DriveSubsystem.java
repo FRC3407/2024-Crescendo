@@ -23,7 +23,7 @@ import org.apache.commons.math3.optimization.direct.NelderMeadSimplex;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathfindHolonomic;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.*;
 
@@ -36,6 +36,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.*;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -105,19 +106,18 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Field", m_field);
     // Configure AutoBuilder last
     AutoBuilder.configureHolonomic(
-        this::getPose, // Robot pose supplier
-        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-        this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            new PIDConstants(Constants.ModuleConstants.kDrivingP,
-                Constants.ModuleConstants.kDrivingI, Constants.ModuleConstants.kDrivingD), // Translation PID constants
-            new PIDConstants(Constants.ModuleConstants.kTurningP,
-                Constants.ModuleConstants.kTurningI, Constants.ModuleConstants.kTurningD), // Rotation PID constants
-            Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-            Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest
-                                                  // module.
-            new ReplanningConfig() // Default path replanning config. See the API for the options here
+      this::getPose, // Robot pose supplier
+      this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        new PIDConstants(Constants.ModuleConstants.kPPDrivingP, 
+          Constants.ModuleConstants.kPPDrivingI, Constants.ModuleConstants.kPPDrivingD), // Translation PID constants
+        new PIDConstants(Constants.ModuleConstants.kPPTurningP, 
+          Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD), // Rotation PID constants
+        Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+        Constants.DriveConstants.kBaseRadius, // Drive base radius in metbers. Distance from robot center to furthest module.
+        new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         () -> {
           // Boolean supplier that controls when the path will be mirrored for the red
@@ -133,6 +133,21 @@ public class DriveSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
     );
+    // Load the path we want to pathfind to and follow
+    PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
+
+    // Create the constraints to use while pathfinding. The constraints defined in the path will only be used for the path.
+    PathConstraints constraints = new PathConstraints(
+        3.0, 4.0,
+        Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+    // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
+        path,
+        constraints,
+        3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+    );
+
   }
 
   @Override
@@ -148,6 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
         }));
     SmartDashboard.putNumber("X in meters", getPose().getX());
     SmartDashboard.putNumber("Y in meters", getPose().getY());
+    SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0)));
   }
 
   /**
