@@ -144,7 +144,7 @@ public class DriveSubsystem extends SubsystemBase {
         }));
     SmartDashboard.putNumber("X in meters", getPose().getX());
     SmartDashboard.putNumber("Y in meters", getPose().getY());
-    SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0)));
+    SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
   }
 
   /**
