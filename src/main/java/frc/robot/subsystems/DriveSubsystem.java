@@ -114,6 +114,8 @@ public class DriveSubsystem extends SubsystemBase {
       },
       this // Reference to this subsystem to set requirements
     );
+
+
     // Load the path we want to pathfind to and follow
     PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
 
@@ -128,7 +130,6 @@ public class DriveSubsystem extends SubsystemBase {
         constraints,
         3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     );
-
   }
 
   @Override
@@ -144,7 +145,7 @@ public class DriveSubsystem extends SubsystemBase {
         }));
     SmartDashboard.putNumber("X in meters", getPose().getX());
     SmartDashboard.putNumber("Y in meters", getPose().getY());
-    SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0)));
+    SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
   }
 
   /**

@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.List;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -28,9 +29,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.FlingCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.controls.ControlSchemeManager;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Flinger;
+import frc.robot.subsystems.FloorIntake;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -48,13 +53,20 @@ public class RobotContainer extends TimedRobot {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    FloorIntake intake = new FloorIntake();
+    Flinger flinger = new Flinger();
+
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
     Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.TESTING);
     this.controls.runInitialThread();
+
+    NamedCommands.registerCommand("intakeCommand", new IntakeCommand(flinger, intake));
+    NamedCommands.registerCommand("flingCommand", new FlingCommand(flinger, intake));
+  
   }
   
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("driveforward");
+    return new PathPlannerAuto("fling_df");
   }
 
   // /**
