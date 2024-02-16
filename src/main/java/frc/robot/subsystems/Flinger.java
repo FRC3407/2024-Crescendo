@@ -20,8 +20,8 @@ public class Flinger extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Flinger Encoder Velocity", flingerMotor.getEncoder().getVelocity());
-        SmartDashboard.putNumber("Flinger Target Velocity", getRPM());
+        SmartDashboard.putNumber("Flinger Encoder Velocity", getRPM());
+        SmartDashboard.putNumber("Flinger Target Velocity", getTargetRPM());
     }
 
     @Override
@@ -39,9 +39,14 @@ public class Flinger extends SubsystemBase {
         targetSpeed = speed;
     }
 
-    public double getRPM()
+    public double getTargetRPM()
     {
         return targetSpeed*5500;
+    }
+
+    public double getRPM()
+    {
+        return flingerMotor.getEncoder().getVelocity();
     }
 
 }
