@@ -1,5 +1,9 @@
 package frc.robot.controls;
 
+import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.wpilibj.event.EventLoop;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -7,11 +11,12 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonBox;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FlingCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ShootCommand;
 import frc.robot.Robot;
 import frc.robot.controls.ControlSchemeManager.AmbiguousSolution;
 import frc.robot.controls.ControlSchemeManager.AutomatedTester;
@@ -23,13 +28,14 @@ import frc.robot.controls.Input.InputMap;
 import frc.robot.controls.Input.PlayStation;
 import frc.robot.controls.Input.Xbox;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.FloorIntake;
+import frc.utils.DebindableTrigger;
+import frc.robot.subsystems.Flinger;
 
 public final class Controls {
 
-	public static final Shooter m_shooter = new Shooter();
-	public static final Intake m_intake = new Intake();
+	public static final Flinger m_flinger = new Flinger();
+	public static final FloorIntake m_intake = new FloorIntake();
 	public final static DriveSubsystem m_driveTrain = new DriveSubsystem();
 
 	public static enum FeatureLevel {
@@ -111,170 +117,153 @@ public final class Controls {
 	}
 
 	private static ControlScheme buildScheme(String name, ControlSchemeBase.Setup_F setup, InputMap... reqs) {
-		return new ControlScheme(name, new AutomatedTester(reqs), setup, Controls::deScheduleActive);
+		return new ControlScheme(name, new AutomatedTester(reqs), setup);
 	}
 
-	private static void deScheduleActive() {
-		for (Command c : active_commands) {
-			c.cancel();
-		}
+	private static ArrayList<DebindableTrigger> triggerList = new ArrayList<DebindableTrigger>();
+
+	private static void deScheduleCommands()
+	{
+		m_driveTrain.removeDefaultCommand();
+		m_flinger.removeDefaultCommand();
+		m_intake.removeDefaultCommand();
+		/*for (DebindableTrigger trigger : triggerList) {
+			trigger.debind();
+		}*/
 	}
 
 	// single xbox controller
 	private static void singleXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		deScheduleCommands();
 		InputDevice controller = inputs[0];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Xbox.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				Xbox.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				Xbox.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				Xbox.Analog.LT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Analog.RT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
 				Xbox.Digital.A.getSupplier(controller),
 				Xbox.Digital.B.getSupplier(controller));
 		// Command path = new PathCommand(m_driveTrain,)
 		m_driveTrain.setDefaultCommand(drive_control);
-		Command intake_control = new IntakeCommand(m_intake,
-				Xbox.Digital.LB.getSupplier(controller));
-		m_intake.setDefaultCommand(intake_control);
-		Command shooter_control = new ShootCommand(m_shooter,
-				Xbox.Digital.RB.getSupplier(controller),
-				Xbox.Digital.LB.getSupplier(controller));
-		m_shooter.setDefaultCommand(shooter_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Xbox.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Single Xbox Control Scheme Registered");
+		
 	}
 
 	// single PlayStation controller
 	private static void singlePlayStation(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		deScheduleCommands();
 		InputDevice controller = inputs[0];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				PlayStation.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				PlayStation.Analog.RT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Digital.X.getSupplier(controller),
 				PlayStation.Digital.O.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
-		Command intake_control = new IntakeCommand(m_intake,
-				PlayStation.Digital.LB.getSupplier(controller));
-		m_intake.setDefaultCommand(intake_control);
-		Command shooter_control = new ShootCommand(m_shooter,
-				PlayStation.Digital.RB.getSupplier(controller),
-				PlayStation.Digital.LB.getSupplier(controller));
-		m_shooter.setDefaultCommand(shooter_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> PlayStation.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> PlayStation.Digital.RB.getValueOf(controller));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Single PlayStation Control Scheme Registered");
 	}
 
 	// dual xbox controllers
 	private static void dualXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		deScheduleCommands();
 		InputDevice controller1 = inputs[0];
 		InputDevice controller2 = inputs[1];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Xbox.Analog.RX.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
 				Xbox.Analog.RY.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
 				Xbox.Analog.LX.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
 				Xbox.Analog.LT.getDriveInputSupplier(controller1, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Analog.RT.getDriveInputSupplier(controller1, OIConstants.kTriggerDeadband, 1.0, 1.0),
 				Xbox.Digital.A.getSupplier(controller1),
 				Xbox.Digital.B.getSupplier(controller1));
 		m_driveTrain.setDefaultCommand(drive_control);
-		Command intake_control = new IntakeCommand(m_intake,
-				Xbox.Digital.LB.getSupplier(controller2));
-		m_intake.setDefaultCommand(intake_control);
-		Command shooter_control = new ShootCommand(m_shooter,
-				Xbox.Digital.RB.getSupplier(controller2),
-				Xbox.Digital.LB.getSupplier(controller2));
-		m_shooter.setDefaultCommand(shooter_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Xbox.Analog.RT.getValueOf(controller1)>=OIConstants.kTriggerDeadband);
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller1));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Dual Xbox Control Scheme Registered");
 	}
 
 	// simple 2-joystick arcade board
 	private static void arcadeBoardSimple(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		deScheduleCommands();
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.TRI.getSupplier(rstick),
 				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		Command intake_control = new IntakeCommand(m_intake,
-				Attack3.Digital.B1.getSupplier(lstick));
-		m_intake.setDefaultCommand(intake_control);
-		Command shooter_control = new ShootCommand(m_shooter,
-				Attack3.Digital.B1.getSupplier(rstick),
-				Attack3.Digital.B1.getSupplier(lstick));
-		m_shooter.setDefaultCommand(shooter_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.B2.getValueOf(rstick));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Arcade Board Simple Control Scheme Registered");
 	}
 
 	// 2 joysticks plus the buttonbox
 	private static void arcadeBoardFull(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		deScheduleCommands();
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
 		InputDevice bbox = inputs[2];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.TRI.getSupplier(rstick),
 				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		Command intake_control = new IntakeCommand(m_intake,
-				Attack3.Digital.B1.getSupplier(lstick));
-		m_intake.setDefaultCommand(intake_control);
-		Command shooter_control = new ShootCommand(m_shooter,
-				Attack3.Digital.B1.getSupplier(rstick),
-				Attack3.Digital.B1.getSupplier(lstick));
-		m_shooter.setDefaultCommand(shooter_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.TB.getValueOf(rstick));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Arcade Board Full Control Scheme Registered");
 	}
 
 	// full control board plus an extra controller
 	private static void competitionBoard(Robot robot, DriveMode drivemode, InputDevice... inputs) {
+		deScheduleCommands();
 		InputDevice lstick = inputs[0];
 		InputDevice rstick = inputs[1];
 		InputDevice bbox = inputs[2];
 		InputDevice controller = inputs[3];
-		m_driveTrain.removeDefaultCommand();
-		m_shooter.removeDefaultCommand();
-		m_intake.removeDefaultCommand();
 		Command drive_control = new DriveCommand(m_driveTrain,
 				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.TRI.getSupplier(rstick),
 				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		Command intake_control = new IntakeCommand(m_intake,
-				Attack3.Digital.B1.getSupplier(lstick));
-		m_intake.setDefaultCommand(intake_control);
-		Command shooter_control = new ShootCommand(m_shooter,
-				Attack3.Digital.B1.getSupplier(rstick),
-				Attack3.Digital.B1.getSupplier(lstick));
-		m_shooter.setDefaultCommand(shooter_control);
+		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
+		triggerList.add(flingTrigger);
+		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
+		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.TB.getValueOf(rstick));
+		triggerList.add(intakeTrigger);
+		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
 		System.out.println("Competition Board Control Scheme Registered");
 	}
 }

@@ -29,22 +29,24 @@ import frc.robot.controls.Input.InputMap;
  */
 public final class Constants {
 
-  public static final class ShooterConstants {
-    public static final double SHOOTER_SHOOT_SPEED = 3.0;
-    public static final double SHOOTER_INTAKE_SPEED = 1.0;
-    public static final int kShootBot = 10;
-    public static final int kShootTop = 11;
+  public static final class FlingerConstants {
+    public static final double FLINGER_SHOOT_SPEED = 1.0;
+    public static final double FLINGER_INTAKE_SPEED = -0.5;
+    public static final int flingerCanID = 11;
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 1.0;
-    public static final int kIntake = 12;
+    public static final double INTAKE_SPEED = 0.25;
+    public static final int motorCanID = 10;
+    public static final int bottomDIOSensor = 1;
+    public static final int middleDIOSensor = 2;
+    public static final int topDIOSensor = 3;
   }
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 6.9;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
