@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.List;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -21,6 +22,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -45,7 +48,7 @@ import frc.robot.subsystems.FloorIntake;
  */
 
 public class RobotContainer extends TimedRobot {
-
+  private final SendableChooser<Command> autoChooser;
   private final ControlSchemeManager controls = new ControlSchemeManager();
   private final Robot robot = new Robot();
 
@@ -55,10 +58,15 @@ public class RobotContainer extends TimedRobot {
   public RobotContainer() {
     FloorIntake intake = new FloorIntake();
     Flinger flinger = new Flinger();
+    autoChooser = AutoBuilder.buildAutoChooser();
+
 
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
     Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.TESTING);
     this.controls.runInitialThread();
+
+    SmartDashboard.putData("left_drive_f", autoChooser);
+
 
     NamedCommands.registerCommand("intakeCommand", new IntakeCommand(flinger, intake));
     NamedCommands.registerCommand("flingCommand", new FlingCommand(flinger, intake));
@@ -66,7 +74,8 @@ public class RobotContainer extends TimedRobot {
   }
   
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("left_drive_f");
+    // return new PathPlannerAuto("left_drive_f");
+    return autoChooser.getSelected();
   }
 
   // /**
