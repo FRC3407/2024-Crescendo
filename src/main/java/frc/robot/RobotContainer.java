@@ -36,7 +36,7 @@ import frc.robot.controls.Controls;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
-
+import frc.robot.commands.AutoGoCommand;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
