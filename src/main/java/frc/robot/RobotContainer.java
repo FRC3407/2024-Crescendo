@@ -66,7 +66,7 @@ public class RobotContainer extends TimedRobot {
   }
   
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("left_drive_f");
+    return new PathPlannerAuto("l_drive_f");
   }
 
   // /**

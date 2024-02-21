@@ -8,11 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3950925173499227,
-        "y": 4.6548560950028195
+        "x": 1.8413320937012951,
+        "y": 4.096779268725046
       },
       "isLocked": false,
       "linkedName": "beginning pos right"
+    },
+    {
+      "anchor": {
+        "x": 2.4078958148401552,
+        "y": 4.109517305630104
+      },
+      "prevControl": {
+        "x": 2.231931382169729,
+        "y": 4.0658086300397915
+      },
+      "nextControl": {
+        "x": 2.990197417121761,
+        "y": 4.254158080152506
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +36,8 @@
         "y": 5.53
       },
       "prevControl": {
-        "x": 1.3366633613457033,
-        "y": 5.015169223695506
+        "x": 1.6288706982742225,
+        "y": 5.67843632357103
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +46,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "fling",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "flingCommand"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 1.52,
-        "y": 7.0
+        "y": 4.109517305630104
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8020858026392936,
-        "y": 7.0
+        "x": 2.0628804071766402,
+        "y": 4.109517305630104
       },
       "isLocked": false,
-      "linkedName": "beginning pos left"
+      "linkedName": "beginning pos right"
     },
     {
       "anchor": {
-        "x": 2.486585220553886,
-        "y": 6.205655341853024
+        "x": 2.43,
+        "y": 4.109517305630104
       },
       "prevControl": {
-        "x": 2.486585220553886,
-        "y": 6.803694825277374
+        "x": 2.012804548779699,
+        "y": 4.109517305630104
       },
       "nextControl": {
-        "x": 2.486585220553886,
-        "y": 5.481670044568435
+        "x": 2.8471954512203013,
+        "y": 4.109517305630104
       },
       "isLocked": false,
       "linkedName": null
@@ -36,38 +36,39 @@
         "y": 5.531293435066112
       },
       "prevControl": {
-        "x": 1.849019627339374,
-        "y": 5.531293435066112
-      },
-      "nextControl": {
-        "x": 0.6490196273393738,
-        "y": 5.531293435066112
-      },
-      "isLocked": false,
-      "linkedName": "fling pos"
-    },
-    {
-      "anchor": {
-        "x": 1.52,
-        "y": 7.0
-      },
-      "prevControl": {
-        "x": 1.2039479074200776,
-        "y": 6.418116737280097
+        "x": 1.7232979851306993,
+        "y": 5.11187260243217
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "beginning pos left"
+      "linkedName": "fling pos"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
+      "name": "wait",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 3.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "fling",
       "waypointRelativePos": 2.0,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
@@ -82,21 +83,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.75,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.9371012669783,
+    "rotation": -179.00074910780626,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "left",
+  "folder": "right",
   "previewStartingState": {
-    "rotation": 179.53284007187642,
+    "rotation": 179.6930713048201,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

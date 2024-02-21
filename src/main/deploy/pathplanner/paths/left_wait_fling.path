@@ -55,9 +55,25 @@
         "x": 1.1885895924188925,
         "y": 5.52155524239874
       },
-      "nextControl": null,
+      "nextControl": {
+        "x": 1.3094496622598553,
+        "y": 5.52155524239874
+      },
       "isLocked": false,
       "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.52,
+        "y": 7.0
+      },
+      "prevControl": {
+        "x": 1.2511615508483158,
+        "y": 6.6384470732785426
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "beginning pos left"
     }
   ],
   "rotationTargets": [],
@@ -112,7 +128,7 @@
   "reversed": false,
   "folder": "left",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 179.2473184083956,
     "velocity": 0
   },
   "useDefaultConstraints": false
