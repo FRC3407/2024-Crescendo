@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.2490196273393739,
+        "y": 5.531293435066112
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2490196273393757,
+        "y": 5.531293435066112
+      },
+      "isLocked": false,
+      "linkedName": "fling pos"
+    },
+    {
+      "anchor": {
+        "x": 2.388388169421654,
+        "y": 5.511817049731372
+      },
+      "prevControl": {
+        "x": 1.388388169421654,
+        "y": 5.511817049731372
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "fling",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "flingCommand"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.75,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 179.81683421524636,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "middle",
+  "previewStartingState": {
+    "rotation": 179.3811065079477,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

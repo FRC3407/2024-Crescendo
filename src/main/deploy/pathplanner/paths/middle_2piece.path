@@ -1,0 +1,120 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.2490196273393739,
+        "y": 5.53
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.519019627339374,
+        "y": 5.53
+      },
+      "isLocked": false,
+      "linkedName": "fling pos"
+    },
+    {
+      "anchor": {
+        "x": 2.622104793438532,
+        "y": 5.53
+      },
+      "prevControl": {
+        "x": 2.352104793438532,
+        "y": 5.53
+      },
+      "nextControl": {
+        "x": 2.892104793438532,
+        "y": 5.53
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.2490196273393739,
+        "y": 5.53
+      },
+      "prevControl": {
+        "x": 1.1091490358886718,
+        "y": 5.53
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "fling pos"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "fling",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "flingCommand"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intakeCommand"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "fling2",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "flingCommand"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -179.4222788221426,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "middle",
+  "previewStartingState": {
+    "rotation": 179.7886100046208,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
