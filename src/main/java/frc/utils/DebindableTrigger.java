@@ -283,11 +283,11 @@ public class DebindableTrigger implements BooleanSupplier{
           });
     }
 
-    /**
-     * Debinds all runnables from m_loop
-     */ 
-    public void debind()
-    {
-        m_loop.clear();
-    }
+    // /**
+    //  * Debinds all runnables from m_loop
+    //  */ 
+    // public void debind()
+    // {
+    //     m_loop.clear();
+    // }
   }
