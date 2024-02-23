@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2490196273393739,
-        "y": 5.531293435066112
+        "x": 1.52,
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.519019627339374,
+        "x": 1.441310594286269,
+        "y": 6.464912041146633
+      },
+      "isLocked": false,
+      "linkedName": "beginning pos left"
+    },
+    {
+      "anchor": {
+        "x": 1.2490196273393739,
         "y": 5.531293435066112
+      },
+      "prevControl": {
+        "x": 1.3591847953385967,
+        "y": 6.06638139391948
+      },
+      "nextControl": {
+        "x": 1.138854459340151,
+        "y": 4.996205476212744
       },
       "isLocked": false,
       "linkedName": "fling pos"
     },
     {
       "anchor": {
-        "x": 2.622104793438532,
-        "y": 5.53
+        "x": 2.533798863982124,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 2.352104793438532,
-        "y": 5.53
+        "x": 2.249446041658223,
+        "y": 6.631343284321051
       },
       "nextControl": {
-        "x": 2.892104793438532,
-        "y": 5.53
+        "x": 2.818151686306025,
+        "y": 7.368656715678949
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +52,28 @@
         "y": 5.531293435066112
       },
       "prevControl": {
-        "x": 1.1091490358886715,
-        "y": 5.531293435066112
+        "x": 1.3911960385013247,
+        "y": 5.74295391512454
+      },
+      "nextControl": {
+        "x": 1.106843216177423,
+        "y": 5.319632955007684
+      },
+      "isLocked": false,
+      "linkedName": "fling pos"
+    },
+    {
+      "anchor": {
+        "x": 1.52,
+        "y": 7.0
+      },
+      "prevControl": {
+        "x": 1.652477519988342,
+        "y": 6.921728933847972
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "fling pos"
+      "linkedName": "beginning pos left"
     }
   ],
   "rotationTargets": [],
@@ -49,9 +81,9 @@
   "eventMarkers": [
     {
       "name": "fling",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 1.1,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
@@ -66,9 +98,9 @@
     },
     {
       "name": "intake",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2.1,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
@@ -83,37 +115,30 @@
     },
     {
       "name": "fling2",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 3.05,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "flingCommand"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.5,
+    "maxVelocity": 0.75,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.4222788221426,
+    "rotation": -179.43273359014202,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "middle",
+  "folder": "left",
   "previewStartingState": {
-    "rotation": 179.7886100046208,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": false

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.52,
-      "y": 4.109517305630104
+      "x": 1.2490196273393739,
+      "y": 5.53
     },
-    "rotation": 180.0
+    "rotation": -178.8709256019058
   },
   "command": {
     "type": "sequential",
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "right_fling"
+            "pathName": "middle_2piece"
           }
         }
       ]
     }
   },
-  "folder": "right_autos",
+  "folder": "middle_autos",
   "choreoAuto": false
 }

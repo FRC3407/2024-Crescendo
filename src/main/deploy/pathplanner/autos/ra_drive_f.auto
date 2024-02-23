@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.52,
-      "y": 7.0
+      "y": 4.109517305630104
     },
     "rotation": 0
   },
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "left_drive_f"
+            "pathName": "right_drive_f"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "right_autos",
   "choreoAuto": false
 }

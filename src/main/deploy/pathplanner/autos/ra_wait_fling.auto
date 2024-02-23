@@ -5,7 +5,7 @@
       "x": 1.52,
       "y": 4.109517305630104
     },
-    "rotation": 180.0
+    "rotation": 179.45343963161937
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "right_fling"
+            "pathName": "right_wait_fling"
           }
         }
       ]
