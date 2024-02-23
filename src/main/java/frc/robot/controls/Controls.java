@@ -121,9 +121,9 @@ public final class Controls {
 		m_driveTrain.removeDefaultCommand();
 		m_flinger.removeDefaultCommand();
 		m_intake.removeDefaultCommand();
-		/*for (DebindableTrigger trigger : triggerList) {
-			trigger.debind();
-		}*/
+		// for (DebindableTrigger trigger : triggerList) {
+		// 	trigger.debind();
+		// }
 	}
 
 	// single xbox controller
@@ -135,7 +135,6 @@ public final class Controls {
 				Xbox.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				Xbox.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				Xbox.Analog.LT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Digital.A.getSupplier(controller),
 				Xbox.Digital.B.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
 		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Xbox.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
@@ -157,7 +156,6 @@ public final class Controls {
 				PlayStation.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				PlayStation.Digital.X.getSupplier(controller),
 				PlayStation.Digital.O.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
 		DebindableTrigger flingTrigger = new DebindableTrigger(() -> PlayStation.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
@@ -179,7 +177,6 @@ public final class Controls {
 				Xbox.Analog.RY.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
 				Xbox.Analog.LX.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
 				Xbox.Analog.LT.getDriveInputSupplier(controller1, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Digital.A.getSupplier(controller1),
 				Xbox.Digital.B.getSupplier(controller1));
 		m_driveTrain.setDefaultCommand(drive_control);
 		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Xbox.Analog.RT.getValueOf(controller1)>=OIConstants.kTriggerDeadband);
@@ -201,7 +198,6 @@ public final class Controls {
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
 		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
@@ -224,7 +220,6 @@ public final class Controls {
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
 		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
@@ -248,7 +243,6 @@ public final class Controls {
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.B2.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
 		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));

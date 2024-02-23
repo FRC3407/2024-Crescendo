@@ -18,29 +18,26 @@ public class DriveCommand extends Command {
   private final DoubleSupplier m_linearXSupplier;
   private final DoubleSupplier m_linearYSupplier;
   private final DoubleSupplier m_angularSpeedSupplier;
-  private final BooleanSupplier m_setXSupplier;
   private final BooleanSupplier m_zeroHeadingSupplier;
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier, BooleanSupplier m_setXSupplier, BooleanSupplier m_zeroHeadingSupplier) {
+      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier, BooleanSupplier m_zeroHeadingSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
     this.m_angularSpeedSupplier = m_angularSpeedSupplier;
     this.m_linearBoostSupplier = m_linearBoostSupplier;
-    this.m_setXSupplier = m_setXSupplier;
     this.m_zeroHeadingSupplier = m_zeroHeadingSupplier;
     this.addRequirements(m_driveSubsystem);
   }
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier, BooleanSupplier m_setXSupplier, BooleanSupplier m_zeroHeadingSupplier) {
+      DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier, BooleanSupplier m_zeroHeadingSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
     this.m_angularSpeedSupplier = m_angularSpeedSupplier;
     this.m_linearBoostSupplier = () -> m_linearBoostSupplier.getAsDouble() >= 0.5;
-    this.m_setXSupplier = m_setXSupplier;
     this.m_zeroHeadingSupplier = m_zeroHeadingSupplier;
     this.addRequirements(m_driveSubsystem);
   }
@@ -64,9 +61,6 @@ public class DriveCommand extends Command {
             OIConstants.kDriveDeadband),
         -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband),
         true, true);
-    if (m_setXSupplier.getAsBoolean()) {
-      m_driveSubsystem.setX();
-    }
     if (m_zeroHeadingSupplier.getAsBoolean()) {
       m_driveSubsystem.zeroHeading();
     }
