@@ -49,7 +49,7 @@ public class RobotContainer extends TimedRobot {
    */
   public RobotContainer() {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
-    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.TESTING);
+    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.COMPETITION);
     this.controls.runInitialThread();
   }
   

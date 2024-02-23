@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.utils.ClearableEventLoop;
 public class DebindableTrigger implements BooleanSupplier{
     private final BooleanSupplier m_condition;
     private final EventLoop m_loop;

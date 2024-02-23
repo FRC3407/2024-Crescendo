@@ -90,7 +90,6 @@ public class FlingCommand extends Command {
 
     public boolean readyToFire()
     {
-        System.out.println(rpmList.toString());
         double currentRPM = m_flinger.getRPM();
         rpmList.add(0, currentRPM);
         if(rpmList.size()!=10)
