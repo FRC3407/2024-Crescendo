@@ -57,7 +57,7 @@ public class RobotContainer extends TimedRobot {
     Flinger flinger = new Flinger();
 
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
-    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.TESTING);
+    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.COMPETITION);
     this.controls.runInitialThread();
 
     NamedCommands.registerCommand("intakeCommand", new IntakeCommand(flinger, intake));
