@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.utils.ClearableEventLoop;
 
 public class TriggerRunnable {
   private final BooleanSupplier m_condition;
@@ -19,6 +18,8 @@ public class TriggerRunnable {
   public static enum LoopType {
     onTrue,
     onFalse,
+    whileTrue,
+    whileFalse,
   }
 
   private final LoopType loopType;
@@ -40,6 +41,10 @@ public class TriggerRunnable {
       return onTrue();
     } else if (loopType == LoopType.onFalse) {
       return onFalse();
+    } else if (loopType == LoopType.whileTrue) {
+      return whileTrue();
+    } else if (loopType == LoopType.whileFalse) {
+      return whileFalse();
     }
     return false;
   }
@@ -84,136 +89,47 @@ public class TriggerRunnable {
     return false;
   }
 
-  // /**
-  // * Starts the given command whenever the condition changes from `true` to
-  // * `false`.
-  // *
-  // * @param command the command to start
-  // * @return this trigger, so calls can be chained
-  // */
-  // public Trigger onFalse(Command command) {
-  // requireNonNullParam(command, "command", "onFalse");
-  // m_loop.bind(
-  // new Runnable() {
-  // private boolean m_pressedLast = m_condition.getAsBoolean();
+  /**
+   * Starts the given command whenever the condition changes to `true` and
+   * cancels it when it changes to `false`.
+   *
+   * @param command the command to start
+   * @return boolean, true if the command was scheduled
+   */
+  public boolean whileTrue() {
+    boolean pressed = m_condition.getAsBoolean();
+    if (!m_pressedLast && pressed) {
+      m_pressedLast = pressed;
+      command.schedule();
+      return true;
+    } else if (m_pressedLast && !pressed) {
+      m_pressedLast = pressed;
+      command.cancel();
+      return false;
+    }
+    return false;
+  }
 
-  // @Override
-  // public void run() {
-  // boolean pressed = m_condition.getAsBoolean();
-
-  // if (m_pressedLast && !pressed) {
-  // command.schedule();
-  // }
-
-  // m_pressedLast = pressed;
-  // }
-  // });
-  // return getAsTrigger();
-  // }
-
-  // /**
-  // * Starts the given command when the condition changes to `true` and cancels
-  // it
-  // * when the condition
-  // * changes to `false`.
-  // *
-  // * <p>
-  // * Doesn't re-start the command if it ends while the condition is still
-  // `true`.
-  // * If the command
-  // * should restart, see {@link edu.wpi.first.wpilibj2.command.RepeatCommand}.
-  // *
-  // * @param command the command to start
-  // * @return this trigger, so calls can be chained
-  // */
-  // public Trigger whileTrue(Command command) {
-  // requireNonNullParam(command, "command", "whileTrue");
-  // m_loop.bind(
-  // new Runnable() {
-  // private boolean m_pressedLast = m_condition.getAsBoolean();
-
-  // @Override
-  // public void run() {
-  // boolean pressed = m_condition.getAsBoolean();
-
-  // if (!m_pressedLast && pressed) {
-  // command.schedule();
-  // } else if (m_pressedLast && !pressed) {
-  // command.cancel();
-  // }
-
-  // m_pressedLast = pressed;
-  // }
-  // });
-  // return getAsTrigger();
-  // }
-
-  // /**
-  // * Starts the given command when the condition changes to `false` and cancels
-  // it
-  // * when the
-  // * condition changes to `true`.
-  // *
-  // * <p>
-  // * Doesn't re-start the command if it ends while the condition is still
-  // `false`.
-  // * If the command
-  // * should restart, see {@link edu.wpi.first.wpilibj2.command.RepeatCommand}.
-  // *
-  // * @param command the command to start
-  // * @return this trigger, so calls can be chained
-  // */
-  // public Trigger whileFalse(Command command) {
-  // requireNonNullParam(command, "command", "whileFalse");
-  // m_loop.bind(
-  // new Runnable() {
-  // private boolean m_pressedLast = m_condition.getAsBoolean();
-
-  // @Override
-  // public void run() {
-  // boolean pressed = m_condition.getAsBoolean();
-
-  // if (m_pressedLast && !pressed) {
-  // command.schedule();
-  // } else if (!m_pressedLast && pressed) {
-  // command.cancel();
-  // }
-
-  // m_pressedLast = pressed;
-  // }
-  // });
-  // return getAsTrigger();
-  // }
-
-  // /**
-  // * Toggles a command when the condition changes from `false` to `true`.
-  // *
-  // * @param command the command to toggle
-  // * @return this trigger, so calls can be chained
-  // */
-  // public Trigger toggleOnTrue(Command command) {
-  // requireNonNullParam(command, "command", "toggleOnTrue");
-  // m_loop.bind(
-  // new Runnable() {
-  // private boolean m_pressedLast = m_condition.getAsBoolean();
-
-  // @Override
-  // public void run() {
-  // boolean pressed = m_condition.getAsBoolean();
-
-  // if (!m_pressedLast && pressed) {
-  // if (command.isScheduled()) {
-  // command.cancel();
-  // } else {
-  // command.schedule();
-  // }
-  // }
-
-  // m_pressedLast = pressed;
-  // }
-  // });
-  // return getAsTrigger();
-  // }
+    /**
+   * Starts the given command whenever the condition changes to `false` and
+   * cancels it when it changes to `true`.
+   *
+   * @param command the command to start
+   * @return boolean, true if the command was scheduled
+   */
+  public boolean whileFalse() {
+    boolean pressed = m_condition.getAsBoolean();
+    if (!m_pressedLast && pressed) {
+      m_pressedLast = pressed;
+      command.schedule();
+      return true;
+    } else if (m_pressedLast && !pressed) {
+      m_pressedLast = pressed;
+      command.cancel();
+      return false;
+    }
+    return false;
+  }
 
   // /**
   // * Toggles a command when the condition changes from `true` to `false`.

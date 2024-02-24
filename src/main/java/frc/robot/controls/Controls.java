@@ -63,15 +63,8 @@ public final class Controls {
 
 	private static ControlScheme[] getCompetitionSchemes(Robot robot) {
 		ControlScheme
-		// tank = buildScheme("Competition Controls (Tank Drive)", (InputDevice...
-		// i)->competitionBoard(robot, DriveMode.TANK, i), Attack3.Map, Attack3.Map,
-		// ButtonBox.Map, Xbox.Map),
-		// arcade = buildScheme("Competition Controls (Arcade Drive)", (InputDevice...
-		// i)->competitionBoard(robot, DriveMode.ARCADE, i), Attack3.Map, Attack3.Map,
-		// ButtonBox.Map, Xbox.Map);
-		defaultSwerve = buildScheme("Competition Controls (Default Swerve)",
-				(InputDevice... i) -> competitionBoard(robot, DriveMode.DEFAULTSWERVE, i), Attack3.Map, Attack3.Map,
-				ButtonBox.Map, Xbox.Map);
+		defaultSwerve = buildScheme("Full Arcade", (InputDevice... i) -> arcadeBoardFull(robot, DEFAULT_DRIVE_MODE, i),
+		Attack3.Map, Attack3.Map, ButtonBox.Map);
 		return DEFAULT_DRIVE_MODE == DriveMode.DEFAULTSWERVE ? new ControlScheme[] { defaultSwerve }
 				: new ControlScheme[] { null };
 	}
@@ -204,7 +197,7 @@ public final class Controls {
 				() -> Attack3.Digital.TRI.getValueOf(rstick),
 				new FlingCommand(m_flinger, m_intake)));
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
-				() -> Attack3.Digital.B2.getValueOf(rstick),
+				() -> Attack3.Digital.TB.getValueOf(rstick),
 				new IntakeCommand(m_flinger, m_intake)));
 		System.out.println("Arcade Board Simple Control Scheme Registered");
 	}
@@ -226,9 +219,8 @@ public final class Controls {
 				() -> Attack3.Digital.TRI.getValueOf(rstick),
 				new FlingCommand(m_flinger, m_intake)));
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
-				() -> Attack3.Digital.B2.getValueOf(rstick),
+				() -> Attack3.Digital.TB.getValueOf(rstick),
 				new IntakeCommand(m_flinger, m_intake)));
-		System.out.println("Arcade Board Full Control Scheme Registered");
 	}
 
 	// full control board plus an extra controller
@@ -243,7 +235,7 @@ public final class Controls {
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.B2.getSupplier(rstick));
+				Attack3.Digital.TB.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
 				() -> Attack3.Digital.TRI.getValueOf(rstick),
@@ -251,6 +243,5 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
 				() -> Attack3.Digital.B2.getValueOf(rstick),
 				new IntakeCommand(m_flinger, m_intake)));
-		System.out.println("Competition Board Control Scheme Registered");
 	}
 }

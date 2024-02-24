@@ -424,7 +424,6 @@ public class ControlSchemeManager implements Sendable {
 				ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
 				for (;;) {
 					scheduleContinuousWorker(buff);
-					Controls.pollCommands();
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -544,12 +543,9 @@ public class ControlSchemeManager implements Sendable {
 			if (compat >= 0) {
 				this.schemes.get(compat).setup(sel.devices);
 				this.applied = this.schemes.get(compat).getDesc();
-				System.out.println("ControlSchemeManager: Set up control scheme [" + this.schemes.get(compat).getDesc()
-						+ "] with inputs:");
 				for (InputDevice d : sel.devices) {
 					InputDevice.logDevice(d);
 				}
-				System.out.println();
 				return true;
 			} else if (compat < -1) {
 				System.out.println("ControlSchemeManager: Ambiguous case detected, please refine selection.");
@@ -559,12 +555,9 @@ public class ControlSchemeManager implements Sendable {
 			if (sel.devices != null && sel.devices.length > 0) {
 				this.schemes.get(id).setup(sel.devices);
 				this.applied = this.schemes.get(id).getDesc();
-				System.out.println("ControlSchemeManager: Set up control scheme [" + this.schemes.get(id).getDesc()
-						+ "] with inputs:");
 				for (InputDevice d : sel.devices) {
 					InputDevice.logDevice(d);
 				}
-				System.out.println();
 				return true;
 			}
 		}
@@ -614,12 +607,9 @@ public class ControlSchemeManager implements Sendable {
 					}
 					this.schemes.get(compat).setup(sel.devices);
 					this.applied = this.schemes.get(compat).getDesc();
-					System.out.println("ControlSchemeManager: Set up control scheme ["
-							+ this.schemes.get(compat).getDesc() + "] with inputs:");
 					for (InputDevice d : sel.devices) {
 						InputDevice.logDevice(d);
 					}
-					System.out.println();
 					sel.prev_active_id = compat;
 					sel.prev_selected = id;
 					sel.has_any = true;
@@ -634,12 +624,9 @@ public class ControlSchemeManager implements Sendable {
 					}
 					this.schemes.get(id).setup(sel.devices);
 					this.applied = this.schemes.get(id).getDesc();
-					System.out.println("ControlSchemeManager: Set up control scheme [" + this.schemes.get(id).getDesc()
-							+ "] with inputs:");
 					for (InputDevice d : sel.devices) {
 						InputDevice.logDevice(d);
 					}
-					System.out.println();
 					sel.prev_active_id = id;
 					sel.prev_selected = id;
 					sel.has_any = true;
