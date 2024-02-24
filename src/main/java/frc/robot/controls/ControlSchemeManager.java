@@ -424,6 +424,7 @@ public class ControlSchemeManager implements Sendable {
 				ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
 				for (;;) {
 					scheduleContinuousWorker(buff);
+					Controls.pollCommands();
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {

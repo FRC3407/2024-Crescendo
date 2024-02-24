@@ -65,7 +65,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (this.m_floorIntake.getMidSensor() && this.m_floorIntake.getBotSensor()) {
+        if ((this.m_floorIntake.getMidSensor() && this.m_floorIntake.getBotSensor() || Flinger.flingCommandActive)) {
             return true;
         } else {
             return false;

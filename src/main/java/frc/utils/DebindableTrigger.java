@@ -13,6 +13,7 @@ import frc.utils.ClearableEventLoop;
 public class DebindableTrigger implements BooleanSupplier{
     private final BooleanSupplier m_condition;
     private final EventLoop m_loop;
+    //private static enum LoopType
   
     /**
      * Creates a new trigger based on the given condition.

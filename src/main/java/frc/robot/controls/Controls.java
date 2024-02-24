@@ -23,7 +23,7 @@ import frc.robot.controls.Input.PlayStation;
 import frc.robot.controls.Input.Xbox;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FloorIntake;
-import frc.utils.DebindableTrigger;
+import frc.utils.TriggerRunnable;
 import frc.robot.subsystems.Flinger;
 
 public final class Controls {
@@ -43,8 +43,7 @@ public final class Controls {
 
 	public static final FeatureLevel DEFAULT_FEATURE_LEVEL = FeatureLevel.TESTING;
 	public static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.DEFAULTSWERVE;
-
-	private static Command[] active_commands;
+	private static ArrayList<TriggerRunnable> triggerList = new ArrayList<TriggerRunnable>();
 
 	private static ControlScheme[] getAllSchemes(Robot robot) {
 		return new ControlScheme[] {
@@ -114,16 +113,17 @@ public final class Controls {
 		return new ControlScheme(name, new AutomatedTester(reqs), setup);
 	}
 
-	private static ArrayList<DebindableTrigger> triggerList = new ArrayList<DebindableTrigger>();
-
-	private static void deScheduleCommands()
-	{
+	private static void deScheduleCommands() {
 		m_driveTrain.removeDefaultCommand();
 		m_flinger.removeDefaultCommand();
 		m_intake.removeDefaultCommand();
-		// for (DebindableTrigger trigger : triggerList) {
-		// 	trigger.debind();
-		// }
+		triggerList.clear();
+	}
+
+	public static void pollCommands() {
+		for (TriggerRunnable triggerRunnable : triggerList) {
+			triggerRunnable.poll();
+		}
 	}
 
 	// single xbox controller
@@ -137,14 +137,14 @@ public final class Controls {
 				Xbox.Analog.LT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
 				Xbox.Digital.B.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
-		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Xbox.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
-		triggerList.add(flingTrigger);
-		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
-		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller));
-		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
+				() -> Xbox.Analog.RT.getValueOf(controller) >= OIConstants.kTriggerDeadband,
+				new FlingCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
+				() -> Xbox.Digital.RB.getValueOf(controller),
+				new IntakeCommand(m_flinger, m_intake)));
 		System.out.println("Single Xbox Control Scheme Registered");
-		
+
 	}
 
 	// single PlayStation controller
@@ -158,12 +158,12 @@ public final class Controls {
 				PlayStation.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
 				PlayStation.Digital.O.getSupplier(controller));
 		m_driveTrain.setDefaultCommand(drive_control);
-		DebindableTrigger flingTrigger = new DebindableTrigger(() -> PlayStation.Analog.RT.getValueOf(controller)>=OIConstants.kTriggerDeadband);
-		triggerList.add(flingTrigger);
-		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
-		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> PlayStation.Digital.RB.getValueOf(controller));
-		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
+				() -> PlayStation.Analog.RT.getValueOf(controller) >= OIConstants.kTriggerDeadband,
+				new FlingCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
+				() -> PlayStation.Digital.RB.getValueOf(controller),
+				new IntakeCommand(m_flinger, m_intake)));
 		System.out.println("Single PlayStation Control Scheme Registered");
 	}
 
@@ -179,12 +179,12 @@ public final class Controls {
 				Xbox.Analog.LT.getDriveInputSupplier(controller1, OIConstants.kTriggerDeadband, 1.0, 1.0),
 				Xbox.Digital.B.getSupplier(controller1));
 		m_driveTrain.setDefaultCommand(drive_control);
-		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Xbox.Analog.RT.getValueOf(controller1)>=OIConstants.kTriggerDeadband);
-		triggerList.add(flingTrigger);
-		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
-		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Xbox.Digital.RB.getValueOf(controller1));
-		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
+				() -> Xbox.Analog.RT.getValueOf(controller1) >= OIConstants.kTriggerDeadband,
+				new FlingCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
+				() -> Xbox.Digital.RB.getValueOf(controller1),
+				new IntakeCommand(m_flinger, m_intake)));
 		System.out.println("Dual Xbox Control Scheme Registered");
 	}
 
@@ -200,12 +200,12 @@ public final class Controls {
 				Attack3.Digital.TRI.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
-		triggerList.add(flingTrigger);
-		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
-		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.B2.getValueOf(rstick));
-		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
+				() -> Attack3.Digital.TRI.getValueOf(rstick),
+				new FlingCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
+				() -> Attack3.Digital.B2.getValueOf(rstick),
+				new IntakeCommand(m_flinger, m_intake)));
 		System.out.println("Arcade Board Simple Control Scheme Registered");
 	}
 
@@ -222,12 +222,12 @@ public final class Controls {
 				Attack3.Digital.TRI.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
-		triggerList.add(flingTrigger);
-		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
-		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.TB.getValueOf(rstick));
-		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
+				() -> Attack3.Digital.TRI.getValueOf(rstick),
+				new FlingCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
+				() -> Attack3.Digital.B2.getValueOf(rstick),
+				new IntakeCommand(m_flinger, m_intake)));
 		System.out.println("Arcade Board Full Control Scheme Registered");
 	}
 
@@ -245,12 +245,12 @@ public final class Controls {
 				Attack3.Digital.TRI.getSupplier(lstick),
 				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		DebindableTrigger flingTrigger = new DebindableTrigger(() -> Attack3.Digital.TRI.getValueOf(rstick));
-		triggerList.add(flingTrigger);
-		flingTrigger.onTrue(new FlingCommand(m_flinger,m_intake));
-		DebindableTrigger intakeTrigger = new DebindableTrigger(() -> Attack3.Digital.TB.getValueOf(rstick));
-		triggerList.add(intakeTrigger);
-		intakeTrigger.onTrue(new IntakeCommand(m_flinger,m_intake));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
+				() -> Attack3.Digital.TRI.getValueOf(rstick),
+				new FlingCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
+				() -> Attack3.Digital.B2.getValueOf(rstick),
+				new IntakeCommand(m_flinger, m_intake)));
 		System.out.println("Competition Board Control Scheme Registered");
 	}
 }

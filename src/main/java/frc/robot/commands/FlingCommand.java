@@ -44,6 +44,7 @@ public class FlingCommand extends Command {
             startFlinger = false;
             postShotTimer.reset();
             rpmList.clear();
+            Flinger.flingCommandActive = true;
         } else {
             ringLoaded = false;
         }
@@ -80,6 +81,7 @@ public class FlingCommand extends Command {
         postShotTimer.reset();
         ringLoaded = false;
         rpmList.clear();
+        Flinger.flingCommandActive = false;
     }
 
     @Override
