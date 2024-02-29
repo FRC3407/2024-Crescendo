@@ -37,7 +37,7 @@ public class FlingCommand extends Command {
     @Override
     public void initialize() {
         this.m_intake.intake(0);
-        if (this.m_intake.getBotSensor() && this.m_intake.getMidSensor()) {
+        if (this.m_intake.getMidSensor()) {
             // If a ring is in the correct position start backing up the ring
             this.m_intake.intake(-0.1);
             ringLoaded = true;

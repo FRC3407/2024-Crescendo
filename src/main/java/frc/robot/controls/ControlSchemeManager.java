@@ -437,6 +437,12 @@ public class ControlSchemeManager implements Sendable {
 		return false;
 	}
 
+	public synchronized void loopScheme()
+	{
+		ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
+		scheduleContinuousWorker(buff);
+	}
+
 	/**
 	 * Generates a loopable Runnable for continuous control scheme search.
 	 * This method should be used to create a Runnable that can be executed in a
@@ -543,9 +549,9 @@ public class ControlSchemeManager implements Sendable {
 			if (compat >= 0) {
 				this.schemes.get(compat).setup(sel.devices);
 				this.applied = this.schemes.get(compat).getDesc();
-				for (InputDevice d : sel.devices) {
-					InputDevice.logDevice(d);
-				}
+				// for (InputDevice d : sel.devices) {
+				// 	InputDevice.logDevice(d);
+				// }
 				return true;
 			} else if (compat < -1) {
 				System.out.println("ControlSchemeManager: Ambiguous case detected, please refine selection.");
@@ -555,9 +561,9 @@ public class ControlSchemeManager implements Sendable {
 			if (sel.devices != null && sel.devices.length > 0) {
 				this.schemes.get(id).setup(sel.devices);
 				this.applied = this.schemes.get(id).getDesc();
-				for (InputDevice d : sel.devices) {
-					InputDevice.logDevice(d);
-				}
+				// for (InputDevice d : sel.devices) {
+				// 	InputDevice.logDevice(d);
+				// }
 				return true;
 			}
 		}
@@ -607,9 +613,9 @@ public class ControlSchemeManager implements Sendable {
 					}
 					this.schemes.get(compat).setup(sel.devices);
 					this.applied = this.schemes.get(compat).getDesc();
-					for (InputDevice d : sel.devices) {
-						InputDevice.logDevice(d);
-					}
+					// for (InputDevice d : sel.devices) {
+					// 	InputDevice.logDevice(d);
+					// }
 					sel.prev_active_id = compat;
 					sel.prev_selected = id;
 					sel.has_any = true;
@@ -624,9 +630,9 @@ public class ControlSchemeManager implements Sendable {
 					}
 					this.schemes.get(id).setup(sel.devices);
 					this.applied = this.schemes.get(id).getDesc();
-					for (InputDevice d : sel.devices) {
-						InputDevice.logDevice(d);
-					}
+					// for (InputDevice d : sel.devices) {
+					// 	InputDevice.logDevice(d);
+					// }
 					sel.prev_active_id = id;
 					sel.prev_selected = id;
 					sel.has_any = true;

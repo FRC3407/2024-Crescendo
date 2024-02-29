@@ -41,7 +41,7 @@ import frc.robot.commands.AutoGoCommand;
 
 public class RobotContainer extends TimedRobot {
 
-  private final ControlSchemeManager controls = new ControlSchemeManager();
+  private static final ControlSchemeManager controls = new ControlSchemeManager();
   private final Robot robot = new Robot();
 
   /**
@@ -49,10 +49,15 @@ public class RobotContainer extends TimedRobot {
    */
   public RobotContainer() {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
-    Controls.setupControls(this.robot, this.controls, Controls.FeatureLevel.COMPETITION);
-    this.controls.runInitialThread();
+    Controls.setupControls(this.robot, controls, Controls.FeatureLevel.COMPETITION);
+    //this.controls.runInitialThread();
   }
   
+  public static void loopScheme()
+  {
+    controls.loopScheme();
+  }
+
   public Command getAutonomousCommand() {
     return new AutoGoCommand(Controls.m_driveTrain);
   }
