@@ -19,17 +19,6 @@ public class DriveCommand extends Command {
   private final DoubleSupplier m_linearYSupplier;
   private final DoubleSupplier m_angularSpeedSupplier;
 
-  /*public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier) {
-    this.m_driveSubsystem = subsystem;
-    this.m_linearXSupplier = m_linearXSupplier;
-    this.m_linearYSupplier = m_linearYSupplier;
-    this.m_angularSpeedSupplier = m_angularSpeedSupplier;
-    this.m_linearBoostSupplier = m_linearBoostSupplier;
-
-    this.addRequirements(m_driveSubsystem);
-  }*/
-
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
       DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier) {
     this.m_driveSubsystem = subsystem;

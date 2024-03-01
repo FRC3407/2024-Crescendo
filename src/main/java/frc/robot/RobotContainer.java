@@ -48,14 +48,12 @@ public class RobotContainer extends TimedRobot {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
-  private final Robot robot = new Robot();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
-    // this.controls.runInitialThread();
     ConfigureButtonBindings();
   }
 
