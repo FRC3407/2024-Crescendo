@@ -12,8 +12,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import frc.robot.controls.Input.DigitalMap;
-import frc.robot.controls.Input.InputMap;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -46,7 +45,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 6.9;
+    public static final double kMaxSpeedMetersPerSecond = 4.8;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
@@ -177,7 +176,7 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
-  public static class ButtonBox extends InputMap {
+  /*public static class ButtonBox extends InputMap {
     public static enum Digital implements DigitalMap {
       B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
       S1(7), S2(8),
@@ -212,6 +211,6 @@ public final class Constants {
     public boolean compatible(int p) {
       return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT;
     }
-  }
+  }*/
 
 }
