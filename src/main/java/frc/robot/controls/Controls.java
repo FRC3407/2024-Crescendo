@@ -235,13 +235,13 @@ public final class Controls {
 				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
 				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.TB.getSupplier(rstick));
+				Attack3.Digital.B2.getSupplier(rstick));
 		m_driveTrain.setDefaultCommand(drive_control);
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Fling
 				() -> Attack3.Digital.TRI.getValueOf(rstick),
 				new FlingCommand(m_flinger, m_intake)));
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, //Intake
-				() -> Attack3.Digital.B2.getValueOf(rstick),
+				() -> Attack3.Digital.TB.getValueOf(rstick),
 				new IntakeCommand(m_flinger, m_intake)));
 	}
 }
