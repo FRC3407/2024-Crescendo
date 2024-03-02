@@ -20,12 +20,12 @@ public class DriveCommand extends Command {
   private final DoubleSupplier m_angularSpeedSupplier;
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier) {
+      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
     this.m_angularSpeedSupplier = m_angularSpeedSupplier;
-    this.m_linearBoostSupplier = () -> m_linearBoostSupplier.getAsDouble() >= 0.5;
+    this.m_linearBoostSupplier = m_linearBoostSupplier;
 
     this.addRequirements(m_driveSubsystem);
   }
@@ -38,16 +38,16 @@ public class DriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double boostValue = m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1;
+    double xSpeed = MathUtil.applyDeadband(m_linearYSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    double ySpeed = MathUtil.applyDeadband(m_linearXSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    double rotSpeed = MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    ySpeed = ySpeed * boostValue;
+    xSpeed = xSpeed * boostValue;
     m_driveSubsystem.drive(
-        -MathUtil.applyDeadband(
-            m_linearYSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
-                * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
-            OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(
-            m_linearXSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
-                * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
-            OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband),
+        -xSpeed/2,
+        -ySpeed/2,
+        -rotSpeed,
         true, true);
   }
 

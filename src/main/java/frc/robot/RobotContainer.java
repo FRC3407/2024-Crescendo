@@ -64,8 +64,9 @@ public class RobotContainer extends TimedRobot {
   private void ConfigureButtonBindings() {
     Joystick l_attack3 = new Joystick(0);
     Joystick r_attack3 = new Joystick(1);
+    JoystickButton boostButton = new JoystickButton(l_attack3, 2);
     m_driveTrain.setDefaultCommand(
-        new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, l_attack3::getThrottle));
+        new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, ()-> boostButton.getAsBoolean()));
 
     JoystickButton flingButton = new JoystickButton(r_attack3, 1);
     flingButton.onTrue(new FlingCommand(m_flinger, m_intake));
