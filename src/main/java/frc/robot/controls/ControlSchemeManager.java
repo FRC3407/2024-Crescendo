@@ -113,14 +113,18 @@ public class ControlSchemeManager implements Sendable {
 	}
 
 	/**
-	 * AutomatedTester class implements Compat_F for automated testing of control
-	 * schemes.
+	 * the AutomatedTester class is designed for automated testing of control
+	 * schemes. It takes input requirements and matches them with available input
+	 * devices. If all requirements are met, it returns an array of matched
+	 * InputDevice objects; otherwise, it returns null.
 	 */
 	public static class AutomatedTester implements ControlSchemeBase.Compat_F {
 		private final InputMap[] requirements;
-		private final InputDevice[] buff; // the array [reference] is final but the assignments are not
+		private final InputDevice[] buff; // The array [reference] is final, but the assignments are not.
 
 		/**
+		 * Constructor for AutomatedTester.
+		 *
 		 * @param reqs InputMap requirements.
 		 */
 		public AutomatedTester(InputMap... reqs) {
@@ -128,34 +132,44 @@ public class ControlSchemeManager implements Sendable {
 			this.buff = new InputDevice[reqs.length];
 		}
 
-		@Override /* This is basically just a big matching function */
+		/**
+		 * This method is essentially a big matching function.
+		 *
+		 * @param inputs Input devices to test.
+		 * @return An array of matched InputDevices or null if not all requirements are
+		 *         met.
+		 */
+		@Override
 		public InputDevice[] test(InputDevice... inputs) {
-			int[] avail, reqs = new int[this.requirements.length]; // look up tables for inputs (param) and
+			int[] avail, reqs = new int[this.requirements.length]; // Look-up tables for inputs (param) and
 																	// this.requirements, respectively
 			int found = 0;
+
 			if (inputs.length == DriverStation.kJoystickPorts) {
-				avail = new int[] { 0, 1, 2, 3, 4, 5 }; // 0 through (DriverStation.kJoystickPorts - 1)
+				avail = new int[] { 0, 1, 2, 3, 4, 5 }; // Available ports: 0 through (DriverStation.kJoystickPorts - 1)
 			} else {
 				avail = new int[inputs.length];
 				for (int i = 0; i < avail.length; i++) {
 					avail[i] = inputs[i].getPort();
 				}
 			}
+
 			for (int i = 0; i < reqs.length; i++) {
 				reqs[i] = i;
 			}
-			for (int i = found; i < avail.length; i++) { // for each remaining port:
+
+			for (int i = found; i < avail.length; i++) { // For each remaining port:
 				int p = avail[i];
-				for (int r = found; r < reqs.length; r++) { // for each remaining requirement:
-					if (this.requirements[reqs[r]].compatible(p)) { // if compatible:
+				for (int r = found; r < reqs.length; r++) { // For each remaining requirement:
+					if (this.requirements[reqs[r]].compatible(p)) { // If compatible:
 						this.buff[reqs[r]] = inputs[p];
 						if (i != found) {
-							for (int q = i; q > found; q--) { // start at i, work backwards until @ found
-								avail[q] = avail[q - 1]; // bump all vals before i up an index
+							for (int q = i; q > found; q--) { // Start at i, work backwards until @ found
+								avail[q] = avail[q - 1]; // Bump all values before i up an index
 							}
 						}
 						if (r != found) {
-							for (int q = r; q > found; q--) { // same as above but for the reqs look up table
+							for (int q = r; q > found; q--) { // Same as above but for the reqs look-up table
 								reqs[q] = reqs[q - 1];
 							}
 						}
@@ -169,7 +183,6 @@ public class ControlSchemeManager implements Sendable {
 			}
 			return null;
 		}
-
 	}
 
 	/**
@@ -383,31 +396,12 @@ public class ControlSchemeManager implements Sendable {
 		this.schemes.clear();
 	}
 
-	public synchronized void loopScheme()
-	{
+	/**
+	 * Schedules a new Continuous Worker to select the most compatible control scheme
+	 */
+	public synchronized void loopScheme() {
 		ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
 		scheduleContinuousWorker(buff);
-	}
-
-	/**
-	 * Generates a loopable Runnable for continuous control scheme search.
-	 * This method should be used to create a Runnable that can be executed in a
-	 * loop for continuous control scheme selection.
-	 * 
-	 * @return A Runnable that continuously schedules the continuous worker for
-	 *         control scheme selection.
-	 */
-	public synchronized Runnable genLoopableRunContinuous() {
-		System.out.println("running genLoopableRunContinuous");
-		if (this.searcher == DUMMY_THREAD || (this.searcher != null && this.searcher.isAlive())) {
-			System.out.println("ControlSchemeManager: Search not begun due to possible extraneous runners.");
-			return () -> {
-			};
-		}
-		this.searcher = DUMMY_THREAD;
-		System.out.println("ControlSchemeManager: Beginning input search...");
-		final ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
-		return () -> this.scheduleContinuousWorker(buff);
 	}
 
 	/**
@@ -427,51 +421,59 @@ public class ControlSchemeManager implements Sendable {
 	}
 
 	/**
-	 * Schedule the continuous worker for selecting and setting up control schemes.
+	 * This method schedules the continuous worker responsible for selecting and
+	 * configuring control schemes. It checks compatibility, prioritizes schemes
+	 * based on complexity or simplicity, and handles ambiguous cases. The selected
+	 * scheme is set up for use.
 	 * 
 	 * @param sel ContinuousSelectionBuffer for additional tracking information.
 	 */
 	private void scheduleContinuousWorker(ContinuousSelectionBuffer sel) {
 		int id = this.options.getSelected();
+
+		// Check if there are no previous selections or if the current selection has
+		// changed
 		if (!sel.has_any || (sel.prev_selected != id && sel.prev_active_id != id)) {
 			if (id < 0) {
 				sel.devices = sel.buff = null;
 				int compat = -1;
+
+				// Iterate through available schemes
 				for (int i = 0; i < this.schemes.size(); i++) {
 					sel.buff = this.schemes.get(i).compatible(this.inputs);
+
+					// If a compatible scheme is found
 					if (sel.buff != null && sel.buff.length > 0) {
 						switch (this.ambg_preference) {
-							case PREFER_COMPLEX: {
+							case PREFER_COMPLEX:
 								if (sel.devices == null || sel.buff.length > sel.devices.length) {
 									sel.devices = sel.buff;
 									compat = i;
 								}
 								break;
-							}
-							case PREFER_SIMPLE: {
+							case PREFER_SIMPLE:
 								if (sel.devices == null || sel.buff.length < sel.devices.length) {
 									sel.devices = sel.buff;
 									compat = i;
 								}
 								break;
-							}
 							default:
-							case NONE: {
+							case NONE:
 								compat = (compat == -1) ? i : -2;
 								sel.devices = sel.buff;
-							}
 						}
 					}
 				}
+
+				// If a compatible scheme was found
 				if (compat >= 0) {
 					if (sel.has_any) {
+						// Shut down the previously active scheme
 						this.schemes.get(sel.prev_active_id).shutdown();
 					}
+					// Set up the newly compatible scheme
 					this.schemes.get(compat).setup(sel.devices);
 					this.applied = this.schemes.get(compat).getDesc();
-					// for (InputDevice d : sel.devices) {
-					// 	InputDevice.logDevice(d);
-					// }
 					sel.prev_active_id = compat;
 					sel.prev_selected = id;
 					sel.has_any = true;
@@ -479,16 +481,16 @@ public class ControlSchemeManager implements Sendable {
 					System.out.println("ControlSchemeManager: Ambiguous case detected, please refine selection.");
 				}
 			} else {
+				// If a specific scheme is selected
 				sel.devices = this.schemes.get(id).compatible(this.inputs);
 				if (sel.devices != null && sel.devices.length > 0) {
 					if (sel.has_any) {
+						// Shut down the previously active scheme
 						this.schemes.get(sel.prev_active_id).shutdown();
 					}
+					// Set up the selected scheme
 					this.schemes.get(id).setup(sel.devices);
 					this.applied = this.schemes.get(id).getDesc();
-					// for (InputDevice d : sel.devices) {
-					// 	InputDevice.logDevice(d);
-					// }
 					sel.prev_active_id = id;
 					sel.prev_selected = id;
 					sel.has_any = true;
@@ -496,5 +498,4 @@ public class ControlSchemeManager implements Sendable {
 			}
 		}
 	}
-
 }
