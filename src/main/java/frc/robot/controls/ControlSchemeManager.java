@@ -397,7 +397,8 @@ public class ControlSchemeManager implements Sendable {
 	}
 
 	/**
-	 * Schedules a new Continuous Worker to select the most compatible control scheme
+	 * Schedules a new Continuous Worker to select the most compatible control
+	 * scheme
 	 */
 	public synchronized void loopScheme() {
 		ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
@@ -419,6 +420,9 @@ public class ControlSchemeManager implements Sendable {
 		int prev_selected = -1, prev_active_id = -1;
 		boolean has_any = false;
 	}
+
+	private static int lastSelectedCompat;
+	private static int lastSelectedId;
 
 	/**
 	 * This method schedules the continuous worker responsible for selecting and
@@ -472,11 +476,14 @@ public class ControlSchemeManager implements Sendable {
 						this.schemes.get(sel.prev_active_id).shutdown();
 					}
 					// Set up the newly compatible scheme
+					if (compat != lastSelectedCompat) {
 					this.schemes.get(compat).setup(sel.devices);
 					this.applied = this.schemes.get(compat).getDesc();
 					sel.prev_active_id = compat;
 					sel.prev_selected = id;
 					sel.has_any = true;
+					}
+					lastSelectedCompat = compat;
 				} else if (compat < -1 && !sel.has_any) {
 					System.out.println("ControlSchemeManager: Ambiguous case detected, please refine selection.");
 				}
@@ -489,11 +496,14 @@ public class ControlSchemeManager implements Sendable {
 						this.schemes.get(sel.prev_active_id).shutdown();
 					}
 					// Set up the selected scheme
-					this.schemes.get(id).setup(sel.devices);
-					this.applied = this.schemes.get(id).getDesc();
-					sel.prev_active_id = id;
-					sel.prev_selected = id;
-					sel.has_any = true;
+					if (id != lastSelectedId) {
+						this.schemes.get(id).setup(sel.devices);
+						this.applied = this.schemes.get(id).getDesc();
+						sel.prev_active_id = id;
+						sel.prev_selected = id;
+						sel.has_any = true;
+					}
+					lastSelectedId = id;
 				}
 			}
 		}

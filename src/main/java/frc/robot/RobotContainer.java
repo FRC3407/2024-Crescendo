@@ -41,10 +41,7 @@ public class RobotContainer extends TimedRobot {
     if(System.currentTimeMillis()-timeSinceLastLoop>2000)
     {
       controls.loopScheme();
+      timeSinceLastLoop = System.currentTimeMillis();
     }
-  }
-
-  public Command getAutonomousCommand() {
-    return new AutoGoCommand(Controls.m_driveTrain);
   }
 }

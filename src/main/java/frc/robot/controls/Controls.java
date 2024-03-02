@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.controls.Input.ButtonBox;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.IntakeCommand;
@@ -44,15 +45,18 @@ public final class Controls {
 	public static final FeatureLevel DEFAULT_FEATURE_LEVEL = FeatureLevel.ALLSCHEMES;
 	// By default, uses swerve for drive
 	public static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.DEFAULTSWERVE;
-	// A list of TriggerRunnables, cleared in deScheduleCommands whenever a new schemed is used
+	// A list of TriggerRunnables, cleared in deScheduleCommands whenever a new
+	// schemed is used
 	// to prevent duplicate commands
-	// All TriggerRunnables are polled in pollCommands, allowing their conditions to be checked
+	// All TriggerRunnables are polled in pollCommands, allowing their conditions to
+	// be checked
 	// and their commands to be ran
 	private static ArrayList<TriggerRunnable> triggerList = new ArrayList<TriggerRunnable>();
 
 	/**
 	 * @param robot
-	 * @return A list of all schemes that the robot can use (new schemes must be added to this list)
+	 * @return A list of all schemes that the robot can use (new schemes must be
+	 *         added to this list)
 	 */
 	private static ControlScheme[] getAllSchemes(Robot robot) {
 		return new ControlScheme[] {
@@ -71,7 +75,8 @@ public final class Controls {
 		};
 	}
 
-	// Example of a specific list of schemes to use, this list of schemes on has just the
+	// Example of a specific list of schemes to use, this list of schemes on has
+	// just the
 	// "Full Arcade" scheme in it
 
 	// private static ControlScheme[] getCompetitionSchemes(Robot robot) {
@@ -149,6 +154,10 @@ public final class Controls {
 		for (TriggerRunnable triggerRunnable : triggerList) {
 			triggerRunnable.poll();
 		}
+	}
+
+	public static Command getAutonomousCommand() {
+		return new AutoGoCommand(Controls.m_driveTrain);
 	}
 
 	// Uses a Single Xbox Controller
@@ -275,42 +284,52 @@ public final class Controls {
 	// How to write a new control scheme
 	// Use the following shell:
 
-	// private static void nameOfScheme(Robot robot, DriveMode drivemode, InputDevice... inputs)
+	// private static void nameOfScheme(Robot robot, DriveMode drivemode,
+	// InputDevice... inputs)
 	// {
-	// 	deScheduleCommands();
-	// 	InputDevice nameOfDevice = inputs[port];                                                          //Step 1
-	// 	Command drive_control = new DriveCommand(m_driveTrain,                                            //Step 2
-	// 			inputDeviceType.Analog/Digital.button.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-	// 			inputDeviceType.Analog/Digital.button.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-	// 			inputDeviceType.Analog/Digital.button.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-	// 			inputDeviceType.Analog/Digital.button.getSupplier(controller),
-	// 			inputDeviceType.Analog/Digital.button.getSupplier(controller));
-	// 	m_driveTrain.setDefaultCommand(drive_control);
-	// 	triggerList.add(new TriggerRunnable(LoopType,                                                     //Step 3
-	// 			buttonSupplier, 
-	// 			command));
+	// deScheduleCommands();
+	// InputDevice nameOfDevice = inputs[port]; //Step 1
+	// Command drive_control = new DriveCommand(m_driveTrain, //Step 2
+	// inputDeviceType.Analog/Digital.button.getDriveInputSupplier(controller, 0,
+	// 1.0, 1.0),
+	// inputDeviceType.Analog/Digital.button.getDriveInputSupplier(controller, 0,
+	// 1.0, 1.0),
+	// inputDeviceType.Analog/Digital.button.getDriveInputSupplier(controller, 0,
+	// 1.0, 1.0),
+	// inputDeviceType.Analog/Digital.button.getSupplier(controller),
+	// inputDeviceType.Analog/Digital.button.getSupplier(controller));
+	// m_driveTrain.setDefaultCommand(drive_control);
+	// triggerList.add(new TriggerRunnable(LoopType, //Step 3
+	// buttonSupplier,
+	// command));
 	// }
 
-	//Step 1: For each type of InputDevice you want to use add a new InputDevice, name it according to the 
-	//type of device, then set the port to the port you want
+	// Step 1: For each type of InputDevice you want to use add a new InputDevice,
+	// name it according to the
+	// type of device, then set the port to the port you want
 
-	//Step 2: For the drive change the inputDeviceTypes and buttons to what you want 
-	//based on your device type's input map in Input.java
-	//Then change controller to the type of controller you are getting the input from
-	//Repeat for each subsystem the uses a defaultCommand
+	// Step 2: For the drive change the inputDeviceTypes and buttons to what you
+	// want
+	// based on your device type's input map in Input.java
+	// Then change controller to the type of controller you are getting the input
+	// from
+	// Repeat for each subsystem the uses a defaultCommand
 
-	//Step 3: For each individual command that is being run, add a copy of the triggerList.add code
-	//Replace the loopType with the type of loop you would like, most of the types from the wpilib 
-	//trigger class are usable such as onTrue and whileFalse, the available types can be seen in 
-	//TriggerRunnable.LoopType
-	//Replace buttonSupplier with the supplier you would like to use, to convert a value function into
-	//a supplier, use a lambda expression, for example: () -> Attack3.Digital.TRI.getValueOf(rstick)
-	//this would turn the getValueOf function for the Attack 3 trigger into a supplier rather than just
-	//a value function
-	//Replace command wih the type of command you would like to run, wether it be a new command or
-	//one from the commands folder
-
-
-
-
+	// Step 3: For each individual command that is being run, add a copy of the
+	// triggerList.add code
+	// Replace the loopType with the type of loop you would like, most of the types
+	// from the wpilib
+	// trigger class are usable such as onTrue and whileFalse, the available types
+	// can be seen in
+	// TriggerRunnable.LoopType
+	// Replace buttonSupplier with the supplier you would like to use, to convert a
+	// value function into
+	// a supplier, use a lambda expression, for example: () ->
+	// Attack3.Digital.TRI.getValueOf(rstick)
+	// this would turn the getValueOf function for the Attack 3 trigger into a
+	// supplier rather than just
+	// a value function
+	// Replace command wih the type of command you would like to run, wether it be a
+	// new command or
+	// one from the commands folder
 }
