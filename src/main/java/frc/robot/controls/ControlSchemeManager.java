@@ -383,60 +383,6 @@ public class ControlSchemeManager implements Sendable {
 		this.schemes.clear();
 	}
 
-	/**
-	 * Run the initial thread for searching control schemes.
-	 * 
-	 * @return True if the thread was started, false otherwise.
-	 */
-	public synchronized boolean runInitialThread() {
-		if (this.searcher == DUMMY_THREAD) {
-			System.out.println("ControlSchemeManager: Search not begun due to possible extraneous runners.");
-		} else if (this.searcher == null || !this.searcher.isAlive()) {
-			this.searcher = new Thread(() -> {
-				System.out.println("ControlSchemeManager: Beginning input search...");
-				SelectionBuffer buff = new SelectionBuffer();
-				for (;;) {
-					scheduleInitialWorker(buff);
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						System.out.println(e.getMessage());
-					}
-				}
-			});
-			this.searcher.start();
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Run the continuous thread for searching control schemes.
-	 * 
-	 * @return True if the thread was started, false otherwise.
-	 */
-	public synchronized boolean runContinuousThread() {
-		if (this.searcher == DUMMY_THREAD) {
-			System.out.println("ControlSchemeManager: Search not begun due to possible extraneous runners.");
-		} else if (this.searcher == null || !this.searcher.isAlive()) {
-			this.searcher = new Thread(() -> {
-				System.out.println("ControlSchemeManager: Beginning input search...");
-				ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
-				for (;;) {
-					scheduleContinuousWorker(buff);
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						System.out.println(e.getMessage());
-					}
-				}
-			});
-			this.searcher.start();
-			return true;
-		}
-		return false;
-	}
-
 	public synchronized void loopScheme()
 	{
 		ContinuousSelectionBuffer buff = new ContinuousSelectionBuffer();
@@ -465,22 +411,6 @@ public class ControlSchemeManager implements Sendable {
 	}
 
 	/**
-	 * Signals the loop runner to exit in case it's running continuously.
-	 * This method should be used to gracefully exit a continuous control scheme
-	 * search loop.
-	 *
-	 * @return True if the loop runner was successfully signaled to exit, false
-	 *         otherwise.
-	 */
-	public synchronized boolean signalLoopRunnerExit() {
-		if (this.searcher == DUMMY_THREAD) {
-			this.searcher = null;
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Class representing a buffer for storing selected control schemes.
 	 */
 	private class SelectionBuffer {
@@ -494,80 +424,6 @@ public class ControlSchemeManager implements Sendable {
 	private class ContinuousSelectionBuffer extends SelectionBuffer {
 		int prev_selected = -1, prev_active_id = -1;
 		boolean has_any = false;
-	}
-
-	/**
-	 * Schedule the initial worker for selecting and setting up control schemes.
-	 * 
-	 * @return True if a control scheme was successfully selected, false otherwise.
-	 */
-	private boolean scheduleInitialWorker() {
-		return this.scheduleInitialWorker(null);
-	}
-
-	/**
-	 * Overloaded method to schedule the initial worker with a specified selection
-	 * buffer.
-	 * 
-	 * @param sel SelectionBuffer to be used for storing selected control schemes.
-	 * @return True if a control scheme was successfully selected, false otherwise.
-	 */
-	private boolean scheduleInitialWorker(SelectionBuffer sel) {
-		if (sel == null) {
-			sel = new SelectionBuffer();
-		}
-		int id = this.options.getSelected();
-		if (id < 0) {
-			sel.devices = sel.buff = null;
-			int compat = -1;
-			for (int i = 0; i < this.schemes.size(); i++) {
-				sel.buff = this.schemes.get(i).compatible(this.inputs);
-				if (sel.buff != null && sel.buff.length > 0) {
-					switch (this.ambg_preference) {
-						case PREFER_COMPLEX: {
-							if (sel.devices == null || sel.buff.length > sel.devices.length) {
-								sel.devices = sel.buff;
-								compat = i;
-							}
-							break;
-						}
-						case PREFER_SIMPLE: {
-							if (sel.devices == null || sel.buff.length < sel.devices.length) {
-								sel.devices = sel.buff;
-								compat = i;
-							}
-							break;
-						}
-						default:
-						case NONE: {
-							compat = (compat == -1) ? i : -2;
-							sel.devices = sel.buff;
-						}
-					}
-				}
-			}
-			if (compat >= 0) {
-				this.schemes.get(compat).setup(sel.devices);
-				this.applied = this.schemes.get(compat).getDesc();
-				// for (InputDevice d : sel.devices) {
-				// 	InputDevice.logDevice(d);
-				// }
-				return true;
-			} else if (compat < -1) {
-				System.out.println("ControlSchemeManager: Ambiguous case detected, please refine selection.");
-			}
-		} else {
-			sel.devices = this.schemes.get(id).compatible(this.inputs);
-			if (sel.devices != null && sel.devices.length > 0) {
-				this.schemes.get(id).setup(sel.devices);
-				this.applied = this.schemes.get(id).getDesc();
-				// for (InputDevice d : sel.devices) {
-				// 	InputDevice.logDevice(d);
-				// }
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**

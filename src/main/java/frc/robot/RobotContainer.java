@@ -4,33 +4,11 @@
 
 package frc.robot;
 
-import java.util.List;
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.controls.ControlSchemeManager;
 import frc.robot.controls.Controls;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.AutoGoCommand;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -49,13 +27,17 @@ public class RobotContainer extends TimedRobot {
    */
   public RobotContainer() {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
-    Controls.setupControls(this.robot, controls, Controls.FeatureLevel.COMPETITION);
+    Controls.setupControls(this.robot, controls, Controls.FeatureLevel.ALLSCHEMES);
     //this.controls.runInitialThread();
   }
   
+  private static double timeLastLoop = System.currentTimeMillis();
   public static void loopScheme()
   {
-    controls.loopScheme();
+    if(System.currentTimeMillis()-timeLastLoop>2000)
+    {
+      controls.loopScheme();
+    }
   }
 
   public Command getAutonomousCommand() {

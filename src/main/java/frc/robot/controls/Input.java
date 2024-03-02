@@ -237,29 +237,6 @@ public class Input {
 				return super.isConnected();
 			});
 		}
-
-		// public static void logDevice(GenericHID i) {
-		// 	logDevice(i.getPort());
-		// }
-
-		// public static void logDevice(int p) {
-		// 	if (DriverStation.isJoystickConnected(p)) {
-		// 		System.out.println("\tDS Port[" + p + "] >> Axis count: " +
-		// 				DriverStation.getStickAxisCount(p) + ", Button count: " +
-		// 				DriverStation.getStickButtonCount(p) + ", POV count: " +
-		// 				DriverStation.getStickPOVCount(p));
-		// 	}
-		// }
-
-		// public static void logConnections() {
-		// 	System.out.println("Connected DS Inputs:");
-		// 	for (int i = 0; i < DriverStation.kJoystickPorts; i++) {
-		// 		if (DriverStation.isJoystickConnected(i)) {
-		// 			logDevice(i);
-		// 		}
-		// 	}
-		// }
-
 	}
 
 	/**
@@ -484,15 +461,6 @@ public class Input {
 			return PovButton.dummy;
 		}
 
-		// default ToggleTrigger getToggleFrom(InputDevice i) {
-		// return new ToggleTrigger(getCallbackFrom(i));
-		// }
-		// default ToggleTrigger getToggleFrom(GenericHID i) {
-		// return new ToggleTrigger(getCallbackFrom(i));
-		// }
-		// default ToggleTrigger getToggleFrom(int p) {
-		// return new ToggleTrigger(getCallbackFrom(p));
-		// }
 		default boolean getValueOf(GenericHID i) {
 			if (this.isPovBindOf(i)) {
 				return (i.getPOV((this.getValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getValue()
@@ -867,5 +835,46 @@ public class Input {
 			return super.compat(p, Analog.TOTAL, Digital.TOTAL);
 		}
 	}
+
+	/**
+	 * All button and axis indices for the Button Box (as of 2024)
+	 */
+	public static class ButtonBox extends InputMap {
+		public static enum Digital implements DigitalMap {
+		  B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
+		  S1(7), S2(8),
+		  TOTAL(16); // whatever interface board the bbox is using apparently has 12 buttons and 1
+					 // POV
+	
+		  public final int value;
+	
+		  private Digital(int v) {
+			this.value = v;
+		  }
+	
+		  public int getValue() {
+			return this.value;
+		  }
+	
+		  public int getTotal() {
+			return TOTAL.value;
+		  }
+		}
+	
+		private ButtonBox() {
+		}
+	
+		public static final ButtonBox Map = new ButtonBox();
+		public static final int AXIS_COUNT = 5; // see the last comment --> the bbox apparently has 5 axis
+	
+		public boolean compatible(GenericHID i) {
+		  return Digital.TOTAL.compatible(i) && i.getAxisCount() == AXIS_COUNT;
+		}
+	
+		public boolean compatible(int p) {
+		  return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT;
+		}
+	  }
+	
 
 }

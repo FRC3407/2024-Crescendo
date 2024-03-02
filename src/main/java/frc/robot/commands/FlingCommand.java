@@ -1,11 +1,7 @@
 package frc.robot.commands;
 
 import java.util.ArrayList;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Flinger;
@@ -90,6 +86,10 @@ public class FlingCommand extends Command {
         return (postShotTimer.hasElapsed(0.25) || !ringLoaded);
     }
 
+    /**
+     * @return True if the flinger if the rpm of the flinger stable for 10 concecutive ticks, 
+     * indicating its at its max speed
+     */
     public boolean readyToFire()
     {
         double currentRPM = m_flinger.getRPM();
