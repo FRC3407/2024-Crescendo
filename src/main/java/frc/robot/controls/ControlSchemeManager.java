@@ -202,7 +202,7 @@ public class ControlSchemeManager implements Sendable {
 	private SendableChooser<Integer> options = new SendableChooser<>();
 	private Thread searcher;
 	private String applied = "None";
-	private AmbiguousSolution ambg_preference = AmbiguousSolution.NONE;
+	private AmbiguousSolution ambg_preference = AmbiguousSolution.PREFER_SIMPLE;
 
 	/**
 	 * Initializes options and input devices.
