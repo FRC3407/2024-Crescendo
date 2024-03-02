@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import static edu.wpi.first.util.ErrorMessages.requireNonNullParam;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 //Intended to be a replacement of the wpilib Trigger class, 
 //allowing existing Triggers to be essentially deschedule
@@ -15,17 +16,18 @@ public class TriggerRunnable {
   private boolean m_pressedLast;
   private final Command command;
 
-  //The type of loop to be checked, nearly identical to the wpilib Trigger types
+  // The type of loop to be checked, nearly identical to the wpilib Trigger types
   public static enum LoopType {
+    onToggle,
     onTrue,
     onFalse,
     whileTrue,
     whileFalse,
     toggleOnTrue,
-    toggleOnFalse
+    toggleOnFalse,
   }
 
-  //The type of loop checked in poll
+  // The type of loop checked in poll
   private final LoopType loopType;
 
   /**
@@ -47,8 +49,10 @@ public class TriggerRunnable {
    * @return True if the conditions of the loop type is met
    */
   public boolean poll() {
-    if (loopType == LoopType.onTrue) {
-      return onTrue();
+    if (loopType == LoopType.onToggle) {
+      return onToggle();
+    } else if (loopType == LoopType.onTrue) {
+        return onTrue();
     } else if (loopType == LoopType.onFalse) {
       return onFalse();
     } else if (loopType == LoopType.whileTrue) {
@@ -61,6 +65,22 @@ public class TriggerRunnable {
       return toggleOnTrue();
     }
     m_pressedLast = m_condition.getAsBoolean();
+    return false;
+  }
+
+  /**
+   * Starts the given command whenever the condition changes
+   *
+   * @param command the command to start
+   * @return boolean, true if the command was scheduled
+   */
+  public boolean onToggle() {
+    boolean pressed = m_condition.getAsBoolean();
+
+    if (m_pressedLast != pressed) {
+      command.schedule();
+      return true;
+    }
     return false;
   }
 

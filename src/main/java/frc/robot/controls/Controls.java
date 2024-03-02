@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.controls.Input.ButtonBox;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoGoCommand;
+import frc.robot.commands.AutoSelector;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.IntakeCommand;
@@ -156,8 +157,10 @@ public final class Controls {
 		}
 	}
 
+	public static Command selectedAutoCommand = new AutoGoCommand(m_driveTrain);
+
 	public static Command getAutonomousCommand() {
-		return new AutoGoCommand(Controls.m_driveTrain);
+		return selectedAutoCommand;
 	}
 
 	// Uses a Single Xbox Controller
@@ -257,6 +260,11 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 				() -> Attack3.Digital.TB.getValueOf(rstick),
 				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
+				() -> ButtonBox.Digital.S1.getValueOf(bbox),
+				new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(bbox),
+						() -> ButtonBox.Digital.S2.getValueOf(bbox))));
+
 	}
 
 	// Uses two Attack Joysticks, the Button Box, and an Xbox controller
@@ -279,6 +287,10 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 				() -> Attack3.Digital.TB.getValueOf(rstick),
 				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
+				() -> ButtonBox.Digital.S1.getValueOf(bbox),
+				new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(bbox),
+						() -> ButtonBox.Digital.S2.getValueOf(bbox))));
 	}
 
 	// How to write a new control scheme
