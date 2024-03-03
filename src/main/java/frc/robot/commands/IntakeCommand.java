@@ -32,14 +32,16 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if (this.m_floorIntake.getTopSensor() && !this.m_floorIntake.getMidSensor() && !this.m_floorIntake.getBotSensor()) {
+        if (!this.m_floorIntake.getBotSensor() && !this.m_floorIntake.getMidSensor()
+                && this.m_floorIntake.getTopSensor()) {
             this.m_floorIntake.intake(0);
             this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED);
         }
-        if (this.m_floorIntake.getTopSensor() && this.m_floorIntake.getMidSensor() && !this.m_floorIntake.getBotSensor()) {
+        if (!this.m_floorIntake.getBotSensor() && this.m_floorIntake.getMidSensor()
+                && this.m_floorIntake.getTopSensor()) {
             this.m_floorIntake.intake(0);
-            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED*2);
-        } else if (this.m_floorIntake.getMidSensor() && !this.m_floorIntake.getBotSensor()) {
+            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED * 2);
+        } else if (!this.m_floorIntake.getBotSensor() && this.m_floorIntake.getMidSensor()) {
             this.m_flinger.fling(0);
             this.m_floorIntake.intake(-Constants.IntakeConstants.INTAKE_SPEED * 0.1);
         } else if (this.m_floorIntake.getBotSensor() && !this.m_floorIntake.getMidSensor()
@@ -61,6 +63,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
+        // Ends the command if the ring is in the right position or if a fling command is active
         if ((this.m_floorIntake.getMidSensor() && this.m_floorIntake.getBotSensor()) || Flinger.flingCommandActive) {
             return true;
         } else {

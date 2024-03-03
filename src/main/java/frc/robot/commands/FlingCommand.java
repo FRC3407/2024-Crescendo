@@ -87,8 +87,8 @@ public class FlingCommand extends Command {
     }
 
     /**
-     * @return True if the flinger if the rpm of the flinger stable for 10 concecutive ticks, 
-     * indicating its at its max speed
+     * @return True if the flinger if the rpm of the flinger stable and running
+     * for 10 concecutive ticks, indicating its at its max speed
      */
     public boolean readyToFire()
     {
@@ -109,10 +109,5 @@ public class FlingCommand extends Command {
             }
         }
         return true;
-    }
-
-    public ArrayList<Double> getList()
-    {
-        return rpmList;
     }
 }

@@ -157,8 +157,12 @@ public final class Controls {
 		}
 	}
 
+	// Changed by AutoSelector.java
 	public static Command selectedAutoCommand = new AutoGoCommand(m_driveTrain);
 
+	/**
+	 * @return The selected auto command
+	 */
 	public static Command getAutonomousCommand() {
 		return selectedAutoCommand;
 	}

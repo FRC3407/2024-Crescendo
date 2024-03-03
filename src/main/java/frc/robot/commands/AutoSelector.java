@@ -56,6 +56,7 @@ public class AutoSelector extends Command {
         autoList.add(new AutoGoCommand(Controls.m_driveTrain));
         int index = 0;
         if (type == Type.SWITCH) {
+            // Selects an auto based on which combination of switchs are down (array below)
             // S1&S2 -> 0
             // S1&!S2 -> 1
             // !S1&S2 -> 2
@@ -77,6 +78,7 @@ public class AutoSelector extends Command {
                 Controls.selectedAutoCommand = autoList.get(index);
             }
         } else if (type == Type.BUTTON) {
+            // Selects an auto based on the pressed button
             if (button1.getAsBoolean()) {
                 index = 0;
             } else if (button2.getAsBoolean()) {
