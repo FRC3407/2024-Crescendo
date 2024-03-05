@@ -2,11 +2,8 @@ package frc.robot.commands;
 
 import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.controls.Controls;
-import frc.robot.subsystems.DriveSubsystem;
 
 public class AutoSelector extends Command {
     private boolean end = false;
@@ -53,10 +50,12 @@ public class AutoSelector extends Command {
     }
 
     public void initialize() {
+        System.out.println("AutoSelector");
         autoList.add(new AutoGoCommand(Controls.m_driveTrain));
+        autoList.add(new AutoGoCommandLong(Controls.m_driveTrain));
         int index = 0;
         if (type == Type.SWITCH) {
-            // Selects an auto based on which combination of switchs are down (array below)
+            // Selects an auto based on which combination of switches are down (array below)
             // S1&S2 -> 0
             // S1&!S2 -> 1
             // !S1&S2 -> 2

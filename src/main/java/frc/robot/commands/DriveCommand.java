@@ -21,7 +21,8 @@ public class DriveCommand extends Command {
   private final BooleanSupplier m_zeroHeadingSupplier;
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier, BooleanSupplier m_zeroHeadingSupplier) {
+      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier,
+      BooleanSupplier m_zeroHeadingSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
@@ -32,7 +33,8 @@ public class DriveCommand extends Command {
   }
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier, BooleanSupplier m_zeroHeadingSupplier) {
+      DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier,
+      BooleanSupplier m_zeroHeadingSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;

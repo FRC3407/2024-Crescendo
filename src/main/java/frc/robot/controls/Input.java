@@ -51,8 +51,8 @@ public class Input {
 			this(src, Double.MAX_VALUE);
 		} // kind of pointless?
 
-		public AnalogSlewSupplier(DoubleSupplier src, double mrate) {
-			this.limit = new SlewRateLimiter(mrate, -mrate, src.getAsDouble());
+		public AnalogSlewSupplier(DoubleSupplier src, double rate) {
+			this.limit = new SlewRateLimiter(rate, -rate, src.getAsDouble());
 			this.source = src;
 		}
 
@@ -240,7 +240,7 @@ public class Input {
 	}
 
 	/**
-	 * PovButton remaps all pov's on a joystick to additional button indices past
+	 * PovButton remaps all ports on a joystick to additional button indices past
 	 * those normally used. Functionality and use is
 	 * the same as a normal joystick button.
 	 */
@@ -336,16 +336,16 @@ public class Input {
 			return () -> 0.0;
 		}
 
-		default AnalogSlewSupplier getLimitedSupplier(InputDevice i, double mrate) {
+		default AnalogSlewSupplier getLimitedSupplier(InputDevice i, double rate) {
 			if (this.compatible(i)) {
-				return new AnalogSlewSupplier(() -> i.getRawAxis(this.getPortValue()), mrate);
+				return new AnalogSlewSupplier(() -> i.getRawAxis(this.getPortValue()), rate);
 			}
 			return new AnalogSlewSupplier(() -> 0.0);
 		}
 
-		default AnalogSlewSupplier getLimitedSupplier(int p, double mrate) {
+		default AnalogSlewSupplier getLimitedSupplier(int p, double rate) {
 			if (this.compatible(p)) {
-				return new AnalogSlewSupplier(() -> DriverStation.getStickAxis(p, this.getPortValue()), mrate);
+				return new AnalogSlewSupplier(() -> DriverStation.getStickAxis(p, this.getPortValue()), rate);
 			}
 			return new AnalogSlewSupplier(() -> 0.0);
 		}
@@ -364,17 +364,18 @@ public class Input {
 			return new AnalogExponential(() -> 0.0, 1.0);
 		}
 
-		default AnalogSupplier getExponentialLimitedSupplier(InputDevice i, double mrate, double pow) {
+		default AnalogSupplier getExponentialLimitedSupplier(InputDevice i, double rate, double pow) {
 			if (this.compatible(i)) {
-				return new AnalogSlewSupplier(new AnalogExponential(() -> i.getRawAxis(this.getPortValue()), pow), mrate);
+				return new AnalogSlewSupplier(new AnalogExponential(() -> i.getRawAxis(this.getPortValue()), pow),
+						rate);
 			}
 			return () -> 0.0;
 		}
 
-		default AnalogSupplier getExponentialLimitedSupplier(int p, double mrate, double pow) {
+		default AnalogSupplier getExponentialLimitedSupplier(int p, double rate, double pow) {
 			if (this.compatible(p)) {
 				return new AnalogSlewSupplier(
-						new AnalogExponential(() -> DriverStation.getStickAxis(p, this.getPortValue()), pow), mrate);
+						new AnalogExponential(() -> DriverStation.getStickAxis(p, this.getPortValue()), pow), rate);
 			}
 			return () -> 0.0;
 		}
@@ -400,8 +401,19 @@ public class Input {
 	 * Provides integration with PovButton when available.
 	 */
 	public static interface DigitalMap {
-		int getValue();
 
+		/**
+		 * Implemented in extended classes
+		 * 
+		 * @return Integer value of the port
+		 */
+		int getPortValue();
+
+		/**
+		 * Implemented in extended classes
+		 * 
+		 * @return Total number of port options
+		 */
 		int getTotal();
 
 		default boolean compatible(GenericHID i) {
@@ -414,119 +426,123 @@ public class Input {
 
 		default boolean isPovBindOf(GenericHID i) {
 			if (this.compatible(i)) {
-				return this.getValue() > i.getButtonCount();
+				return this.getPortValue() > i.getButtonCount();
 			}
 			return false;
 		}
 
 		default boolean isPovBindOf(int p) {
 			if (this.compatible(p)) {
-				return this.getValue() > DriverStation.getStickPOVCount(p);
+				return this.getPortValue() > DriverStation.getStickPOVCount(p);
 			}
 			return false;
 		}
 
 		default int getPovBindOf(GenericHID i) {
 			if (this.compatible(i) && this.isPovBindOf(i)) {
-				return (this.getValue() - i.getButtonCount()) / 4;
+				return (this.getPortValue() - i.getButtonCount()) / 4;
 			}
 			return -1;
 		}
 
 		default int getPovBindOf(int p) {
 			if (this.compatible(p) && this.isPovBindOf(p)) {
-				return (this.getValue() - DriverStation.getStickButtonCount(p)) / 4;
+				return (this.getPortValue() - DriverStation.getStickButtonCount(p)) / 4;
 			}
 			return -1;
 		}
 
 		default PovButton getCallbackFrom(InputDevice i) {
 			if (this.compatible(i)) {
-				return i.getTrigger(this.getValue());
+				return i.getTrigger(this.getPortValue());
 			}
 			return PovButton.dummy;
 		}
 
 		default PovButton getCallbackFrom(GenericHID i) {
 			if (this.compatible(i)) {
-				return new PovButton(i, this.getValue());
+				return new PovButton(i, this.getPortValue());
 			}
 			return PovButton.dummy;
 		}
 
 		default PovButton getCallbackFrom(int p) {
 			if (this.compatible(p)) {
-				return new PovButton(p, this.getValue());
+				return new PovButton(p, this.getPortValue());
 			}
 			return PovButton.dummy;
 		}
 
 		default boolean getValueOf(GenericHID i) {
 			if (this.isPovBindOf(i)) {
-				return (i.getPOV((this.getValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getValue()
+				return (i.getPOV((this.getPortValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getPortValue()
 						- i.getButtonCount();
 			} else if (this.compatible(i)) {
-				return i.getRawButton(this.getValue());
+				return i.getRawButton(this.getPortValue());
 			}
 			return false;
 		}
 
 		default boolean getValueOf(int p) {
 			if (this.isPovBindOf(p)) {
-				return (DriverStation.getStickPOV(p, (this.getValue() - DriverStation.getStickButtonCount(p) - 1) / 4)
-						/ 90.0 + 1) == this.getValue() - DriverStation.getStickButtonCount(p);
+				return (DriverStation.getStickPOV(p,
+						(this.getPortValue() - DriverStation.getStickButtonCount(p) - 1) / 4)
+						/ 90.0 + 1) == this.getPortValue() - DriverStation.getStickButtonCount(p);
 			} else if (this.compatible(p)) {
-				return DriverStation.getStickButton(p, this.getValue());
+				return DriverStation.getStickButton(p, this.getPortValue());
 			}
 			return false;
 		}
 
 		default boolean getPressedValueOf(GenericHID i) {
 			if (this.isPovBindOf(i)) {
-				return (i.getPOV((this.getValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getValue()
+				return (i.getPOV((this.getPortValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getPortValue()
 						- i.getButtonCount();
 			} else if (this.compatible(i)) {
-				return i.getRawButtonPressed(this.getValue());
+				return i.getRawButtonPressed(this.getPortValue());
 			}
 			return false;
 		}
 
 		default boolean getPressedValueOf(int p) {
 			if (this.isPovBindOf(p)) {
-				return (DriverStation.getStickPOV(p, (this.getValue() - DriverStation.getStickButtonCount(p) - 1) / 4)
-						/ 90.0 + 1) == this.getValue() - DriverStation.getStickButtonCount(p);
+				return (DriverStation.getStickPOV(p,
+						(this.getPortValue() - DriverStation.getStickButtonCount(p) - 1) / 4)
+						/ 90.0 + 1) == this.getPortValue() - DriverStation.getStickButtonCount(p);
 			} else if (this.compatible(p)) {
-				return DriverStation.getStickButtonPressed(p, this.getValue());
+				return DriverStation.getStickButtonPressed(p, this.getPortValue());
 			}
 			return false;
 		}
 
 		default boolean getReleasedValueOf(GenericHID i) {
 			if (this.isPovBindOf(i)) {
-				return (i.getPOV((this.getValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getValue()
+				return (i.getPOV((this.getPortValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getPortValue()
 						- i.getButtonCount();
 			} else if (this.compatible(i)) {
-				return i.getRawButtonReleased(this.getValue());
+				return i.getRawButtonReleased(this.getPortValue());
 			}
 			return false;
 		}
 
 		default boolean getReleasedValueOf(int p) {
 			if (this.isPovBindOf(p)) {
-				return (DriverStation.getStickPOV(p, (this.getValue() - DriverStation.getStickButtonCount(p) - 1) / 4)
-						/ 90.0 + 1) == this.getValue() - DriverStation.getStickButtonCount(p);
+				return (DriverStation.getStickPOV(p,
+						(this.getPortValue() - DriverStation.getStickButtonCount(p) - 1) / 4)
+						/ 90.0 + 1) == this.getPortValue() - DriverStation.getStickButtonCount(p);
 			} else if (this.compatible(p)) {
-				return DriverStation.getStickButtonReleased(p, this.getValue());
+				return DriverStation.getStickButtonReleased(p, this.getPortValue());
 			}
 			return false;
 		}
 
 		default DigitalSupplier getSupplier(GenericHID i) {
 			if (this.isPovBindOf(i)) {
-				return () -> (i.getPOV((this.getValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getValue()
+				return () -> (i.getPOV((this.getPortValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this
+						.getPortValue()
 						- i.getButtonCount();
 			} else if (this.compatible(i)) {
-				return () -> i.getRawButton(this.getValue());
+				return () -> i.getRawButton(this.getPortValue());
 			}
 			return () -> false;
 		}
@@ -534,20 +550,22 @@ public class Input {
 		default DigitalSupplier getSupplier(int p) {
 			if (this.isPovBindOf(p)) {
 				return () -> (DriverStation.getStickPOV(p,
-						(this.getValue() - DriverStation.getStickButtonCount(p) - 1) / 4) / 90.0 + 1) == this.getValue()
+						(this.getPortValue() - DriverStation.getStickButtonCount(p) - 1) / 4) / 90.0
+						+ 1) == this.getPortValue()
 								- DriverStation.getStickButtonCount(p);
 			} else if (this.compatible(p)) {
-				return () -> DriverStation.getStickButton(p, this.getValue());
+				return () -> DriverStation.getStickButton(p, this.getPortValue());
 			}
 			return () -> false;
 		}
 
 		default DigitalSupplier getPressedSupplier(GenericHID i) {
 			if (this.isPovBindOf(i)) {
-				return () -> (i.getPOV((this.getValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getValue()
+				return () -> (i.getPOV((this.getPortValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this
+						.getPortValue()
 						- i.getButtonCount();
 			} else if (this.compatible(i)) {
-				return () -> i.getRawButtonPressed(this.getValue());
+				return () -> i.getRawButtonPressed(this.getPortValue());
 			}
 			return () -> false;
 		}
@@ -555,31 +573,39 @@ public class Input {
 		default DigitalSupplier getPressedSupplier(int p) {
 			if (this.isPovBindOf(p)) {
 				return () -> (DriverStation.getStickPOV(p,
-						(this.getValue() - DriverStation.getStickButtonCount(p) - 1) / 4) / 90.0 + 1) == this.getValue()
+						(this.getPortValue() - DriverStation.getStickButtonCount(p) - 1) / 4) / 90.0
+						+ 1) == this.getPortValue()
 								- DriverStation.getStickButtonCount(p);
 			} else if (this.compatible(p)) {
-				return () -> DriverStation.getStickButtonPressed(p, this.getValue());
+				return () -> DriverStation.getStickButtonPressed(p, this.getPortValue());
 			}
 			return () -> false;
 		}
 
 		default DigitalSupplier getReleasedSupplier(GenericHID i) {
 			if (this.isPovBindOf(i)) {
-				return () -> (i.getPOV((this.getValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this.getValue()
+				return () -> (i.getPOV((this.getPortValue() - i.getButtonCount() - 1) / 4) / 90.0 + 1) == this
+						.getPortValue()
 						- i.getButtonCount();
 			} else if (this.compatible(i)) {
-				return () -> i.getRawButtonReleased(this.getValue());
+				return () -> i.getRawButtonReleased(this.getPortValue());
 			}
 			return () -> false;
 		}
 
-		default DigitalSupplier getReleasedSupplier(int p) {
-			if (this.isPovBindOf(p)) {
-				return () -> (DriverStation.getStickPOV(p,
-						(this.getValue() - DriverStation.getStickButtonCount(p) - 1) / 4) / 90.0 + 1) == this.getValue()
-								- DriverStation.getStickButtonCount(p);
-			} else if (this.compatible(p)) {
-				return () -> DriverStation.getStickButtonReleased(p, this.getValue());
+		/**
+		 * 
+		 * @param port The port to check
+		 * @return
+		 */
+		default DigitalSupplier getReleasedSupplier(int port) {
+			if (this.isPovBindOf(port)) {
+				return () -> (DriverStation.getStickPOV(port,
+						(this.getPortValue() - DriverStation.getStickButtonCount(port) - 1) / 4) / 90.0
+						+ 1) == this.getPortValue()
+								- DriverStation.getStickButtonCount(port);
+			} else if (this.compatible(port)) {
+				return () -> DriverStation.getStickButtonReleased(port, this.getPortValue());
 			}
 			return () -> false;
 		}
@@ -590,16 +616,53 @@ public class Input {
 	 * AnalogMap and DigitalMap
 	 */
 	public static abstract class InputMap {
+		/**
+		 * Returns whether the given HID is compatible with the Analog and Digital enums
+		 * defined in the class.
+		 * 
+		 * @param i The HID to check
+		 * @return Whether the given HID is compatible
+		 */
 		public abstract boolean compatible(GenericHID i);
 
-		public abstract boolean compatible(int p);
+		/**
+		 * Returns whether the given port is compatible with the Analog and Digital
+		 * enums
+		 * defined in the class.
+		 * 
+		 * @param port The port to check
+		 * @return Whether the given port is compatible
+		 */
+		public abstract boolean compatible(int port);
 
+		/**
+		 * A helper function that returns whether the given HID is compatible with the
+		 * Analog and Digital enums defined in the class, given the specific AnalogMap
+		 * and DigitalMap enums.
+		 * 
+		 * @param i The HID to check
+		 * @param a The AnalogMap enum to check
+		 * @param d The DigitalMap enum to check
+		 * @return Whether the given HID is compatible with the given AnalogMap and
+		 *         DigitalMap enums
+		 */
 		protected boolean compat(GenericHID i, AnalogMap a, DigitalMap d) {
 			return a.compatible(i) && d.compatible(i);
 		}
 
-		protected boolean compat(int p, AnalogMap a, DigitalMap d) {
-			return a.compatible(p) && d.compatible(p);
+		/**
+		 * A helper function that returns whether the given port is compatible with the
+		 * Analog and Digital enums defined in the class, given the specific AnalogMap
+		 * and DigitalMap enums.
+		 * 
+		 * @param port The port to check
+		 * @param a    The AnalogMap enum to check
+		 * @param d    The DigitalMap enum to check
+		 * @return Whether the given port is compatible with the given AnalogMap and
+		 *         DigitalMap enums
+		 */
+		protected boolean compat(int port, AnalogMap a, DigitalMap d) {
+			return a.compatible(port) && d.compatible(port);
 		}
 	}
 
@@ -617,10 +680,16 @@ public class Input {
 				this.value = value;
 			}
 
+			/**
+			 * @return The port number of the selected button or axis
+			 */
 			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -630,7 +699,7 @@ public class Input {
 			LB(5), RB(6), LS(9), RS(10),
 			A(1), B(2), X(3), Y(4),
 			BACK(7), START(8),
-			DT(11), DR(12), DB(13), DL(14), // Dpad buttons (only valid with PovButton objects)
+			DT(11), DR(12), DB(13), DL(14), // D-Pad buttons (only valid with PovButton objects)
 			TOTAL(14);
 
 			public final int value;
@@ -639,10 +708,16 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			/**
+			 * @return The port number of the selected button or axis
+			 */
+			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -676,10 +751,16 @@ public class Input {
 				this.value = value;
 			}
 
+			/**
+			 * @return The port number of the selected button or axis
+			 */
 			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -698,10 +779,16 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			/**
+			 * @return The port number of the selected button or axis
+			 */
+			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -735,10 +822,16 @@ public class Input {
 				this.value = value;
 			}
 
+			/**
+			 * @return The port number of the selected button or axis
+			 */
 			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -755,10 +848,16 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			/**
+			 * @return The port number of the selected button or axis
+			 */
+			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -783,7 +882,7 @@ public class Input {
 	 */
 	public static class Extreme3d extends InputMap {
 		public static enum Analog implements AnalogMap {
-			X(0), Y(1), Z(2), S(3), // x-axis, y-axis, swivell-axis, slider-axis
+			X(0), Y(1), Z(2), S(3), // x-axis, y-axis, swivel-axis, slider-axis
 			TOTAL(4);
 
 			public final int value;
@@ -792,10 +891,16 @@ public class Input {
 				this.value = value;
 			}
 
+			/**
+			 * @return The port number of the selected button or axis
+			 */
 			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -813,10 +918,16 @@ public class Input {
 				this.value = value;
 			}
 
-			public int getValue() {
+			/**
+			 * @return The port number of the selected button or axis
+			 */
+			public int getPortValue() {
 				return this.value;
 			}
 
+			/**
+			 * @return The total number of port options
+			 */
 			public int getTotal() {
 				return TOTAL.value;
 			}
@@ -841,40 +952,46 @@ public class Input {
 	 */
 	public static class ButtonBox extends InputMap {
 		public static enum Digital implements DigitalMap {
-		  B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
-		  S1(7), S2(8),
-		  TOTAL(16); // whatever interface board the bbox is using apparently has 12 buttons and 1
-					 // POV
-	
-		  public final int value;
-	
-		  private Digital(int v) {
-			this.value = v;
-		  }
-	
-		  public int getValue() {
-			return this.value;
-		  }
-	
-		  public int getTotal() {
-			return TOTAL.value;
-		  }
+			B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
+			S1(7), S2(8),
+			TOTAL(16); // whatever interface board the Button Box is using apparently has 12 buttons
+						// and 1
+						// POV
+
+			public final int value;
+
+			private Digital(int v) {
+				this.value = v;
+			}
+
+			/**
+			 * @return The port number of the selected button or axis
+			 */
+			public int getPortValue() {
+				return this.value;
+			}
+
+			/**
+			 * @return The total number of port options
+			 */
+			public int getTotal() {
+				return TOTAL.value;
+			}
 		}
-	
+
 		private ButtonBox() {
 		}
-	
+
 		public static final ButtonBox Map = new ButtonBox();
-		public static final int AXIS_COUNT = 5; // see the last comment --> the bbox apparently has 5 axis
-	
+		public static final int AXIS_COUNT = 5; // see the last comment --> the Button Box apparently has 5 axis
+
 		public boolean compatible(GenericHID i) {
-		  return Digital.TOTAL.compatible(i) && i.getAxisCount() == AXIS_COUNT;
+			return Digital.TOTAL.compatible(i) && i.getAxisCount() == AXIS_COUNT;
 		}
-	
+
 		public boolean compatible(int p) {
-		  return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT;
+			return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT;
 		}
-	  }
-	
+	}
 
 }

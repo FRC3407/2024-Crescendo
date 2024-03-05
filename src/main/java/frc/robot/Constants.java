@@ -25,7 +25,7 @@ public final class Constants {
 
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = 1.0;
-    public static final double FLINGER_INTAKE_SPEED = -0.5; //Inverted by default
+    public static final double FLINGER_INTAKE_SPEED = -0.5; // Inverted by default
     public static final int flingerCanID = 11;
   }
 
@@ -52,7 +52,7 @@ public final class Constants {
     // Distance between centers of right and left wheels on robot
     public static final double kWheelBase = Units.inchesToMeters(22.5);
     // Distance between front and back wheels on robot
-    public static final double kBaseRadius = Math.sqrt(Math.pow((kTrackWidth/2), 2) + Math.pow((kWheelBase/2), 2));
+    public static final double kBaseRadius = Math.sqrt(Math.pow((kTrackWidth / 2), 2) + Math.pow((kWheelBase / 2), 2));
     // Distance from middle of robot to a wheel
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -68,7 +68,7 @@ public final class Constants {
 
     // SPARK MAX CAN IDs
 
-    //Need to update CAN IDs
+    // Need to update CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
     public static final int kRearLeftDrivingCanId = 6;
     public static final int kFrontRightDrivingCanId = 4;
@@ -88,7 +88,7 @@ public final class Constants {
     // This changes the drive speed of the module (a pinion gear with more teeth
     // will result in a
     // robot that drives faster).
-    //get pinion gear configuration from build team
+    // get pinion gear configuration from build team
     public static final int kDrivingMotorPinionTeeth = 14;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite

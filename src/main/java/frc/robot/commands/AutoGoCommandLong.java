@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class AutoGoCommand extends Command {
+public class AutoGoCommandLong extends Command {
     Timer timer;
     private final DriveSubsystem m_driveTrain;
 
-    public AutoGoCommand(DriveSubsystem subsystem) {
+    public AutoGoCommandLong(DriveSubsystem subsystem) {
         this.m_driveTrain = subsystem;
         timer = new Timer();
     }
@@ -28,7 +28,7 @@ public class AutoGoCommand extends Command {
     }
 
     public boolean isFinished() {
-        if (timer.hasElapsed(3) == true) {
+        if (timer.hasElapsed(10) == true) {
             return true;
         } else {
             return false;

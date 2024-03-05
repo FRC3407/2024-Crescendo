@@ -6,6 +6,7 @@ import frc.robot.controls.Input.ButtonBox;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.AutoSelector;
+// import frc.robot.commands.AutoSelector;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.IntakeCommand;
@@ -127,17 +128,17 @@ public final class Controls {
 	}
 
 	/**
-	 * @param name  The name of the new ControlScheme
+	 * @param name         The name of the new ControlScheme
 	 * @param setup
-	 * @param reqs
+	 * @param requirements InputMap requirements for the new ControlScheme
 	 * @return New ControlScheme with the parameters specified
 	 */
-	private static ControlScheme buildScheme(String name, ControlSchemeBase.Setup_F setup, InputMap... reqs) {
-		return new ControlScheme(name, new AutomatedTester(reqs), setup);
+	private static ControlScheme buildScheme(String name, ControlSchemeBase.Setup_F setup, InputMap... requirements) {
+		return new ControlScheme(name, new AutomatedTester(requirements), setup);
 	}
 
 	/**
-	 * Removes all default commands and clears the triggerList, used in beggining of
+	 * Removes all default commands and clears the triggerList, used in beginning of
 	 * every control scheme to prevent duplication of triggers & commands
 	 */
 	private static void deScheduleCommands() {
@@ -163,138 +164,150 @@ public final class Controls {
 	/**
 	 * @return The selected auto command
 	 */
-	public static Command getAutonomousCommand() {
+	public static Command getSelectedAutoCommand()
+	{
 		return selectedAutoCommand;
 	}
 
 	// Uses a Single Xbox Controller
 	private static void singleXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		deScheduleCommands();
-		InputDevice controller = inputs[0];
-		Command drive_control = new DriveCommand(m_driveTrain,
-				Xbox.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				Xbox.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				Xbox.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				Xbox.Analog.LT.getDriveInputSupplier(controller, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Digital.B.getSupplier(controller));
-		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
-				() -> Xbox.Analog.RT.getValueOf(controller) >= OIConstants.kTriggerDeadband,
-				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
-				() -> Xbox.Digital.RB.getValueOf(controller),
-				new IntakeCommand(m_flinger, m_intake)));
+		InputDevice xboxController = inputs[0];
+		if (drivemode == DriveMode.DEFAULTSWERVE) {
+			Command drive_control = new DriveCommand(m_driveTrain,
+					Xbox.Analog.RX.getDriveInputSupplier(xboxController, 0, 1.0, 1.0),
+					Xbox.Analog.RY.getDriveInputSupplier(xboxController, 0, 1.0, 1.0),
+					Xbox.Analog.LX.getDriveInputSupplier(xboxController, 0, 1.0, 1.0),
+					Xbox.Analog.LT.getDriveInputSupplier(xboxController, OIConstants.kTriggerDeadband, 1.0, 1.0),
+					Xbox.Digital.B.getSupplier(xboxController));
+			m_driveTrain.setDefaultCommand(drive_control);
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+					() -> Xbox.Analog.RT.getValueOf(xboxController) >= OIConstants.kTriggerDeadband,
+					new FlingCommand(m_flinger, m_intake)));
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+					() -> Xbox.Digital.RB.getValueOf(xboxController),
+					new IntakeCommand(m_flinger, m_intake)));
+		}
 	}
 
 	// Uses a Single PlayStation controller
 	private static void singlePlayStation(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		deScheduleCommands();
-		InputDevice controller = inputs[0];
-		Command drive_control = new DriveCommand(m_driveTrain,
-				PlayStation.Analog.RX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				PlayStation.Analog.RY.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				PlayStation.Analog.LX.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				PlayStation.Analog.LT.getDriveInputSupplier(controller, 0, 1.0, 1.0),
-				PlayStation.Digital.O.getSupplier(controller));
-		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
-				() -> PlayStation.Analog.RT.getValueOf(controller) >= OIConstants.kTriggerDeadband,
-				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
-				() -> PlayStation.Digital.RB.getValueOf(controller),
-				new IntakeCommand(m_flinger, m_intake)));
+		InputDevice playstationController = inputs[0];
+		if (drivemode == DriveMode.DEFAULTSWERVE) {
+			Command drive_control = new DriveCommand(m_driveTrain,
+					PlayStation.Analog.RX.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
+					PlayStation.Analog.RY.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
+					PlayStation.Analog.LX.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
+					PlayStation.Analog.LT.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
+					PlayStation.Digital.O.getSupplier(playstationController));
+			m_driveTrain.setDefaultCommand(drive_control);
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+					() -> PlayStation.Analog.RT.getValueOf(playstationController) >= OIConstants.kTriggerDeadband,
+					new FlingCommand(m_flinger, m_intake)));
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+					() -> PlayStation.Digital.RB.getValueOf(playstationController),
+					new IntakeCommand(m_flinger, m_intake)));
+		}
 	}
 
 	// Uses two Xbox controllers
 	private static void dualXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		deScheduleCommands();
-		InputDevice controller1 = inputs[0];
-		InputDevice controller2 = inputs[1];
-		Command drive_control = new DriveCommand(m_driveTrain,
-				Xbox.Analog.RX.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
-				Xbox.Analog.RY.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
-				Xbox.Analog.LX.getDriveInputSupplier(controller1, 0, 1.0, 1.0),
-				Xbox.Analog.LT.getDriveInputSupplier(controller1, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Digital.B.getSupplier(controller1));
-		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
-				() -> Xbox.Analog.RT.getValueOf(controller1) >= OIConstants.kTriggerDeadband,
-				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
-				() -> Xbox.Digital.RB.getValueOf(controller1),
-				new IntakeCommand(m_flinger, m_intake)));
+		InputDevice xboxController1 = inputs[0];
+		@SuppressWarnings("unused")
+		InputDevice xboxController2 = inputs[1]; // Not used
+		if (drivemode == DriveMode.DEFAULTSWERVE) {
+			Command drive_control = new DriveCommand(m_driveTrain,
+					Xbox.Analog.RX.getDriveInputSupplier(xboxController1, 0, 1.0, 1.0),
+					Xbox.Analog.RY.getDriveInputSupplier(xboxController1, 0, 1.0, 1.0),
+					Xbox.Analog.LX.getDriveInputSupplier(xboxController1, 0, 1.0, 1.0),
+					Xbox.Analog.LT.getDriveInputSupplier(xboxController1, OIConstants.kTriggerDeadband, 1.0, 1.0),
+					Xbox.Digital.B.getSupplier(xboxController1));
+			m_driveTrain.setDefaultCommand(drive_control);
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+					() -> Xbox.Analog.RT.getValueOf(xboxController1) >= OIConstants.kTriggerDeadband,
+					new FlingCommand(m_flinger, m_intake)));
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+					() -> Xbox.Digital.RB.getValueOf(xboxController1),
+					new IntakeCommand(m_flinger, m_intake)));
+		}
 	}
 
 	// Uses two Attack Joysticks
 	private static void arcadeBoardSimple(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		deScheduleCommands();
-		InputDevice lstick = inputs[0];
-		InputDevice rstick = inputs[1];
-		Command drive_control = new DriveCommand(m_driveTrain,
-				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
-				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.B2.getSupplier(rstick));
-		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
-				() -> Attack3.Digital.TRI.getValueOf(rstick),
-				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
-				() -> Attack3.Digital.TB.getValueOf(rstick),
-				new IntakeCommand(m_flinger, m_intake)));
+		InputDevice leftStick = inputs[0];
+		InputDevice rightStick = inputs[1];
+		if (drivemode == DriveMode.DEFAULTSWERVE) {
+			Command drive_control = new DriveCommand(m_driveTrain,
+					Attack3.Analog.X.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
+					Attack3.Analog.Y.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
+					Attack3.Analog.X.getDriveInputSupplier(leftStick, 0, 1.0, 1.0),
+					Attack3.Digital.TRI.getSupplier(leftStick),
+					Attack3.Digital.B2.getSupplier(rightStick));
+			m_driveTrain.setDefaultCommand(drive_control);
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+					() -> Attack3.Digital.TRI.getValueOf(rightStick),
+					new FlingCommand(m_flinger, m_intake)));
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+					() -> Attack3.Digital.TB.getValueOf(rightStick),
+					new IntakeCommand(m_flinger, m_intake)));
+		}
 	}
 
 	// Uses two Attack Joysticks and the Button Box
 	private static void arcadeBoardFull(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		deScheduleCommands();
-		InputDevice lstick = inputs[0];
-		InputDevice rstick = inputs[1];
-		InputDevice bbox = inputs[2];
-		Command drive_control = new DriveCommand(m_driveTrain,
-				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
-				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.B2.getSupplier(rstick));
-		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
-				() -> Attack3.Digital.TRI.getValueOf(rstick),
-				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
-				() -> Attack3.Digital.TB.getValueOf(rstick),
-				new IntakeCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
-				() -> ButtonBox.Digital.S1.getValueOf(bbox),
-				new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(bbox),
-						() -> ButtonBox.Digital.S2.getValueOf(bbox))));
-
+		InputDevice leftStick = inputs[0];
+		InputDevice rightStick = inputs[1];
+		InputDevice buttonBox = inputs[2];
+		if (drivemode == DriveMode.DEFAULTSWERVE) {
+			Command drive_control = new DriveCommand(m_driveTrain,
+					Attack3.Analog.X.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
+					Attack3.Analog.Y.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
+					Attack3.Analog.X.getDriveInputSupplier(leftStick, 0, 1.0, 1.0),
+					Attack3.Digital.TRI.getSupplier(leftStick),
+					Attack3.Digital.B2.getSupplier(rightStick));
+			m_driveTrain.setDefaultCommand(drive_control);
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+					() -> Attack3.Digital.TRI.getValueOf(rightStick),
+					new FlingCommand(m_flinger, m_intake)));
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+					() -> Attack3.Digital.TB.getValueOf(rightStick),
+					new IntakeCommand(m_flinger, m_intake)));
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
+					() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+					new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+							() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
+		}
 	}
 
 	// Uses two Attack Joysticks, the Button Box, and an Xbox controller
 	private static void fullCompetitionBoard(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		deScheduleCommands();
-		InputDevice lstick = inputs[0];
-		InputDevice rstick = inputs[1];
-		InputDevice bbox = inputs[2];
-		InputDevice controller = inputs[3];
-		Command drive_control = new DriveCommand(m_driveTrain,
-				Attack3.Analog.X.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-				Attack3.Analog.Y.getDriveInputSupplier(rstick, 0, 1.0, 1.0),
-				Attack3.Analog.X.getDriveInputSupplier(lstick, 0, 1.0, 1.0),
-				Attack3.Digital.TRI.getSupplier(lstick),
-				Attack3.Digital.B2.getSupplier(rstick));
-		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
-				() -> Attack3.Digital.TRI.getValueOf(rstick),
-				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
-				() -> Attack3.Digital.TB.getValueOf(rstick),
-				new IntakeCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
-				() -> ButtonBox.Digital.S1.getValueOf(bbox),
-				new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(bbox),
-						() -> ButtonBox.Digital.S2.getValueOf(bbox))));
+		InputDevice leftStick = inputs[0];
+		InputDevice rightStick = inputs[1];
+		InputDevice xboxController = inputs[3]; // Not used
+		if (drivemode == DriveMode.DEFAULTSWERVE) {
+			Command drive_control = new DriveCommand(m_driveTrain,
+					Attack3.Analog.X.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
+					Attack3.Analog.Y.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
+					Attack3.Analog.X.getDriveInputSupplier(leftStick, 0, 1.0, 1.0),
+					Attack3.Digital.TRI.getSupplier(leftStick),
+					Attack3.Digital.B2.getSupplier(rightStick));
+			m_driveTrain.setDefaultCommand(drive_control);
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+					() -> Attack3.Digital.TRI.getValueOf(rightStick),
+					new FlingCommand(m_flinger, m_intake)));
+			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+					() -> Attack3.Digital.TB.getValueOf(rightStick),
+					new IntakeCommand(m_flinger, m_intake)));
+			// triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Auto Select
+			// 		() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+			// 		new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+			// 				() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
+		}
 	}
 
 	// How to write a new control scheme
@@ -334,14 +347,14 @@ public final class Controls {
 	// Step 3: For each individual command that is being run, add a copy of the
 	// triggerList.add code
 	// Replace the loopType with the type of loop you would like, most of the types
-	// from the wpilib
+	// from the WPILib
 	// trigger class are usable such as onTrue and whileFalse, the available types
 	// can be seen in
 	// TriggerRunnable.LoopType
 	// Replace buttonSupplier with the supplier you would like to use, to convert a
 	// value function into
 	// a supplier, use a lambda expression, for example: () ->
-	// Attack3.Digital.TRI.getValueOf(rstick)
+	// Attack3.Digital.TRI.getValueOf(rightStick)
 	// this would turn the getValueOf function for the Attack 3 trigger into a
 	// supplier rather than just
 	// a value function

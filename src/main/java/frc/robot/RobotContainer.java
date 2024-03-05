@@ -6,16 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.controls.ControlSchemeManager;
 import frc.robot.controls.Controls;
-import frc.robot.commands.AutoGoCommand;
-/*
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
- */
 
 public class RobotContainer extends TimedRobot {
 
@@ -29,17 +21,16 @@ public class RobotContainer extends TimedRobot {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
     Controls.setupControls(this.robot, controls, Controls.FeatureLevel.ALLSCHEMES);
   }
-  
+
   private static double timeSinceLastLoop = System.currentTimeMillis();
 
   /**
    * Checks the controls schemes
    */
-  public static void loopScheme()
-  {
-    //If 2 seconds have elapse since the last control scheme check, check the control schemes
-    if(System.currentTimeMillis()-timeSinceLastLoop>2000)
-    {
+  public static void loopScheme() {
+    // If 2 seconds have elapse since the last control scheme check, check the
+    // control schemes
+    if (System.currentTimeMillis() - timeSinceLastLoop > 2000) {
       controls.loopScheme();
       timeSinceLastLoop = System.currentTimeMillis();
     }

@@ -20,9 +20,7 @@ import frc.robot.controls.Controls;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -30,9 +28,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
   }
 
@@ -73,16 +68,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = Controls.getAutonomousCommand();
+    m_autonomousCommand = Controls.getSelectedAutoCommand();
 
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
-
-    // schedule the autonomous command (example)
+    // schedule the autonomous command if there is one available
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }

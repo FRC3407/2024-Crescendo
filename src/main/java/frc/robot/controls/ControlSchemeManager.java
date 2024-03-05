@@ -48,7 +48,7 @@ public class ControlSchemeManager implements Sendable {
 		 */
 		public void setup(InputDevice... inputs);
 
-		/** Optional callback for deiniting the scheduled bindings */
+		/** Optional callback for debinding the scheduled bindings */
 		default public void shutdown() {
 		}
 
@@ -67,25 +67,25 @@ public class ControlSchemeManager implements Sendable {
 		private final String desc;
 
 		/**
-		 * @param d Description of the control scheme.
-		 * @param c Compatibility function.
-		 * @param s Setup function.
+		 * @param description Description of the control scheme.
+		 * @param c           Compatibility function.
+		 * @param s           Setup function.
 		 */
-		public ControlScheme(String d, Compat_F c, Setup_F s) {
-			this(d, c, s, null);
+		public ControlScheme(String description, Compat_F c, Setup_F s) {
+			this(description, c, s, null);
 		}
 
 		/**
-		 * @param d Description of the control scheme.
-		 * @param c Compatibility function.
-		 * @param s Setup function.
-		 * @param e Shutdown function.
+		 * @param description Description of the control scheme.
+		 * @param c           Compatibility function.
+		 * @param s           Setup function.
+		 * @param e           Shutdown function.
 		 */
-		public ControlScheme(String d, Compat_F c, Setup_F s, Runnable e) {
+		public ControlScheme(String description, Compat_F c, Setup_F s, Runnable e) {
 			this.compatibility = c;
 			this.setup = s;
 			this.shutdown = e;
-			this.desc = d;
+			this.desc = description;
 		}
 
 		@Override
@@ -125,11 +125,11 @@ public class ControlSchemeManager implements Sendable {
 		/**
 		 * Constructor for AutomatedTester.
 		 *
-		 * @param reqs InputMap requirements.
+		 * @param requirements InputMap requirements.
 		 */
-		public AutomatedTester(InputMap... reqs) {
-			this.requirements = reqs;
-			this.buff = new InputDevice[reqs.length];
+		public AutomatedTester(InputMap... requirements) {
+			this.requirements = requirements;
+			this.buff = new InputDevice[requirements.length];
 		}
 
 		/**
@@ -141,8 +141,8 @@ public class ControlSchemeManager implements Sendable {
 		 */
 		@Override
 		public InputDevice[] test(InputDevice... inputs) {
-			int[] avail, reqs = new int[this.requirements.length]; // Look-up tables for inputs (param) and
-																	// this.requirements, respectively
+			int[] avail, requirements = new int[this.requirements.length]; // Look-up tables for inputs (param) and
+			// this.requirements, respectively
 			int found = 0;
 
 			if (inputs.length == DriverStation.kJoystickPorts) {
@@ -154,23 +154,23 @@ public class ControlSchemeManager implements Sendable {
 				}
 			}
 
-			for (int i = 0; i < reqs.length; i++) {
-				reqs[i] = i;
+			for (int i = 0; i < requirements.length; i++) {
+				requirements[i] = i;
 			}
 
 			for (int i = found; i < avail.length; i++) { // For each remaining port:
 				int p = avail[i];
-				for (int r = found; r < reqs.length; r++) { // For each remaining requirement:
-					if (this.requirements[reqs[r]].compatible(p)) { // If compatible:
-						this.buff[reqs[r]] = inputs[p];
+				for (int r = found; r < requirements.length; r++) { // For each remaining requirement:
+					if (this.requirements[requirements[r]].compatible(p)) { // If compatible:
+						this.buff[requirements[r]] = inputs[p];
 						if (i != found) {
 							for (int q = i; q > found; q--) { // Start at i, work backwards until @ found
 								avail[q] = avail[q - 1]; // Bump all values before i up an index
 							}
 						}
 						if (r != found) {
-							for (int q = r; q > found; q--) { // Same as above but for the reqs look-up table
-								reqs[q] = reqs[q - 1];
+							for (int q = r; q > found; q--) { // Same as above but for the requirements look-up table
+								requirements[q] = requirements[q - 1];
 							}
 						}
 						found++;
@@ -195,14 +195,11 @@ public class ControlSchemeManager implements Sendable {
 		PREFER_SIMPLE
 	}
 
-	private static final Thread DUMMY_THREAD = new Thread();
-
 	private final ArrayList<ControlSchemeBase> schemes = new ArrayList<>();
 	private final InputDevice[] inputs = new InputDevice[DriverStation.kJoystickPorts]; // make static?
 	private SendableChooser<Integer> options = new SendableChooser<>();
-	private Thread searcher;
 	private String applied = "None";
-	private AmbiguousSolution ambg_preference = AmbiguousSolution.PREFER_SIMPLE;
+	private AmbiguousSolution ambiguousPreference = AmbiguousSolution.PREFER_COMPLEX;
 
 	/**
 	 * Initializes options and input devices.
@@ -233,52 +230,52 @@ public class ControlSchemeManager implements Sendable {
 	 * Overloaded method to add a new control scheme with compatibility and setup
 	 * functions.
 	 * 
-	 * @param d Description of the control scheme.
-	 * @param c Compatibility function.
-	 * @param s Setup function.
+	 * @param description Description of the control scheme.
+	 * @param c           Compatibility function.
+	 * @param s           Setup function.
 	 */
-	public void addScheme(String d, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s) {
-		this.options.addOption(d, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(d, c, s));
+	public void addScheme(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s) {
+		this.options.addOption(description, Integer.valueOf(this.schemes.size()));
+		this.schemes.add(new ControlScheme(description, c, s));
 	}
 
 	/**
 	 * Overloaded method to add a new control scheme with compatibility, setup, and
 	 * shutdown functions.
 	 * 
-	 * @param d Description of the control scheme.
-	 * @param c Compatibility function.
-	 * @param s Setup function.
-	 * @param e Shutdown function.
+	 * @param description Description of the control scheme.
+	 * @param c           Compatibility function.
+	 * @param s           Setup function.
+	 * @param e           Shutdown function.
 	 */
-	public void addScheme(String d, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s, Runnable e) {
-		this.options.addOption(d, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(d, c, s, e));
+	public void addScheme(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s, Runnable e) {
+		this.options.addOption(description, Integer.valueOf(this.schemes.size()));
+		this.schemes.add(new ControlScheme(description, c, s, e));
 	}
 
 	/**
 	 * Overloaded method to add a new control scheme with compatibility, setup, and
 	 * shutdown functions.
 	 * 
-	 * @param d    Description of the control scheme.
-	 * @param s    Setup function.
-	 * @param reqs InputMap requirements.
+	 * @param description  Description of the control scheme.
+	 * @param s            Setup function.
+	 * @param requirements InputMap requirements.
 	 */
-	public void addScheme(String d, ControlSchemeBase.Setup_F s, InputMap... reqs) {
-		this.addScheme(d, new AutomatedTester(reqs), s);
+	public void addScheme(String description, ControlSchemeBase.Setup_F s, InputMap... requirements) {
+		this.addScheme(description, new AutomatedTester(requirements), s);
 	}
 
 	/**
 	 * Overloaded method to add a new control scheme with compatibility, setup, and
 	 * shutdown functions.
 	 * 
-	 * @param d    Description of the control scheme.
-	 * @param s    Setup function.
-	 * @param e    Shutdown function.
-	 * @param reqs InputMap requirements.
+	 * @param description  Description of the control scheme.
+	 * @param s            Setup function.
+	 * @param e            Shutdown function.
+	 * @param requirements InputMap requirements.
 	 */
-	public void addScheme(String d, ControlSchemeBase.Setup_F s, Runnable e, InputMap... reqs) {
-		this.addScheme(d, new AutomatedTester(reqs), s, e);
+	public void addScheme(String description, ControlSchemeBase.Setup_F s, Runnable e, InputMap... requirements) {
+		this.addScheme(description, new AutomatedTester(requirements), s, e);
 	}
 
 	/**
@@ -294,51 +291,51 @@ public class ControlSchemeManager implements Sendable {
 	/**
 	 * Overloaded method to set the default control scheme by creating a new scheme.
 	 * 
-	 * @param d Description of the control scheme.
-	 * @param c Compatibility function.
-	 * @param s Setup function.
+	 * @param description Description of the control scheme.
+	 * @param c           Compatibility function.
+	 * @param s           Setup function.
 	 */
-	public void setDefault(String d, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s) {
-		this.options.setDefaultOption(d, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(d, c, s));
+	public void setDefault(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s) {
+		this.options.setDefaultOption(description, Integer.valueOf(this.schemes.size()));
+		this.schemes.add(new ControlScheme(description, c, s));
 	}
 
 	/**
 	 * Overloaded method to set the default control scheme by creating a new scheme.
 	 * 
-	 * @param d Description of the control scheme.
-	 * @param c Compatibility function.
-	 * @param s Setup function.
-	 * @param e Shutdown function.
+	 * @param description Description of the control scheme.
+	 * @param c           Compatibility function.
+	 * @param s           Setup function.
+	 * @param e           Shutdown function.
 	 */
-	public void setDefault(String d, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s, Runnable e) {
-		this.options.setDefaultOption(d, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(d, c, s, e));
+	public void setDefault(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s, Runnable e) {
+		this.options.setDefaultOption(description, Integer.valueOf(this.schemes.size()));
+		this.schemes.add(new ControlScheme(description, c, s, e));
 	}
 
 	/**
 	 * Overloaded method to set the default control scheme by creating a new
 	 * AutomatedTester.
 	 * 
-	 * @param d    Description of the control scheme.
-	 * @param s    Setup function.
-	 * @param reqs InputMap requirements.
+	 * @param description  Description of the control scheme.
+	 * @param s            Setup function.
+	 * @param requirements InputMap requirements.
 	 */
-	public void setDefault(String d, ControlSchemeBase.Setup_F s, InputMap... reqs) {
-		this.setDefault(d, new AutomatedTester(reqs), s);
+	public void setDefault(String d, ControlSchemeBase.Setup_F s, InputMap... requirements) {
+		this.setDefault(d, new AutomatedTester(requirements), s);
 	}
 
 	/**
 	 * Overloaded method to set the default control scheme by creating a new
 	 * AutomatedTester.
 	 * 
-	 * @param d    Description of the control scheme.
-	 * @param s    Setup function.
-	 * @param e    Shutdown function.
-	 * @param reqs InputMap requirements.
+	 * @param description  Description of the control scheme.
+	 * @param s            Setup function.
+	 * @param e            Shutdown function.
+	 * @param requirements InputMap requirements.
 	 */
-	public void setDefault(String d, ControlSchemeBase.Setup_F s, Runnable e, InputMap... reqs) {
-		this.setDefault(d, new AutomatedTester(reqs), s, e);
+	public void setDefault(String description, ControlSchemeBase.Setup_F s, Runnable e, InputMap... requirements) {
+		this.setDefault(description, new AutomatedTester(requirements), s, e);
 	}
 
 	/**
@@ -351,11 +348,11 @@ public class ControlSchemeManager implements Sendable {
 	/**
 	 * Overloaded method to publish the control scheme selector to SmartDashboard.
 	 * 
-	 * @param n Name of the control scheme selector.
+	 * @param name Name of the control scheme selector.
 	 */
-	public void publishSelector(String n) {
-		SmartDashboard.putData(n + "/Selector", this.options);
-		SmartDashboard.putData(n, this);
+	public void publishSelector(String name) {
+		SmartDashboard.putData(name + "/Selector", this.options);
+		SmartDashboard.putData(name, this);
 	}
 
 	/**
@@ -370,21 +367,21 @@ public class ControlSchemeManager implements Sendable {
 	/**
 	 * Overloaded method to publish the control scheme selector to SmartDashboard.
 	 * 
-	 * @param nt Specific Network table to publish to.
-	 * @param n  Name of the control scheme selector.
+	 * @param nt   Specific Network table to publish to.
+	 * @param name Name of the control scheme selector.
 	 */
-	public void publishSelector(SenderNT nt, String n) {
-		nt.putData(n + "/Selector", this.options);
-		nt.putData(n, this);
+	public void publishSelector(SenderNT nt, String name) {
+		nt.putData(name + "/Selector", this.options);
+		nt.putData(name, this);
 	}
 
 	/**
 	 * Set the preference for handling ambiguous control scheme solutions.
 	 * 
-	 * @param s AmbiguousSolution preference.
+	 * @param preference AmbiguousSolution preference.
 	 */
-	public void setAmbiguousSolution(AmbiguousSolution s) {
-		this.ambg_preference = s;
+	public void setAmbiguousSolution(AmbiguousSolution preference) {
+		this.ambiguousPreference = preference;
 	}
 
 	/**
@@ -421,8 +418,8 @@ public class ControlSchemeManager implements Sendable {
 		boolean has_any = false;
 	}
 
-	private static int lastSelectedCompat;
-	private static int lastSelectedId;
+	private static int lastSelectedCompat = 10;
+	private static int lastSelectedId = 10;
 
 	/**
 	 * This method schedules the continuous worker responsible for selecting and
@@ -448,7 +445,7 @@ public class ControlSchemeManager implements Sendable {
 
 					// If a compatible scheme is found
 					if (sel.buff != null && sel.buff.length > 0) {
-						switch (this.ambg_preference) {
+						switch (this.ambiguousPreference) {
 							case PREFER_COMPLEX:
 								if (sel.devices == null || sel.buff.length > sel.devices.length) {
 									sel.devices = sel.buff;
@@ -477,11 +474,11 @@ public class ControlSchemeManager implements Sendable {
 					}
 					// Set up the newly compatible scheme
 					if (compat != lastSelectedCompat) {
-					this.schemes.get(compat).setup(sel.devices);
-					this.applied = this.schemes.get(compat).getDesc();
-					sel.prev_active_id = compat;
-					sel.prev_selected = id;
-					sel.has_any = true;
+						this.schemes.get(compat).setup(sel.devices);
+						this.applied = this.schemes.get(compat).getDesc();
+						sel.prev_active_id = compat;
+						sel.prev_selected = id;
+						sel.has_any = true;
 					}
 					lastSelectedCompat = compat;
 				} else if (compat < -1 && !sel.has_any) {

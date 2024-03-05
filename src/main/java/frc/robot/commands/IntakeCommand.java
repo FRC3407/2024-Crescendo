@@ -13,11 +13,12 @@ public class IntakeCommand extends Command {
     /**
      * Runs the intake
      * 
-     * @param shooter
+     * @param m_flinger
+     * @param m_floorIntake
      */
-    public IntakeCommand(Flinger flinger, FloorIntake floorIntake) {
-        this.m_floorIntake = floorIntake;
-        this.m_flinger = flinger;
+    public IntakeCommand(Flinger m_flinger, FloorIntake m_floorIntake) {
+        this.m_floorIntake = m_floorIntake;
+        this.m_flinger = m_flinger;
         addRequirements(m_floorIntake);
     }
 
@@ -63,7 +64,8 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        // Ends the command if the ring is in the right position or if a fling command is active
+        // Ends the command if the ring is in the right position or if a fling command
+        // is active
         if ((this.m_floorIntake.getMidSensor() && this.m_floorIntake.getBotSensor()) || Flinger.flingCommandActive) {
             return true;
         } else {
