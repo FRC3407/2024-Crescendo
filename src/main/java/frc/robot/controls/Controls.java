@@ -26,7 +26,6 @@ import frc.utils.TriggerRunnable;
 import frc.robot.subsystems.Flinger;
 
 public final class Controls {
-
 	public static final Flinger m_flinger = new Flinger();
 	public static final FloorIntake m_intake = new FloorIntake();
 	public final static DriveSubsystem m_driveTrain = new DriveSubsystem();
@@ -45,8 +44,10 @@ public final class Controls {
 
 	// By default, uses all schemes in getAllSchemes
 	public static final FeatureLevel DEFAULT_FEATURE_LEVEL = FeatureLevel.ALLSCHEMES;
+
 	// By default, uses swerve for drive
 	public static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.DEFAULTSWERVE;
+
 	// A list of TriggerRunnables, cleared in deScheduleCommands whenever a new
 	// schemed is used
 	// to prevent duplicate commands
@@ -169,6 +170,7 @@ public final class Controls {
 		return selectedAutoCommand;
 	}
 
+	//SECTION - Control Schemes
 	// Uses a Single Xbox Controller
 	private static void singleXbox(Robot robot, DriveMode drivemode, InputDevice... inputs) {
 		deScheduleCommands();
@@ -276,6 +278,7 @@ public final class Controls {
 			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 					() -> Attack3.Digital.TB.getValueOf(rightStick),
 					new IntakeCommand(m_flinger, m_intake)));
+			//FIXME - Doesn't currently call AutoSelector
 			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
 					() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
 					new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
@@ -288,6 +291,7 @@ public final class Controls {
 		deScheduleCommands();
 		InputDevice leftStick = inputs[0];
 		InputDevice rightStick = inputs[1];
+		InputDevice buttonBox = inputs[2];
 		InputDevice xboxController = inputs[3]; // Not used
 		if (drivemode == DriveMode.DEFAULTSWERVE) {
 			Command drive_control = new DriveCommand(m_driveTrain,
@@ -303,14 +307,16 @@ public final class Controls {
 			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 					() -> Attack3.Digital.TB.getValueOf(rightStick),
 					new IntakeCommand(m_flinger, m_intake)));
-			// triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Auto Select
-			// 		() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-			// 		new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-			// 				() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
+		//FIXME - Doesn't currently call AutoSelector
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
+					() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+					new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+							() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
 		}
 	}
+	//!SECTION
 
-	// How to write a new control scheme
+	//TUTORIAL - How to write a new control scheme
 	// Use the following shell:
 
 	// private static void nameOfScheme(Robot robot, DriveMode drivemode,
@@ -361,4 +367,5 @@ public final class Controls {
 	// Replace command wih the type of command you would like to run, wether it be a
 	// new command or
 	// one from the commands folder
+	//!TUTORIAL
 }

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 //should be checked
 public class TriggerRunnable {
   private final BooleanSupplier m_condition;
-  private boolean m_pressedLast;
+  private boolean m_lastValue;
   private final Command m_command;
 
   // The type of loop to be checked, nearly identical to the wpilib Trigger types
@@ -41,7 +41,7 @@ public class TriggerRunnable {
     this.m_command = m_command;
     this.m_loopType = m_loopType;
     this.m_condition = requireNonNullParam(m_condition, "condition", "Trigger");
-    m_pressedLast = m_condition.getAsBoolean();
+    m_lastValue = m_condition.getAsBoolean();
   }
 
   /**
@@ -66,7 +66,7 @@ public class TriggerRunnable {
     } else if (m_loopType == LoopType.toggleOnTrue) {
       return toggleOnTrue();
     }
-    m_pressedLast = m_condition.getAsBoolean();
+    m_lastValue = m_condition.getAsBoolean();
     return false;
   }
 
@@ -76,9 +76,9 @@ public class TriggerRunnable {
    * @return boolean, true if the command was scheduled
    */
   public boolean onToggle() {
-    boolean pressed = m_condition.getAsBoolean();
+    boolean currentValue = m_condition.getAsBoolean();
 
-    if (m_pressedLast != pressed) {
+    if (m_lastValue != currentValue) {
       m_command.schedule();
       return true;
     }
@@ -92,9 +92,9 @@ public class TriggerRunnable {
    * @return boolean, true if the command was scheduled
    */
   public boolean onTrue() {
-    boolean pressed = m_condition.getAsBoolean();
+    boolean currentValue = m_condition.getAsBoolean();
 
-    if (!m_pressedLast && pressed) {
+    if (!m_lastValue && currentValue) {
       m_command.schedule();
       return true;
     }
@@ -108,9 +108,9 @@ public class TriggerRunnable {
    * @return boolean, true if the command was scheduled
    */
   public boolean onFalse() {
-    boolean pressed = m_condition.getAsBoolean();
+    boolean currentValue = m_condition.getAsBoolean();
 
-    if (m_pressedLast && !pressed) {
+    if (m_lastValue && !currentValue) {
       m_command.schedule();
       return true;
     }
@@ -124,11 +124,11 @@ public class TriggerRunnable {
    * @return boolean, true if the command was scheduled
    */
   public boolean whileTrue() {
-    boolean pressed = m_condition.getAsBoolean();
-    if (!m_pressedLast && pressed) {
+    boolean currentValue = m_condition.getAsBoolean();
+    if (!m_lastValue && currentValue) {
       m_command.schedule();
       return true;
-    } else if (m_pressedLast && !pressed) {
+    } else if (m_lastValue && !currentValue) {
       m_command.cancel();
       return false;
     }
@@ -142,11 +142,11 @@ public class TriggerRunnable {
    * @return boolean, true if the command was scheduled
    */
   public boolean whileFalse() {
-    boolean pressed = m_condition.getAsBoolean();
-    if (!m_pressedLast && pressed) {
+    boolean currentValue = m_condition.getAsBoolean();
+    if (!m_lastValue && currentValue) {
       m_command.schedule();
       return true;
-    } else if (m_pressedLast && !pressed) {
+    } else if (m_lastValue && !currentValue) {
       m_command.cancel();
       return false;
     }
@@ -159,9 +159,9 @@ public class TriggerRunnable {
    * @return boolean, true if the command was scheduled
    */
   public boolean toggleOnFalse() {
-    boolean pressed = m_condition.getAsBoolean();
+    boolean currentValue = m_condition.getAsBoolean();
 
-    if (m_pressedLast && !pressed) {
+    if (m_lastValue && !currentValue) {
       if (m_command.isScheduled()) {
         m_command.cancel();
         return false;
@@ -179,9 +179,9 @@ public class TriggerRunnable {
    * @return boolean, true if the command was scheduled
    */
   public boolean toggleOnTrue() {
-    boolean pressed = m_condition.getAsBoolean();
+    boolean currentValue = m_condition.getAsBoolean();
 
-    if (!m_pressedLast && pressed) {
+    if (!m_lastValue && currentValue) {
       if (m_command.isScheduled()) {
         m_command.cancel();
         return false;

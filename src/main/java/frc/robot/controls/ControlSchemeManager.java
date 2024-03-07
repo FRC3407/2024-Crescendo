@@ -68,23 +68,24 @@ public class ControlSchemeManager implements Sendable {
 
 		/**
 		 * @param description Description of the control scheme.
-		 * @param c           Compatibility function.
-		 * @param s           Setup function.
+		 * @param compat      Compatibility function.
+		 * @param setup       Setup function.
 		 */
-		public ControlScheme(String description, Compat_F c, Setup_F s) {
-			this(description, c, s, null);
+		public ControlScheme(String description, Compat_F compat, Setup_F setup) {
+			this(description, compat, setup, null);
 		}
 
 		/**
 		 * @param description Description of the control scheme.
-		 * @param c           Compatibility function.
-		 * @param s           Setup function.
-		 * @param e           Shutdown function.
+		 * @param compat      Compatibility function.
+		 * @param setup       Setup function.
+		 * @param shutdown    Shutdown function.
 		 */
-		public ControlScheme(String description, Compat_F c, Setup_F s, Runnable e) {
-			this.compatibility = c;
-			this.setup = s;
-			this.shutdown = e;
+		public ControlScheme(String description, Compat_F compat, Setup_F setup, Runnable shutdown) {
+			this.compatibility = compat;
+			this.setup = setup;
+			this.shutdown = shutdown;
+			;
 			this.desc = description;
 		}
 
@@ -219,11 +220,11 @@ public class ControlSchemeManager implements Sendable {
 	/**
 	 * Add a new control scheme to the manager.
 	 * 
-	 * @param c ControlSchemeBase to be added.
+	 * @param CSBase ControlSchemeBase to be added.
 	 */
-	public void addScheme(ControlSchemeBase c) {
-		this.options.addOption(c.getDesc(), Integer.valueOf(this.schemes.size()));
-		this.schemes.add(c);
+	public void addScheme(ControlSchemeBase CSBase) {
+		this.options.addOption(CSBase.getDesc(), Integer.valueOf(this.schemes.size()));
+		this.schemes.add(CSBase);
 	}
 
 	/**
@@ -231,12 +232,12 @@ public class ControlSchemeManager implements Sendable {
 	 * functions.
 	 * 
 	 * @param description Description of the control scheme.
-	 * @param c           Compatibility function.
-	 * @param s           Setup function.
+	 * @param compat      Compatibility function.
+	 * @param setup       Setup function.
 	 */
-	public void addScheme(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s) {
+	public void addScheme(String description, ControlSchemeBase.Compat_F compat, ControlSchemeBase.Setup_F setup) {
 		this.options.addOption(description, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(description, c, s));
+		this.schemes.add(new ControlScheme(description, compat, setup));
 	}
 
 	/**
@@ -244,13 +245,14 @@ public class ControlSchemeManager implements Sendable {
 	 * shutdown functions.
 	 * 
 	 * @param description Description of the control scheme.
-	 * @param c           Compatibility function.
-	 * @param s           Setup function.
-	 * @param e           Shutdown function.
+	 * @param compat      Compatibility function.
+	 * @param setup       Setup function.
+	 * @param shutdown    Shutdown function.
 	 */
-	public void addScheme(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s, Runnable e) {
+	public void addScheme(String description, ControlSchemeBase.Compat_F compat, ControlSchemeBase.Setup_F setup,
+			Runnable shutdown) {
 		this.options.addOption(description, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(description, c, s, e));
+		this.schemes.add(new ControlScheme(description, compat, setup, shutdown));
 	}
 
 	/**
@@ -258,11 +260,11 @@ public class ControlSchemeManager implements Sendable {
 	 * shutdown functions.
 	 * 
 	 * @param description  Description of the control scheme.
-	 * @param s            Setup function.
+	 * @param setup        Setup function.
 	 * @param requirements InputMap requirements.
 	 */
-	public void addScheme(String description, ControlSchemeBase.Setup_F s, InputMap... requirements) {
-		this.addScheme(description, new AutomatedTester(requirements), s);
+	public void addScheme(String description, ControlSchemeBase.Setup_F setup, InputMap... requirements) {
+		this.addScheme(description, new AutomatedTester(requirements), setup);
 	}
 
 	/**
@@ -270,47 +272,49 @@ public class ControlSchemeManager implements Sendable {
 	 * shutdown functions.
 	 * 
 	 * @param description  Description of the control scheme.
-	 * @param s            Setup function.
-	 * @param e            Shutdown function.
+	 * @param setup        Setup function.
+	 * @param shutdown     Shutdown function.
 	 * @param requirements InputMap requirements.
 	 */
-	public void addScheme(String description, ControlSchemeBase.Setup_F s, Runnable e, InputMap... requirements) {
-		this.addScheme(description, new AutomatedTester(requirements), s, e);
+	public void addScheme(String description, ControlSchemeBase.Setup_F setup, Runnable shutdown,
+			InputMap... requirements) {
+		this.addScheme(description, new AutomatedTester(requirements), setup, shutdown);
 	}
 
 	/**
 	 * Set the default control scheme.
 	 * 
-	 * @param c ControlSchemeBase to be set as default.
+	 * @param CSBase ControlSchemeBase to be set as default.
 	 */
-	public void setDefault(ControlSchemeBase c) {
-		this.options.setDefaultOption(c.getDesc(), Integer.valueOf(this.schemes.size()));
-		this.schemes.add(c);
+	public void setDefault(ControlSchemeBase CSBase) {
+		this.options.setDefaultOption(CSBase.getDesc(), Integer.valueOf(this.schemes.size()));
+		this.schemes.add(CSBase);
 	}
 
 	/**
 	 * Overloaded method to set the default control scheme by creating a new scheme.
 	 * 
 	 * @param description Description of the control scheme.
-	 * @param c           Compatibility function.
-	 * @param s           Setup function.
+	 * @param compat      Compatibility function.
+	 * @param setup       Setup function.
 	 */
-	public void setDefault(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s) {
+	public void setDefault(String description, ControlSchemeBase.Compat_F compat, ControlSchemeBase.Setup_F setup) {
 		this.options.setDefaultOption(description, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(description, c, s));
+		this.schemes.add(new ControlScheme(description, compat, setup));
 	}
 
 	/**
 	 * Overloaded method to set the default control scheme by creating a new scheme.
 	 * 
 	 * @param description Description of the control scheme.
-	 * @param c           Compatibility function.
-	 * @param s           Setup function.
-	 * @param e           Shutdown function.
+	 * @param compat      Compatibility function.
+	 * @param setup       Setup function.
+	 * @param shutdown    Shutdown function.
 	 */
-	public void setDefault(String description, ControlSchemeBase.Compat_F c, ControlSchemeBase.Setup_F s, Runnable e) {
+	public void setDefault(String description, ControlSchemeBase.Compat_F compat, ControlSchemeBase.Setup_F setup,
+			Runnable shutdown) {
 		this.options.setDefaultOption(description, Integer.valueOf(this.schemes.size()));
-		this.schemes.add(new ControlScheme(description, c, s, e));
+		this.schemes.add(new ControlScheme(description, compat, setup, shutdown));
 	}
 
 	/**
@@ -318,11 +322,11 @@ public class ControlSchemeManager implements Sendable {
 	 * AutomatedTester.
 	 * 
 	 * @param description  Description of the control scheme.
-	 * @param s            Setup function.
+	 * @param setup        Setup function.
 	 * @param requirements InputMap requirements.
 	 */
-	public void setDefault(String d, ControlSchemeBase.Setup_F s, InputMap... requirements) {
-		this.setDefault(d, new AutomatedTester(requirements), s);
+	public void setDefault(String description, ControlSchemeBase.Setup_F setup, InputMap... requirements) {
+		this.setDefault(description, new AutomatedTester(requirements), setup);
 	}
 
 	/**
@@ -330,12 +334,13 @@ public class ControlSchemeManager implements Sendable {
 	 * AutomatedTester.
 	 * 
 	 * @param description  Description of the control scheme.
-	 * @param s            Setup function.
-	 * @param e            Shutdown function.
+	 * @param setup        Setup function.
+	 * @param shutdown     Shutdown function.
 	 * @param requirements InputMap requirements.
 	 */
-	public void setDefault(String description, ControlSchemeBase.Setup_F s, Runnable e, InputMap... requirements) {
-		this.setDefault(description, new AutomatedTester(requirements), s, e);
+	public void setDefault(String description, ControlSchemeBase.Setup_F setup, Runnable shutdown,
+			InputMap... requirements) {
+		this.setDefault(description, new AutomatedTester(requirements), setup, shutdown);
 	}
 
 	/**

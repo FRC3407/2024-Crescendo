@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.controls.Controls;
 
+//TODO - Not currently implemented
 public class AutoSelector extends Command {
     private boolean end = false;
     private ArrayList<Command> autoList = new ArrayList<Command>();

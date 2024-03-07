@@ -23,29 +23,39 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
+  /**
+   * Constants used for the Flinger Subsystem,
+   * including Can IDs, and motor speeds
+   */
   public static final class FlingerConstants {
-    public static final double FLINGER_SHOOT_SPEED = 1.0;
+    public static final double FLINGER_SHOOT_SPEED = 1.0;   // Percent of the motor's speed
     public static final double FLINGER_INTAKE_SPEED = -0.5; // Inverted by default
-    public static final int flingerCanID = 11;
+    public static final int flingerCanID = 11;              // The Can ID of the flinger motor
   }
 
+  /**
+   * Constants used for the Intake Subsystem,
+   * including Can IDs, DIO ports, and motor speeds
+   */
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 0.25;
-    public static final int motorCanID = 10;
-    public static final int bottomDIOSensor = 1;
-    public static final int middleDIOSensor = 2;
-    public static final int topDIOSensor = 3;
+    public static final double INTAKE_SPEED = 1; // Percent of the motor's speed, between -1 and 1
+    public static final int motorCanID = 10;        // The Can ID of the intake motor
+    public static final int bottomDIOSensor = 1;    // The DIO port of the bottom sensor, located partway into the intake
+    public static final int middleDIOSensor = 2;    // The DIO port of the middle sensor, located in the ring chamber
+    public static final int topDIOSensor = 3;       // The DIO port of the top sensor, located midway into the flinger
   }
 
+  /**
+   * Driving Parameters - Note that these are not the maximum capable speeds of
+   * the robot, rather the allowed maximum speeds
+   */
   public static final class DriveConstants {
-    // Driving Parameters - Note that these are not the maximum capable speeds of
-    // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 6.9;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
-    public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 0.5; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kDirectionSlewRate = 1.2;   // radians per second
+    public static final double kMagnitudeSlewRate = 2.0;   // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 2.0;  // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(22.5);
@@ -67,8 +77,6 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     // SPARK MAX CAN IDs
-
-    // Need to update CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
     public static final int kRearLeftDrivingCanId = 6;
     public static final int kFrontRightDrivingCanId = 4;
@@ -82,6 +90,9 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
   }
 
+  /**
+   * Constants used for swerve modules
+   */
   public static final class ModuleConstants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T.
@@ -117,7 +128,7 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.04;
+    public static final double kDrivingP = 0.1;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -152,6 +163,9 @@ public final class Constants {
     public static final double kTriggerDeadband = 0.2;
   }
 
+  /**
+   * Constants that modify robot movements and performance during autos
+   */
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -167,6 +181,9 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
+  /**
+   * Constants for Neo motors
+   */
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }

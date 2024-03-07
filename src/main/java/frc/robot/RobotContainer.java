@@ -21,15 +21,15 @@ public class RobotContainer extends TimedRobot {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
     Controls.setupControls(this.robot, controls, Controls.FeatureLevel.ALLSCHEMES);
   }
-
+  
   private static double timeSinceLastLoop = System.currentTimeMillis();
 
   /**
-   * Checks the controls schemes
+   * Polls the control scheme manager to see if the current scheme 
+   * should be changed to a more compatible scheme
    */
   public static void loopScheme() {
-    // If 2 seconds have elapse since the last control scheme check, check the
-    // control schemes
+    // If 2 seconds have elapse since the last control scheme check
     if (System.currentTimeMillis() - timeSinceLastLoop > 2000) {
       controls.loopScheme();
       timeSinceLastLoop = System.currentTimeMillis();

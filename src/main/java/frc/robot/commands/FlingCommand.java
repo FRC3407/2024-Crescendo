@@ -34,7 +34,7 @@ public class FlingCommand extends Command {
         this.m_intake.intake(0);
         if (this.m_intake.getMidSensor()) {
             // If a ring is in the correct position start backing up the ring
-            this.m_intake.intake(-0.1);
+            this.m_intake.intake(-0.5);
             ringLoaded = true;
             startFlinger = false;
             postShotTimer.reset();
@@ -98,7 +98,7 @@ public class FlingCommand extends Command {
             rpmList.remove(9);
         }
         for (Double rpmValue : rpmList) {
-            if (Math.abs(rpmValue.doubleValue() - currentRPM) >= 60 || rpmValue < 200) {
+            if (Math.abs(rpmValue.doubleValue() - currentRPM) >= 60 || rpmValue < 3000) {
                 return false;
             }
         }
