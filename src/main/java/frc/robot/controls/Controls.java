@@ -279,10 +279,10 @@ public final class Controls {
 					() -> Attack3.Digital.TB.getValueOf(rightStick),
 					new IntakeCommand(m_flinger, m_intake)));
 			//FIXME - Doesn't currently call AutoSelector
-			triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
-					() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-					new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-							() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
+			// triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
+			// 		() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+			// 		new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+			// 				() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
 		}
 	}
 
@@ -308,10 +308,10 @@ public final class Controls {
 					() -> Attack3.Digital.TB.getValueOf(rightStick),
 					new IntakeCommand(m_flinger, m_intake)));
 		//FIXME - Doesn't currently call AutoSelector
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
-					() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-					new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-							() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
+		// triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select
+		// 			() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+		// 			new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
+		// 					() -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
 		}
 	}
 	//!SECTION

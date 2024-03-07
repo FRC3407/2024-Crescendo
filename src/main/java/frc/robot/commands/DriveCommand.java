@@ -53,19 +53,19 @@ public class DriveCommand extends Command {
   @Override
   public void execute() {
     m_driveSubsystem.drive(
-        -MathUtil.applyDeadband(
-            m_linearYSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
-                * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
-            OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(
-            m_linearXSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
-                * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
-            OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband),
-        true, true);
-    if (m_zeroHeadingSupplier.getAsBoolean()) {
-      m_driveSubsystem.zeroHeading();
-    }
+      -MathUtil.applyDeadband(
+          m_linearYSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
+              * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
+          OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(
+          m_linearXSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
+              * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
+          OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband),
+      true, true);
+  if (m_zeroHeadingSupplier.getAsBoolean()) {
+    m_driveSubsystem.zeroHeading();
+  }
   }
 
   // Called once the command ends or is interrupted.
