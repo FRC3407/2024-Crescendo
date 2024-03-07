@@ -37,13 +37,14 @@ public class FlingCommand extends Command {
     @Override
     public void initialize() {
         this.m_intake.intake(0);
-        if (this.m_intake.getBotSensor() && this.m_intake.getMidSensor()) {
+        if (this.m_intake.getMidSensor()) {
             // If a ring is in the correct position start backing up the ring
             this.m_intake.intake(-0.1);
             ringLoaded = true;
             startFlinger = false;
             postShotTimer.reset();
             rpmList.clear();
+            Flinger.flingCommandActive = true;
         } else {
             ringLoaded = false;
         }
@@ -80,6 +81,7 @@ public class FlingCommand extends Command {
         postShotTimer.reset();
         ringLoaded = false;
         rpmList.clear();
+        Flinger.flingCommandActive = false;
     }
 
     @Override
@@ -90,7 +92,6 @@ public class FlingCommand extends Command {
 
     public boolean readyToFire()
     {
-        System.out.println(rpmList.toString());
         double currentRPM = m_flinger.getRPM();
         rpmList.add(0, currentRPM);
         if(rpmList.size()!=10)
