@@ -35,7 +35,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 0.25;
+    public static final double INTAKE_SPEED = 1;
     public static final int motorCanID = 10;
     public static final int bottomDIOSensor = 1;
     public static final int middleDIOSensor = 2;
@@ -49,7 +49,7 @@ public final class Constants {
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 0.5; // percent per second (1 = 100%)
+    public static final double kMagnitudeSlewRate = 2.0; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
