@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.List;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -55,10 +56,13 @@ public class RobotContainer extends TimedRobot {
   public RobotContainer() {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
     ConfigureButtonBindings();
+
+    NamedCommands.registerCommand("fling_command", new FlingCommand(m_flinger, m_intake));
+    NamedCommands.registerCommand("intake_command", new IntakeCommand(m_flinger, m_intake));
   }
 
   public Command getAutonomousCommand() {
-    return new AutoGoCommand(m_driveTrain);
+    return new PathPlannerAuto("test_auto");
   }
 
   private void ConfigureButtonBindings() {
