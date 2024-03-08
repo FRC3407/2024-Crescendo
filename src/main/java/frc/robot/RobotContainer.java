@@ -45,7 +45,7 @@ import frc.robot.commands.FlingCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ZeroHeadingCommand;
 
-public class RobotContainer extends TimedRobot {
+public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
