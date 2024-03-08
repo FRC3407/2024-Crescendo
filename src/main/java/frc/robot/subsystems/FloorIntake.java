@@ -46,7 +46,7 @@ public class FloorIntake extends SubsystemBase {
     }
 
     /**
-     * Gets the value of the bottom senser
+     * Gets the value of the bottom sensir
      * 
      * @return The value of the bottom sensor
      */
@@ -55,7 +55,7 @@ public class FloorIntake extends SubsystemBase {
     }
 
     /**
-     * Gets the value of the middle senser
+     * Gets the value of the middle sensir
      * 
      * @return The value of the middle sensor
      */
@@ -64,7 +64,7 @@ public class FloorIntake extends SubsystemBase {
     }
 
     /**
-     * Gets the value of the top senser
+     * Gets the value of the top sensir
      * 
      * @return The value of the top sensor
      */
