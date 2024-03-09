@@ -27,7 +27,6 @@ public class FloorIntake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
-        SmartDashboard.putBoolean("Mid Sensor", getMidSensor());
         SmartDashboard.putBoolean("Top Sensor", getTopSensor());
     }
 
@@ -52,15 +51,6 @@ public class FloorIntake extends SubsystemBase {
      */
     public boolean getBotSensor() {
         return sensorBot.get();
-    }
-
-    /**
-     * Gets the value of the middle sensir
-     * 
-     * @return The value of the middle sensor
-     */
-    public boolean getMidSensor() {
-        return sensorMid.get();
     }
 
     /**
