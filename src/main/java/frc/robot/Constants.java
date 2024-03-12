@@ -31,7 +31,8 @@ public final class Constants {
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = 1.0;
     public static final double FLINGER_INTAKE_SPEED = -0.5;
-    public static final int flingerCanID = 11;
+    public static final int flingerCanID_1 = 11;
+    public static final int flingerCanID_2 = 18;
   }
 
   public static final class IntakeConstants {
