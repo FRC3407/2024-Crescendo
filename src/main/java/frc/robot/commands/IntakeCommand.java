@@ -45,7 +45,7 @@ public class IntakeCommand extends Command {
             this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED*2);
         } else if (this.m_floorIntake.getMidSensor() && !this.m_floorIntake.getBotSensor()) {
             this.m_flinger.fling(0);
-            this.m_floorIntake.intake(-Constants.IntakeConstants.INTAKE_SPEED * 0.1);
+            this.m_floorIntake.intake(-Constants.IntakeConstants.INTAKE_SPEED * 0.025);
         } else if (this.m_floorIntake.getBotSensor() && !this.m_floorIntake.getMidSensor()
                 && !this.m_floorIntake.getTopSensor()) {
             this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);

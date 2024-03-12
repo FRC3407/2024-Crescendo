@@ -39,7 +39,7 @@ public class FlingCommand extends Command {
         this.m_intake.intake(0);
         if (this.m_intake.getMidSensor()) {
             // If a ring is in the correct position start backing up the ring
-            this.m_intake.intake(-0.1);
+            this.m_intake.intake(-0.5);
             ringLoaded = true;
             startFlinger = false;
             postShotTimer.reset();
