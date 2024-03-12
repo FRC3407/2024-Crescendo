@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.24,
+      "y": 5.57614009614318
+    },
+    "rotation": 179.6324343001248
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "fling_command"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "intake path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "fling_command"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
