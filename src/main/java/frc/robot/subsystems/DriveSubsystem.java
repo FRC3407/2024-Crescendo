@@ -292,10 +292,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.resetEncoders();
   }
 
-  private double offset = 0;
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    offset = m_gyro.getFusedHeading();
     m_gyro.reset();
   }
 
@@ -305,7 +303,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public Rotation2d getHeading() {
-    return Rotation2d.fromDegrees(-m_gyro.getFusedHeading() - offset);
+    return Rotation2d.fromDegrees(-m_gyro.getAngle());
   }
 
   /**
