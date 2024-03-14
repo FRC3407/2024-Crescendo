@@ -29,15 +29,18 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if(!this.m_floorIntake.getBotSensor() && !this.m_floorIntake.getBotSensor()){
+        boolean isTop = m_floorIntake.getTopSensor();
+        boolean isBot = m_floorIntake.getBotSensor();
+
+        if(!isBot && !isTop){
             this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);
             this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED); 
         }
-        if (this.m_floorIntake.getBotSensor() && !this.m_floorIntake.getBotSensor()){
-            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);
+        if (isBot && !isTop){
+            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_ADJUST_SPEED);
         }
-        if(this.m_floorIntake.getTopSensor() && !this.m_floorIntake.getBotSensor()){
-            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED*(-0.25));
+        if(isTop && !isBot){
+            this.m_floorIntake.intake(-Constants.IntakeConstants.INTAKE_ADJUST_SPEED);
             this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED); 
             // come back, make constant for negative intake speed
         }
@@ -46,7 +49,7 @@ public class IntakeCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         this.m_floorIntake.intake(0);
-        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED*0.25);
+        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED*0.50);
     }
 
     @Override

@@ -32,15 +32,15 @@ public final class Constants {
     public static final double FLINGER_SHOOT_SPEED = 1.0;
     public static final double FLINGER_INTAKE_SPEED = -0.5;
     public static final int flingerCanID_1 = 11;
-    public static final int flingerCanID_2 = 18;
+    public static final int flingerCanID_2 = 12;
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 1;
+    public static final double INTAKE_SPEED = 0.5;
+    public static final double INTAKE_ADJUST_SPEED = 0.25;
     public static final int motorCanID = 10;
-    public static final int bottomDIOSensor = 1;
-    public static final int middleDIOSensor = 2;
-    public static final int topDIOSensor = 3;
+    public static final int BOT_DIO_SENSOR = 0;
+    public static final int TOP_DIO_SENSOR = 1;
   }
 
   public static final class DriveConstants {

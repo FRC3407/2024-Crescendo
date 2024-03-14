@@ -148,6 +148,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Angle", getHeading().getDegrees());
     SmartDashboard.putNumber("Gyro Fused Yaw", m_gyro.getFusedHeading());
     SmartDashboard.putNumber("Gyro Rate", m_gyro.getRate());
+    SmartDashboard.putNumber("Gyro Compass Heading", m_gyro.getCompassHeading());
+    SmartDashboard.putNumber("Gyro Delta", m_gyro.getCompassHeading() - getHeading().getDegrees());
     // SmartDashboard.putString("Selected Auto", Controls.getSelectedAutoCommand().getName());
     SmartDashboard.putNumber("rot", m_currentRotation);
     SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
@@ -292,10 +294,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.resetEncoders();
   }
 
-  private double offset = 0;
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    offset = m_gyro.getFusedHeading();
     m_gyro.reset();
   }
 
@@ -305,7 +305,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public Rotation2d getHeading() {
-    return Rotation2d.fromDegrees(-m_gyro.getFusedHeading() - offset);
+    return Rotation2d.fromDegrees(-m_gyro.getAngle());
   }
 
   /**

@@ -15,7 +15,6 @@ public class FlingCommand extends Command {
 
     private final Flinger m_flinger;
     private final FloorIntake m_intake;
-    private boolean ringLoaded;
 
     /**
      * Spins the flinger
@@ -35,6 +34,7 @@ public class FlingCommand extends Command {
 
     @Override
     public void execute() {
+        this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
     }
 

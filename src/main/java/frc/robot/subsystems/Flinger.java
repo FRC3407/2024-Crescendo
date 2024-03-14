@@ -44,6 +44,7 @@ public class Flinger extends SubsystemBase {
      */
     public void fling(double speed) {
         flingerMotor_1.set(speed);
+        flingerMotor_2.set(speed);
         targetSpeed = speed;
     }
 
