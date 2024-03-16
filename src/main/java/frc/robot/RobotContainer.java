@@ -33,6 +33,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.DriveCommand;
 /*
@@ -49,6 +50,7 @@ public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
+  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
