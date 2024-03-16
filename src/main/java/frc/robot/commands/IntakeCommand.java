@@ -41,7 +41,7 @@ public class IntakeCommand extends Command {
         }
         if(isTop && !isBot){
             this.m_floorIntake.intake(-Constants.IntakeConstants.INTAKE_ADJUST_SPEED);
-            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED); 
+            // this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED); 
             // come back, make constant for negative intake speed
         }
     }
@@ -49,7 +49,7 @@ public class IntakeCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         this.m_floorIntake.intake(0);
-        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED*0.50);
+        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED*.75);
     }
 
     @Override

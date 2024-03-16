@@ -62,7 +62,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("test_auto");
+    return new AutoGoCommand(m_driveTrain);
+    // return new PathPlannerAuto("Tune PID Auto");
   }
 
   private void ConfigureButtonBindings() {

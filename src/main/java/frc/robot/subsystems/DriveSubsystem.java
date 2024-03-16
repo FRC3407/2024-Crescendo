@@ -153,6 +153,10 @@ public class DriveSubsystem extends SubsystemBase {
     // SmartDashboard.putString("Selected Auto", Controls.getSelectedAutoCommand().getName());
     SmartDashboard.putNumber("rot", m_currentRotation);
     SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
+    SmartDashboard.putNumber("Front Left Velocity", m_frontLeft.getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("Front Right Velocity", m_frontRight.getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("Rear Right Velocity", m_rearRight.getState().speedMetersPerSecond);
   }
 
   /**
