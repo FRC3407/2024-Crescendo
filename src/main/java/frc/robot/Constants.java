@@ -145,7 +145,7 @@ public final class Constants {
 
     // PP(PathPlanner) PID Constants
     public static final double kPPDrivingP = 1.0;
-    public static final double kPPDrivingI = 0.0;
+    public static final double kPPDrivingI = 1.0;
     public static final double kPPDrivingD = 0.00;
 
     public static final double kPPTurningP = 2.5;
