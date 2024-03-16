@@ -28,6 +28,12 @@
           "data": {
             "name": "fling_command"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "mid_turn"
+          }
         }
       ]
     }
