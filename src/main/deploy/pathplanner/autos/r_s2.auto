@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.24,
+      "y": 4.109517305630104
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "right_fling"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "fling_command"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "right_return_start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "right_intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "piece_to_fling(r)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "fling_command"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "right_exit"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "right_autos",
+  "choreoAuto": false
+}
