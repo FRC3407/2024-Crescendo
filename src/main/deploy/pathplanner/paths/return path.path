@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.2374919164158553,
-        "y": 5.57614009614318
+        "x": 1.1173895611349738,
+        "y": 5.58
       },
       "prevControl": {
-        "x": 1.4774919164158555,
-        "y": 5.57614009614318
+        "x": 1.357389561134974,
+        "y": 5.58
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "fling_pos"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],

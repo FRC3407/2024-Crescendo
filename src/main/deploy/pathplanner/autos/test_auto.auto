@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "return path"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "fling_command"

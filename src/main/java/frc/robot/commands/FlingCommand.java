@@ -1,11 +1,6 @@
 package frc.robot.commands;
 
-import java.util.ArrayList;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Flinger;
@@ -15,6 +10,7 @@ public class FlingCommand extends Command {
 
     private final Flinger m_flinger;
     private final FloorIntake m_intake;
+    private Timer timer = new Timer();
 
     /**
      * Spins the flinger
@@ -30,12 +26,18 @@ public class FlingCommand extends Command {
     }
 
     @Override
-    public void initialize() { }
+    public void initialize() {
+        timer.reset();
+     }
 
     @Override
     public void execute() {
         this.m_intake.intake(Constants.IntakeConstants.INTAKE_SPEED);
         this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
+        
+        if (!m_intake.getBotSensor() && !m_intake.getTopSensor()){
+            timer.start();
+        }
     }
 
     @Override
@@ -47,7 +49,7 @@ public class FlingCommand extends Command {
     @Override
     public boolean isFinished() {
         // Ends the command if all sensors are false
-        return !m_intake.getBotSensor() && !m_intake.getTopSensor();
+        return timer.hasElapsed(2.5);
     }
 
 }

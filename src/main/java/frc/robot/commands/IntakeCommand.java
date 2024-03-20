@@ -49,7 +49,7 @@ public class IntakeCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         this.m_floorIntake.intake(0);
-        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED*.75);
+        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
     }
 
     @Override
