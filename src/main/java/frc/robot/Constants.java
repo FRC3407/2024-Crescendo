@@ -28,7 +28,10 @@ import frc.robot.controls.Input.InputMap;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
+  public static final class ClimberConstants{
+  public static final int climberCanID = 21; //change id later
+  
+  }
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = 1.0;
     public static final double FLINGER_INTAKE_SPEED = -0.5;

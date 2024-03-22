@@ -44,8 +44,7 @@ public class Flinger extends SubsystemBase {
         return targetSpeed*5500;
     }
 
-    public double getRPM()
-    {
+    public double getRPM(){
         return flingerMotor.getEncoder().getVelocity();
     }
 
