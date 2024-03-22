@@ -29,17 +29,18 @@ import edu.wpi.first.wpilibj.GenericHID;
 public final class Constants {
 
   public static final class FlingerConstants {
-    public static final double FLINGER_SHOOT_SPEED = 1.0;
+    public static final double FLINGER_SHOOT_SPEED = .9;
     public static final double FLINGER_INTAKE_SPEED = -0.5;
-    public static final int flingerCanID = 11;
+    public static final int flingerCanID_1 = 11;
+    public static final int flingerCanID_2 = 12;
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 1;
+    public static final double INTAKE_SPEED = 0.5;
+    public static final double INTAKE_ADJUST_SPEED = 0.25;
     public static final int motorCanID = 10;
-    public static final int bottomDIOSensor = 1;
-    public static final int middleDIOSensor = 2;
-    public static final int topDIOSensor = 3;
+    public static final int BOT_DIO_SENSOR = 0;
+    public static final int TOP_DIO_SENSOR = 1;
   }
 
   public static final class DriveConstants {
@@ -122,7 +123,7 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.04;
+    public static final double kDrivingP = 0.2;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -143,11 +144,11 @@ public final class Constants {
     public static final int kTurningMotorCurrentLimit = 20; // amps
 
     // PP(PathPlanner) PID Constants
-    public static final double kPPDrivingP = 0.752;
-    public static final double kPPDrivingI = 1.858;
+    public static final double kPPDrivingP = 1.0;
+    public static final double kPPDrivingI = 1.50;
     public static final double kPPDrivingD = 0.00;
 
-    public static final double kPPTurningP = 2.5;
+    public static final double kPPTurningP = 5;
     public static final double kPPTurningI = 0;
     public static final double kPPTurningD = 0;
   }

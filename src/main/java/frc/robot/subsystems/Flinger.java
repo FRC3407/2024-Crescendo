@@ -10,19 +10,26 @@ import frc.robot.Constants;
 
 public class Flinger extends SubsystemBase {
 
-    private CANSparkMax flingerMotor;
+    private CANSparkMax flingerMotor_1; // here, change names
+    private CANSparkMax flingerMotor_2; 
     private double targetSpeed;
     public static boolean flingCommandActive = false;
     
     public Flinger() {
-        flingerMotor = new CANSparkMax(Constants.FlingerConstants.flingerCanID, MotorType.kBrushless);
-        flingerMotor.setInverted(true);
+        flingerMotor_1 = new CANSparkMax(Constants.FlingerConstants.flingerCanID_1, MotorType.kBrushless);
+        flingerMotor_1.setInverted(true);
+
+        flingerMotor_2 = new CANSparkMax(Constants.FlingerConstants.flingerCanID_2, MotorType.kBrushless);
+        flingerMotor_2.setInverted(false);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Flinger Encoder Velocity", getRPM());
-        SmartDashboard.putNumber("Flinger Target Velocity", getTargetRPM());
+        SmartDashboard.putNumber("Flinger Encoder Velocity 1", getRPM_1());
+        SmartDashboard.putNumber("Flinger Target Velocity 1", getTargetRPM());
+        
+        SmartDashboard.putNumber("Flinger Encoder Velocity 2", getRPM_2());
+        SmartDashboard.putNumber("Flinger Target Velocity 2", getTargetRPM());
     }
 
     @Override
@@ -36,7 +43,8 @@ public class Flinger extends SubsystemBase {
      * @param speed
      */
     public void fling(double speed) {
-        flingerMotor.set(speed);
+        flingerMotor_1.set(speed);
+        flingerMotor_2.set(speed);
         targetSpeed = speed;
     }
 
@@ -45,9 +53,14 @@ public class Flinger extends SubsystemBase {
         return targetSpeed*5500;
     }
 
-    public double getRPM()
+    public double getRPM_1()
     {
-        return flingerMotor.getEncoder().getVelocity();
+        return flingerMotor_1.getEncoder().getVelocity();
+    }
+
+    public double getRPM_2()
+    {
+        return flingerMotor_2.getEncoder().getVelocity();
     }
 
 }
