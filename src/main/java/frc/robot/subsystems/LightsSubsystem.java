@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.PubSub;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -20,9 +21,41 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class LightsSubsystem extends SubsystemBase {
 
+  public static int CIRCLE1 = 0;
+  public static int CIRCLE2 = 1;
+  public static int CIRCLE3 = 2;
+
+  public static int LINMATRIX = 3;
+  public static int LINMATRIX1 = 4;
+  public static int LINMATRIX2 = 5;
+
+  public static int MATRIX = 6;
+
+  public static int CONWAYS = 7;
+
+  public static int ORANGE_REVERSE_MATRIX = 8;
+  public static int ORANGE_REVERSE_MATRIX1 = 9;
+  public static int ORANGE_REVERSE_MATRIX2 = 10;
+  public static int ORANGE_REVERSE_MATRIX3 = 11;
+
+  public static int FLASH = 12;
+
+  public static int FILLRED = 13;
+  public static int FILLGREEN = 14;
+  public static int FILLWHITE = 15;
+
+  public static int BITMAP = 16;
+
+  public static int POINTER = 17;
+
   public static int I2C_ADDRESS = 0x41;
-  public static final int MAX_ANIMATIONS = 20;   // Must be 32 or less
-  public static final int MAX_STRIPS = 5;        // Must be 8 or less
+  public static int BIGPID = 1;
+  public static int PERIMETERID = 0;
+  public static int HEADID = 2;
+  public static int BACKID = 3;
+  public static int SIDEID = 4;
+  public static final int MAX_ANIMATIONS = 20; // Must be 32 or less
+  public static final int MAX_STRIPS = 5; // Must be 8 or less
 
   private byte[] currentAnimation = new byte[MAX_STRIPS];
   private byte[] nextAnimation = new byte[MAX_STRIPS];
@@ -42,39 +75,37 @@ public class LightsSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (DriverStation.isDisabled()) {
-      setAnimation(0, 0);
-      setAnimation(1, 0);
-      setAnimation(2, 0);
-      setAnimation(3, 0);
-      setAnimation(4, 0);
+      setAnimation(PERIMETERID, LINMATRIX); // linear_matrix.py
+      setAnimation(BIGPID, CONWAYS); // conways_game_of_life.py
+      setAnimation(HEADID, LINMATRIX1); // linear_matrix.py
+      setAnimation(BACKID, LINMATRIX2); // linear_matrix.py
+      setAnimation(SIDEID, MATRIX); // matrix.py
 
+    } else {
+      if (Math.abs(m_intake.getMotorSpeed()) > 0) {
+        setAnimation(PERIMETERID, CIRCLE1); // circle_spinner.py
+        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX); // orange_reverse_matrix.py
+        setAnimation(HEADID, CIRCLE2); // circle_spinner.py
+        setAnimation(BACKID, CIRCLE3); // circle_spinner.py
+        setAnimation(SIDEID, ORANGE_REVERSE_MATRIX1); // orange_reverse_matrix.py
+      } else if (m_intake.getBotSensor()) {
+        setAnimation(PERIMETERID, FLASH); // Flash.py
+        setAnimation(BIGPID, FLASH); // Flash.py
+        setAnimation(HEADID, FLASH); // Flash.py
+        setAnimation(BACKID, FLASH); // Flash.py
+        setAnimation(SIDEID, FLASH); // Flash.py
+      } else {
+        setAnimation(PERIMETERID, FILLGREEN); // Fill.py
+        setAnimation(BIGPID, BITMAP); // animation_bitmap.py
+        setAnimation(HEADID, FILLWHITE); // Fill.py
+        setAnimation(BACKID, FILLRED); // Fill.py
+        setAnimation(SIDEID, FILLGREEN); // Fill.py
+      }
+      if (Math.abs(m_flinger.getRPM()) > 0) {
+        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
+        setAnimation(SIDEID, POINTER); // pointer.py
+      }
     }
-
-    if (DriverStation.isTeleop()) {
-      setAnimation(0, 1);
-      setAnimation(1, 1);
-      setAnimation(2, 1);
-      setAnimation(3, 1);
-      setAnimation(4, 1);
-    }
-
-    if (m_intake.getBotSensor()) {
-      setAnimation(0, 2);
-      setAnimation(1, 2);
-      setAnimation(2, 2);
-      setAnimation(3, 2);
-      setAnimation(4, 2);
-    }
-
-    if (m_flinger.getRPM() > 0) {
-      setAnimation(0, 3);
-      setAnimation(1, 3);
-      setAnimation(2, 3);
-      setAnimation(3, 3);
-      setAnimation(4, 3);
-    }
-
-    // TODO: monitor intrnal robot state and change animations as necessary
     sendAllAnimations();
   }
 

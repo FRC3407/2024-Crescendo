@@ -45,6 +45,10 @@ public class FloorIntake extends SubsystemBase {
         intakeMotor.set(speed);
     }
 
+    public double getMotorSpeed() {
+        return intakeMotor.get();
+    }
+
     /**
      * Gets the value of the bottom sensir
      * 
@@ -71,4 +75,6 @@ public class FloorIntake extends SubsystemBase {
     public boolean getTopSensor() {
         return sensorTop.get();
     }
+
+
 }
