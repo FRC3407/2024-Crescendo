@@ -1,9 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Flinger;
@@ -25,50 +21,39 @@ public class IntakeCommand extends Command {
         addRequirements(m_floorIntake);
     }
 
+    // come back, should this be || or &&? || would work for an && situation
     @Override
     public void initialize() {
-        if (!this.m_floorIntake.getMidSensor()) {
-            // If there isn't a ring loaded, start intake
-            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);
-            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED);
-        }
+        
     }
 
     @Override
     public void execute() {
-        if (this.m_floorIntake.getTopSensor() && !this.m_floorIntake.getMidSensor() && !this.m_floorIntake.getBotSensor()) {
-            this.m_floorIntake.intake(0);
-            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED);
-        }
-        if (this.m_floorIntake.getTopSensor() && this.m_floorIntake.getMidSensor() && !this.m_floorIntake.getBotSensor()) {
-            this.m_floorIntake.intake(0);
-            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED*2);
-        } else if (this.m_floorIntake.getMidSensor() && !this.m_floorIntake.getBotSensor()) {
-            this.m_flinger.fling(0);
-            this.m_floorIntake.intake(-Constants.IntakeConstants.INTAKE_SPEED * 0.025);
-        } else if (this.m_floorIntake.getBotSensor() && !this.m_floorIntake.getMidSensor()
-                && !this.m_floorIntake.getTopSensor()) {
-            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);
-            this.m_flinger.fling(0);
-        } else {
-            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);
-            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED);
-        }
+        boolean isTop = m_floorIntake.getTopSensor();
+        boolean isBot = m_floorIntake.getBotSensor();
 
+        if(!isBot && !isTop){
+            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);
+            this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED); 
+        }
+        if (isBot && !isTop){
+            this.m_floorIntake.intake(Constants.IntakeConstants.INTAKE_ADJUST_SPEED);
+        }
+        if(isTop && !isBot){
+            this.m_floorIntake.intake(-Constants.IntakeConstants.INTAKE_ADJUST_SPEED);
+            // this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED); 
+            // come back, make constant for negative intake speed
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
         this.m_floorIntake.intake(0);
-        this.m_flinger.fling(0);
+        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
     }
 
     @Override
     public boolean isFinished() {
-        if ((this.m_floorIntake.getMidSensor() && this.m_floorIntake.getBotSensor()) || Flinger.flingCommandActive) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.m_floorIntake.getBotSensor() && this.m_floorIntake.getTopSensor();
     }
 }
