@@ -12,12 +12,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "fling_command"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "drive_out"

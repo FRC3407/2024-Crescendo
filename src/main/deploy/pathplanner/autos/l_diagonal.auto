@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6549898746298092,
-      "y": 6.602494628476801
+      "x": 1.2354236697055696,
+      "y": 5.57614009614318
     },
-    "rotation": -119.13429219722619
+    "rotation": -178.6599922191003
   },
   "command": {
     "type": "sequential",
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ls_turn"
+            "pathName": "Copy of left_exit"
           }
         }
       ]
     }
   },
-  "folder": "side_l_autos",
+  "folder": "left_autos",
   "choreoAuto": false
 }

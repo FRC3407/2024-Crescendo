@@ -63,7 +63,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // return new AutoGoCommand(m_driveTrain);
-    return new PathPlannerAuto("test_auto");
+    return new PathPlannerAuto("ls_s1");
   }
 
   private void ConfigureButtonBindings() {

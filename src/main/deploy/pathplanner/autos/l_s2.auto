@@ -18,21 +18,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "fling_command"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "left_return_start"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "left_intake"
+            "pathName": "Copy of left_exit"
           }
         },
         {
