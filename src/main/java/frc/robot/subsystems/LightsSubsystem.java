@@ -101,7 +101,7 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(BACKID, FILLRED); // Fill.py
         setAnimation(SIDEID, FILLGREEN); // Fill.py
       }
-      if (Math.abs(m_flinger.getRPM()) > 0) {
+      if (Math.abs(m_flinger.getRPM_1()) > 0) {
         setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
         setAnimation(SIDEID, POINTER); // pointer.py
       }
