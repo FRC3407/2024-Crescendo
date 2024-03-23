@@ -262,18 +262,30 @@ public final class Controls {
 				Attack3.Digital.TRI.getSupplier(leftStick),
 				Attack3.Digital.B2.getSupplier(rightStick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Fling
 				() -> Attack3.Digital.TRI.getValueOf(rightStick),
 				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
 				() -> Attack3.Digital.TB.getValueOf(rightStick),
 				new IntakeCommand(m_flinger, m_intake)));
-		// FIXME - Doesn't currently call AutoSelector
-		// triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, //
-		// Auto Select
-		// () -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-		// new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-		// () -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select B1
+				() -> ButtonBox.Digital.B1.getValueOf(buttonBox),
+				new AutoSelector(0)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B2
+				() -> ButtonBox.Digital.B2.getValueOf(buttonBox),
+				new AutoSelector(1)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B3
+				() -> ButtonBox.Digital.B3.getValueOf(buttonBox),
+				new AutoSelector(2)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B4
+				() -> ButtonBox.Digital.B4.getValueOf(buttonBox),
+				new AutoSelector(3)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B5
+				() -> ButtonBox.Digital.B5.getValueOf(buttonBox),
+				new AutoSelector(4)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B6
+				() -> ButtonBox.Digital.B6.getValueOf(buttonBox),
+				new AutoSelector(5)));
 	}
 
 	// Uses two Attack Joysticks, the Button Box, and an Xbox controller
@@ -290,18 +302,30 @@ public final class Controls {
 				Attack3.Digital.TRI.getSupplier(leftStick),
 				Attack3.Digital.B2.getSupplier(rightStick));
 		m_driveTrain.setDefaultCommand(drive_control);
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Fling
 				() -> Attack3.Digital.TRI.getValueOf(rightStick),
 				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
 				() -> Attack3.Digital.TB.getValueOf(rightStick),
 				new IntakeCommand(m_flinger, m_intake)));
-		// FIXME - Doesn't currently call AutoSelector
-		// triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, //
-		// Auto Select
-		// () -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-		// new AutoSelector(() -> ButtonBox.Digital.S1.getValueOf(buttonBox),
-		// () -> ButtonBox.Digital.S2.getValueOf(buttonBox))));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select B1
+				() -> ButtonBox.Digital.B1.getValueOf(buttonBox),
+				new AutoSelector(0)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B2
+				() -> ButtonBox.Digital.B2.getValueOf(buttonBox),
+				new AutoSelector(1)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B3
+				() -> ButtonBox.Digital.B3.getValueOf(buttonBox),
+				new AutoSelector(2)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B4
+				() -> ButtonBox.Digital.B4.getValueOf(buttonBox),
+				new AutoSelector(3)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B5
+				() -> ButtonBox.Digital.B5.getValueOf(buttonBox),
+				new AutoSelector(4)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B6
+				() -> ButtonBox.Digital.B6.getValueOf(buttonBox),
+				new AutoSelector(5)));
 	}
 	// !SECTION
 

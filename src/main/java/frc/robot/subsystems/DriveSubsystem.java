@@ -65,7 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
 
   // Slew rate filter variables for controlling lateral acceleration
-  private double m_currentRotation = 0.0;
+  private double m_rotationCommanded = 0.0;
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
 
@@ -155,9 +155,10 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Fused Yaw", m_gyro.getFusedHeading());
     SmartDashboard.putNumber("Gyro Rate", m_gyro.getRate());
     SmartDashboard.putString("Selected Auto", Controls.getSelectedAutoCommand().getName());
-    SmartDashboard.putNumber("rot", m_currentRotation);
+    SmartDashboard.putNumber("rot", m_rotationCommanded);
     SmartDashboard.putNumber("Velocity", Math.sqrt(
         Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
+    SmartDashboard.putNumber("IntendedRot", intendedRotation.getDegrees());
   }
 
   /**
@@ -186,6 +187,9 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
+  Rotation2d intendedRotation = new Rotation2d(getHeading().getDegrees());
+  private static double timeOfLastLoop = System.currentTimeMillis();
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -197,9 +201,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-
+    // FIXME - Rotational drift when moving translationally, could try PID with a
+    // target rotation?
     double xSpeedCommanded;
     double ySpeedCommanded;
+    m_rotationCommanded = 0;
     final boolean isStopped = Math.abs(xSpeed) <= (OIConstants.kDriveDeadband)
         && Math.abs(ySpeed) <= (OIConstants.kDriveDeadband);
 
@@ -241,19 +247,25 @@ public class DriveSubsystem extends SubsystemBase {
 
       xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
       ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-      m_currentRotation = m_rotLimiter.calculate(rot);
+      m_rotationCommanded = m_rotLimiter.calculate(rot);
 
     } else {
       xSpeedCommanded = xSpeed;
       ySpeedCommanded = ySpeed;
-      m_currentRotation = rot;
+      m_rotationCommanded = rot;
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
 
+    
+    intendedRotation = intendedRotation
+        .rotateBy(new Rotation2d((m_rotationCommanded) / ((timeOfLastLoop - System.currentTimeMillis()) / 1000)));
+    double rotDelivered = (intendedRotation.getDegrees() - getHeading().getDegrees())/2
+        / 360 // Convert to rotations
+        * DriveConstants.kMaxAngularSpeed; // Convert to Radians per second
+timeOfLastLoop = System.currentTimeMillis();
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
@@ -261,6 +273,7 @@ public class DriveSubsystem extends SubsystemBase {
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -300,9 +313,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private double offset = 0;
+
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    offset=-m_gyro.getFusedHeading();
+    offset = -m_gyro.getFusedHeading();
     m_gyro.reset();
   }
 
@@ -312,7 +326,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public Rotation2d getHeading() {
-    return Rotation2d.fromDegrees(-m_gyro.getFusedHeading()-offset);
+    return Rotation2d.fromDegrees(-m_gyro.getFusedHeading() - offset);
   }
 
   /**

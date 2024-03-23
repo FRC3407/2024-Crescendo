@@ -37,7 +37,7 @@ public class RobotContainer extends TimedRobot {
     Controls.setupControls(this.robot, controls, Controls.FeatureLevel.ALLSCHEMES);
   }
   
-  private static double timeSinceLastLoop = System.currentTimeMillis();
+  private static double timeOfLastLoop = System.currentTimeMillis();
 
   /**
    * Polls the control scheme manager to see if the current scheme 
@@ -45,9 +45,9 @@ public class RobotContainer extends TimedRobot {
    */
   public static void loopScheme() {
     // If 2 seconds have elapse since the last control scheme check
-    if (System.currentTimeMillis() - timeSinceLastLoop > 2000) {
+    if (System.currentTimeMillis() - timeOfLastLoop > 2000) {
       controls.loopScheme();
-      timeSinceLastLoop = System.currentTimeMillis();
+      timeOfLastLoop = System.currentTimeMillis();
     }
   }
 }
