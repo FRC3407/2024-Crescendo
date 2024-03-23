@@ -5,7 +5,7 @@
       "x": 1.24,
       "y": 5.57614009614318
     },
-    "rotation": 179.6324343001248
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -38,12 +38,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid_turn"
+            "pathName": "position"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "mid_autos",
   "choreoAuto": false
 }
