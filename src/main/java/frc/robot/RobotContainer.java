@@ -50,7 +50,7 @@ public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
-  LightsSubsystem m_lights = new LightsSubsystem(m_intake, m_flinger);
+  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
