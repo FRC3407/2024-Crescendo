@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6549898746298092,
+      "y": 6.602494628476801
+    },
+    "rotation": -120.37912601136833
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "fling_command"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ls_out"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ls_in"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "fling_command"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ls_turn"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "side_l_autos",
+  "choreoAuto": false
+}

@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.2374919164158553,
+        "y": 7.01
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2374919164158555,
+        "y": 7.01
+      },
+      "isLocked": false,
+      "linkedName": "left_start_pos"
+    },
+    {
+      "anchor": {
+        "x": 2.65,
+        "y": 7.01
+      },
+      "prevControl": {
+        "x": 1.65,
+        "y": 7.01
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "left_pick_up"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "intake",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intake_command"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -179.64894345497686,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "left_paths",
+  "previewStartingState": {
+    "rotation": 179.82963660436508,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

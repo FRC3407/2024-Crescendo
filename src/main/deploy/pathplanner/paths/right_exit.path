@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.42,
-        "y": 7.0
+        "x": 1.2354236697055696,
+        "y": 5.57614009614318
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.92,
-        "y": 7.0
+        "x": 1.3980582293784756,
+        "y": 5.413505536470274
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "fling_pos"
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 2.65,
+        "y": 4.11
       },
       "prevControl": {
-        "x": 2.5,
-        "y": 7.0
+        "x": 2.487365440327094,
+        "y": 4.272634559672906
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 0.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -43,7 +43,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
-  "previewStartingState": null,
+  "folder": "right_paths",
+  "previewStartingState": {
+    "rotation": 179.635673573719,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }
