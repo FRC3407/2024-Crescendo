@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.PubSub;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -72,6 +71,18 @@ public class LightsSubsystem extends SubsystemBase {
     clearAllAnimations();
   }
 
+  private boolean isNoteLoaded() {
+    return m_intake.getBotSensor();
+  }
+
+  private boolean isFlingerRunning() {
+    return Math.abs(m_flinger.getRPM_1()) > 0;
+  }
+
+  private boolean isIntakeRunning() {
+    return Math.abs(m_intake.getMotorSpeed()) > 0;
+  }
+
   @Override
   public void periodic() {
     if (DriverStation.isDisabled()) {
@@ -82,13 +93,13 @@ public class LightsSubsystem extends SubsystemBase {
       setAnimation(SIDEID, MATRIX); // matrix.py
 
     } else {
-      if (Math.abs(m_intake.getMotorSpeed()) > 0) {
+      if (isIntakeRunning()) {
         setAnimation(PERIMETERID, CIRCLE1); // circle_spinner.py
         setAnimation(BIGPID, ORANGE_REVERSE_MATRIX); // orange_reverse_matrix.py
         setAnimation(HEADID, CIRCLE2); // circle_spinner.py
         setAnimation(BACKID, CIRCLE3); // circle_spinner.py
         setAnimation(SIDEID, ORANGE_REVERSE_MATRIX1); // orange_reverse_matrix.py
-      } else if (m_intake.getBotSensor()) {
+      } else if (isNoteLoaded()) {
         setAnimation(PERIMETERID, FLASH); // Flash.py
         setAnimation(BIGPID, FLASH); // Flash.py
         setAnimation(HEADID, FLASH); // Flash.py
@@ -101,7 +112,7 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(BACKID, FILLRED); // Fill.py
         setAnimation(SIDEID, FILLGREEN); // Fill.py
       }
-      if (Math.abs(m_flinger.getRPM_1()) > 0) {
+      if (isFlingerRunning()) {
         setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
         setAnimation(SIDEID, POINTER); // pointer.py
       }
