@@ -259,13 +259,13 @@ public class DriveSubsystem extends SubsystemBase {
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
 
-    
     intendedRotation = intendedRotation
-        .rotateBy(new Rotation2d((m_rotationCommanded) / ((timeOfLastLoop - System.currentTimeMillis()) / 1000)));
-    double rotDelivered = (intendedRotation.getDegrees() - getHeading().getDegrees())/2
-        / 360 // Convert to rotations
-        * DriveConstants.kMaxAngularSpeed; // Convert to Radians per second
-timeOfLastLoop = System.currentTimeMillis();
+        .rotateBy(new Rotation2d((m_rotationCommanded) * ((timeOfLastLoop - System.currentTimeMillis()) / 1000)
+            * DriveConstants.kMaxAngularSpeed));
+    timeOfLastLoop = System.currentTimeMillis();
+    double Kp = 0.1; // P gain (may be tuned)
+    double error = intendedRotation.minus(getHeading()).getDegrees(); // Calculate error
+    double rotDelivered = error * Kp; // Error times P = what to move by
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
@@ -273,7 +273,7 @@ timeOfLastLoop = System.currentTimeMillis();
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
-        
+
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
