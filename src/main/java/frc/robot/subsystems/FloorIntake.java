@@ -12,20 +12,19 @@ import frc.robot.Constants;
 public class FloorIntake extends SubsystemBase {
 
     private CANSparkMax intakeMotor;
-    private DigitalInput sensorBot = new DigitalInput(1);
-    private DigitalInput sensorMid = new DigitalInput(2);
-    private DigitalInput sensorTop = new DigitalInput(3);
+    private DigitalInput sensorBot = new DigitalInput(Constants.IntakeConstants.BOT_DIO_SENSOR);
+    private DigitalInput sensorTop = new DigitalInput(Constants.IntakeConstants.TOP_DIO_SENSOR);
 
     public FloorIntake() {
         intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
-        intakeMotor.setInverted(true);
+        intakeMotor.setInverted(false);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
-        SmartDashboard.putBoolean("Mid Sensor", getMidSensor());
         SmartDashboard.putBoolean("Top Sensor", getTopSensor());
+        SmartDashboard.putNumber("Intake Velocity", intakeMotor.getEncoder().getVelocity());
     }
 
     @Override
@@ -49,15 +48,6 @@ public class FloorIntake extends SubsystemBase {
      */
     public boolean getBotSensor() {
         return sensorBot.get();
-    }
-
-    /**
-     * Gets the value of the middle sensor
-     * 
-     * @return The value of the middle sensor
-     */
-    public boolean getMidSensor() {
-        return sensorMid.get();
     }
 
     /**

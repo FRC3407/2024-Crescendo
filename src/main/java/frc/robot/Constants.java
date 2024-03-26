@@ -28,9 +28,10 @@ public final class Constants {
    * including Can IDs, and motor speeds
    */
   public static final class FlingerConstants {
-    public static final double FLINGER_SHOOT_SPEED = 1.0;   // Percent of the motor's speed
-    public static final double FLINGER_INTAKE_SPEED = -0.5; // Inverted by default
-    public static final int flingerCanID = 11;              // The Can ID of the flinger motor
+    public static final double FLINGER_SHOOT_SPEED = .9;
+    public static final double FLINGER_INTAKE_SPEED = -0.9;
+    public static final int flingerCanID_1 = 11;
+    public static final int flingerCanID_2 = 12;
   }
 
   /**
@@ -38,11 +39,11 @@ public final class Constants {
    * including Can IDs, DIO ports, and motor speeds
    */
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 1; // Percent of the motor's speed, between -1 and 1
-    public static final int motorCanID = 10;        // The Can ID of the intake motor
-    public static final int bottomDIOSensor = 1;    // The DIO port of the bottom sensor, located partway into the intake
-    public static final int middleDIOSensor = 2;    // The DIO port of the middle sensor, located in the ring chamber
-    public static final int topDIOSensor = 3;       // The DIO port of the top sensor, located midway into the flinger
+    public static final double INTAKE_SPEED = 0.5; // Percent of the motor's speed, between -1 and 1
+    public static final double INTAKE_ADJUST_SPEED = 0.25;
+    public static final int motorCanID = 10;       // The Can ID of the intake motor
+    public static final int BOT_DIO_SENSOR = 0;    // The DIO port of the bottom sensor, located partway into the intake
+    public static final int TOP_DIO_SENSOR = 1;    // The DIO port of the top sensor
   }
 
   /**
@@ -128,7 +129,7 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.1;
+    public static final double kDrivingP = 0.2;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -149,11 +150,11 @@ public final class Constants {
     public static final int kTurningMotorCurrentLimit = 20; // amps
 
     // PP(PathPlanner) PID Constants
-    public static final double kPPDrivingP = 0.752;
-    public static final double kPPDrivingI = 1.858;
+    public static final double kPPDrivingP = 1.0;
+    public static final double kPPDrivingI = 1.50;
     public static final double kPPDrivingD = 0.00;
 
-    public static final double kPPTurningP = 2.5;
+    public static final double kPPTurningP = 5;
     public static final double kPPTurningI = 0;
     public static final double kPPTurningD = 0;
   }
