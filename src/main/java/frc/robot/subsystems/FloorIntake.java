@@ -1,9 +1,12 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogTrigger;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,7 +45,7 @@ public class FloorIntake extends SubsystemBase {
     }
 
     /**
-     * Gets the value of the bottom sensor
+     * Gets the value of the bottom sensir
      * 
      * @return The value of the bottom sensor
      */
@@ -51,7 +54,7 @@ public class FloorIntake extends SubsystemBase {
     }
 
     /**
-     * Gets the value of the top sensor
+     * Gets the value of the top sensir
      * 
      * @return The value of the top sensor
      */

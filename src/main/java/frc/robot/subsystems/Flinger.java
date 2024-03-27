@@ -12,8 +12,9 @@ public class Flinger extends SubsystemBase {
 
     private CANSparkMax flingerMotor_1; // here, change names
     private CANSparkMax flingerMotor_2; 
+    private double targetSpeed;
     public static boolean flingCommandActive = false;
-
+    
     public Flinger() {
         flingerMotor_1 = new CANSparkMax(Constants.FlingerConstants.flingerCanID_1, MotorType.kBrushless);
         flingerMotor_1.setInverted(true);
@@ -25,8 +26,10 @@ public class Flinger extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Flinger Encoder Velocity 1", getRPM_1());
+        SmartDashboard.putNumber("Flinger Target Velocity 1", getTargetRPM());
         
         SmartDashboard.putNumber("Flinger Encoder Velocity 2", getRPM_2());
+        SmartDashboard.putNumber("Flinger Target Velocity 2", getTargetRPM());
     }
 
     @Override
@@ -42,6 +45,12 @@ public class Flinger extends SubsystemBase {
     public void fling(double speed) {
         flingerMotor_1.set(speed);
         flingerMotor_2.set(speed);
+        targetSpeed = speed;
+    }
+
+    public double getTargetRPM()
+    {
+        return targetSpeed*5500;
     }
 
     public double getRPM_1()
