@@ -27,7 +27,11 @@ import edu.wpi.first.wpilibj.GenericHID;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
+  public static final class ClimberConstants{
+  public static final int climberOneCanID = 21; //change id later
+  public static final int climberTwoCanID = 22; //change id later 
+  public static final double CLIMBER_SPEED = .5;//unknown speed
+  }
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = .9;
     public static final double FLINGER_INTAKE_SPEED = -0.5;
