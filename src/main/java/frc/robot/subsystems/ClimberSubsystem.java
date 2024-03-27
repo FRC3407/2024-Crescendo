@@ -5,21 +5,19 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.revrobotics.SparkMaxPIDController;
 public class ClimberSubsystem extends SubsystemBase {
 
-  private CANSparkMax climberMotor;
-  private SparkMaxPIDController climberPIDController;
-  private RelativeEncoder climberEncoder;
+  private CANSparkMax climberMotorOne;
+  private CANSparkMax climberMoterTwo; 
+
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
-  climberMotor = new CANSparkMax(Constants.ClimberConstants.climberCanID, MotorType.kBrushless);
-  climberPIDController = climberMotor.getPIDController();
+  climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
+  climberMoterTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
   }
 
   @Override
@@ -27,14 +25,8 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public void climb(double speed){
-    climberMotor.set(speed);
+    climberMotorOne.set(speed);
+    climberMoterTwo.set(speed); 
   }
-  public void hold(currentSpeed){
-    climberPIDController.setReference()
-    
-  }
-  public double getRPM(){
-    return climberMotor.getEncoder().getVelocity();
-    }
 
 }

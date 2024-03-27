@@ -29,8 +29,9 @@ import frc.robot.controls.Input.InputMap;
  */
 public final class Constants {
   public static final class ClimberConstants{
-  public static final int climberCanID = 21; //change id later
-  
+  public static final int climberOneCanID = 21; //change id later
+  public static final int climberTwoCanID = 22; //change id later 
+  public static final double CLIMBER_SPEED = .5;//unknown speed
   }
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = 1.0;
