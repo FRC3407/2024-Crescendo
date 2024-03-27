@@ -10,6 +10,7 @@ import frc.robot.commands.AutoSelector;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.Robot;
 import frc.robot.controls.ControlSchemeManager.AmbiguousSolution;
 import frc.robot.controls.ControlSchemeManager.AutomatedTester;
@@ -268,24 +269,6 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
 				() -> Attack3.Digital.TB.getValueOf(rightStick),
 				new IntakeCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select B1
-				() -> ButtonBox.Digital.B1.getValueOf(buttonBox),
-				new AutoSelector(0)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B2
-				() -> ButtonBox.Digital.B2.getValueOf(buttonBox),
-				new AutoSelector(1)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B3
-				() -> ButtonBox.Digital.B3.getValueOf(buttonBox),
-				new AutoSelector(2)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B4
-				() -> ButtonBox.Digital.B4.getValueOf(buttonBox),
-				new AutoSelector(3)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B5
-				() -> ButtonBox.Digital.B5.getValueOf(buttonBox),
-				new AutoSelector(4)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B6
-				() -> ButtonBox.Digital.B6.getValueOf(buttonBox),
-				new AutoSelector(5)));
 	}
 
 	// Uses two Attack Joysticks, the Button Box, and an Xbox controller
@@ -308,9 +291,9 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
 				() -> Attack3.Digital.TB.getValueOf(rightStick),
 				new IntakeCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Reverse Intake
-				() -> ButtonBox.Digital.B1.getValueOf(buttonBox),
-				new AutoSelector(0)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.whileTrue, // Reverse Intake
+				() -> ButtonBox.Digital.B4.getValueOf(buttonBox),
+				new IntakeReverseCommand(m_intake)));
 	}
 	// !SECTION
 

@@ -39,11 +39,12 @@ public final class Constants {
    * including Can IDs, DIO ports, and motor speeds
    */
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 0.5; // Percent of the motor's speed, between -1 and 1
+    public static final double INTAKE_SPEED_REVERSE = -0.5; // Percent of the motor's speed, between -1 and 1
+    public static final double INTAKE_SPEED = 0.5;          // Percent of the motor's speed, between -1 and 1
     public static final double INTAKE_ADJUST_SPEED = 0.25;
-    public static final int motorCanID = 10;       // The Can ID of the intake motor
-    public static final int BOT_DIO_SENSOR = 0;    // The DIO port of the bottom sensor, located partway into the intake
-    public static final int TOP_DIO_SENSOR = 1;    // The DIO port of the top sensor
+    public static final int motorCanID = 10;                // The Can ID of the intake motor
+    public static final int BOT_DIO_SENSOR = 0;             // The DIO port of the bottom sensor, located partway into the intake
+    public static final int TOP_DIO_SENSOR = 1;              // The DIO port of the top sensor
   }
 
   /**
