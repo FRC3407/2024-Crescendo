@@ -25,5 +25,16 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "cSpell.words": [
+    "ADIS",
+    "AHRS",
+    "ALLSCHEMES",
+    "Deadband",
+    "DEFAULTSWERVE",
+    "drivemode",
+    "Holonomic",
+    "teleop",
+    "Wpilib"
+  ]
 }
