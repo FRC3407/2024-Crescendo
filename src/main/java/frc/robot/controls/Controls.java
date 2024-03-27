@@ -308,29 +308,14 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
 				() -> Attack3.Digital.TB.getValueOf(rightStick),
 				new IntakeCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Auto Select B1
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // Reverse Intake
 				() -> ButtonBox.Digital.B1.getValueOf(buttonBox),
 				new AutoSelector(0)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B2
-				() -> ButtonBox.Digital.B2.getValueOf(buttonBox),
-				new AutoSelector(1)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B3
-				() -> ButtonBox.Digital.B3.getValueOf(buttonBox),
-				new AutoSelector(2)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B4
-				() -> ButtonBox.Digital.B4.getValueOf(buttonBox),
-				new AutoSelector(3)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B5
-				() -> ButtonBox.Digital.B5.getValueOf(buttonBox),
-				new AutoSelector(4)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onToggle, // B6
-				() -> ButtonBox.Digital.B6.getValueOf(buttonBox),
-				new AutoSelector(5)));
 	}
 	// !SECTION
 
 	// TUTORIAL - How to write a new control scheme
-	// Use the following shell:
+	// Use the following boilerplate:
 
 	// private static void nameOfScheme(Robot robot, DriveMode drivemode,
 	// InputDevice... inputs)
