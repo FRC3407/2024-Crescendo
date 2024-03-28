@@ -54,8 +54,8 @@ public class LightsSubsystem extends SubsystemBase {
   public static int SIDEID = 2;
   public static int HEADID = 3;
   public static int BACKID = 4;
-
-  public static final int MAX_ANIMATIONS = 20; // Must be 32 or less
+  
+  public static final int MAX_ANIMATIONS = 31; // Must be 31 or less
   public static final int MAX_STRIPS = 5; // Must be 8 or less
 
   private byte[] currentAnimation = new byte[MAX_STRIPS];
@@ -131,7 +131,7 @@ public class LightsSubsystem extends SubsystemBase {
     for (int s = 0; s < MAX_STRIPS; s++) {
       Integer b = Integer.valueOf(((s << 4) & 0xF0) | (MAX_ANIMATIONS & 0x0F));
       nextAnimation[s] = b.byteValue();
-      currentAnimation[s] = (byte) 0;
+      currentAnimation[s] = (byte) MAX_ANIMATIONS;
     }
   }
 
