@@ -288,7 +288,7 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Fling
 				() -> Attack3.Digital.TRI.getValueOf(rightStick),
 				new FlingCommand(m_flinger, m_intake)));
-		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.whileTrue,
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.whileTrue,// Reverse Fling (Alternate Intake)
 				() -> ButtonBox.Digital.B4.getValueOf(buttonBox),
 				new FlingReverseCommand(m_flinger)));
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
