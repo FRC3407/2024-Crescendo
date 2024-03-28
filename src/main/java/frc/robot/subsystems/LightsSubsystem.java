@@ -48,11 +48,13 @@ public class LightsSubsystem extends SubsystemBase {
   public static int POINTER = 17;
 
   public static int I2C_ADDRESS = 0x41;
-  public static int BIGPID = 1;
+
   public static int PERIMETERID = 0;
-  public static int HEADID = 2;
-  public static int BACKID = 3;
-  public static int SIDEID = 4;
+  public static int BIGPID = 1;
+  public static int SIDEID = 2;
+  public static int HEADID = 3;
+  public static int BACKID = 4;
+
   public static final int MAX_ANIMATIONS = 20; // Must be 32 or less
   public static final int MAX_STRIPS = 5; // Must be 8 or less
 
