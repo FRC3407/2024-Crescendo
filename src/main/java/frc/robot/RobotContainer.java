@@ -44,7 +44,9 @@ import frc.robot.commands.DriveCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 import frc.robot.commands.FlingCommand;
+import frc.robot.commands.FlingReverseCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.ZeroHeadingCommand;
 
 public class RobotContainer {
@@ -81,13 +83,13 @@ public class RobotContainer {
     button2.onTrue(new PrintCommand("hook down"));
 
     JoystickButton button3 = new JoystickButton(buttonBox, 3);
-    button3.whileTrue(new PrintCommand("intake reverse"));
+    button3.whileTrue(new IntakeReverseCommand(m_intake));
 
     JoystickButton button4 = new JoystickButton(buttonBox, 4);
     button4.onTrue(new PrintCommand("manual intake"));
 
     JoystickButton button5 = new JoystickButton(buttonBox, 5);
-    button5.whileTrue(new PrintCommand("finger reverse"));
+    button5.whileTrue(new FlingReverseCommand(m_flinger));
 
     JoystickButton button6 = new JoystickButton(buttonBox, 6);
     button6.onTrue(new PrintCommand("emmanuel finger"));
