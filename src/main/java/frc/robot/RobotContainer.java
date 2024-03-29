@@ -32,10 +32,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
 import frc.robot.commands.AutoGoCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommand;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -53,6 +55,7 @@ public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
+  ClimberSubsystem m_climber = new ClimberSubsystem(); 
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -77,7 +80,7 @@ public class RobotContainer {
     GenericHID buttonBox = new GenericHID(2);
 
     JoystickButton button1 = new JoystickButton(buttonBox, 1);
-    button1.onTrue(new PrintCommand("pull down"));
+    button1.onTrue(new ClimbCommand(m_climber));
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
     button2.onTrue(new PrintCommand("hook down"));
