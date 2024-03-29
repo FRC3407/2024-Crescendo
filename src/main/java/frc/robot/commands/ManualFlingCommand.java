@@ -7,14 +7,16 @@ import frc.robot.subsystems.Flinger;
 public class ManualFlingCommand extends Command {
 
     private final Flinger m_flinger;
+    private boolean reversed;
 
     /**
      * Positions the ring, spins the flinger to max speed, and then fires
      * 
      * @param m_flinger
      */
-    public ManualFlingCommand(Flinger m_flinger) {
+    public ManualFlingCommand(Flinger m_flinger, boolean reversed) {
         this.m_flinger = m_flinger;
+        this.reversed = reversed;
         addRequirements(m_flinger);
     }
 
@@ -25,7 +27,11 @@ public class ManualFlingCommand extends Command {
 
     @Override
     public void execute() {
-        this.m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED);
+        if (reversed) {
+            m_flinger.fling(Constants.FlingerConstants.FLINGER_INTAKE_SPEED);
+        } else {
+            m_flinger.fling(Constants.FlingerConstants.FLINGER_SHOOT_SPEED);
+        }
     }
 
     @Override
