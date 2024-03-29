@@ -75,28 +75,28 @@ public class RobotContainer {
     GenericHID buttonBox = new GenericHID(2);
 
     JoystickButton button1 = new JoystickButton(buttonBox, 1);
-    button1.onTrue(new PrintCommand("buttonbox button 1 pressed"));
+    button1.onTrue(new PrintCommand("pull down"));
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
-    button2.onTrue(new PrintCommand("buttonbox button 2 pressed"));
+    button2.onTrue(new PrintCommand("hook down"));
 
     JoystickButton button3 = new JoystickButton(buttonBox, 3);
-    button3.onTrue(new PrintCommand("buttonbox button 3 pressed"));
+    button3.whileTrue(new PrintCommand("intake reverse"));
 
     JoystickButton button4 = new JoystickButton(buttonBox, 4);
-    button4.onTrue(new PrintCommand("buttonbox button 4 pressed"));
+    button4.onTrue(new PrintCommand("manual intake"));
 
     JoystickButton button5 = new JoystickButton(buttonBox, 5);
-    button5.onTrue(new PrintCommand("buttonbox button 5 pressed"));
+    button5.whileTrue(new PrintCommand("finger reverse"));
 
     JoystickButton button6 = new JoystickButton(buttonBox, 6);
-    button6.onTrue(new PrintCommand("buttonbox button 6 pressed"));
+    button6.onTrue(new PrintCommand("emmanuel finger"));
 
     JoystickButton button7 = new JoystickButton(buttonBox, 7);
-    button7.onTrue(new PrintCommand("buttonbox button 7 pressed"));
+    button7.onTrue(new PrintCommand("camera switch (toggle)"));
 
     JoystickButton button8 = new JoystickButton(buttonBox, 8);
-    button8.onTrue(new PrintCommand("buttonbox button 8 pressed"));
+    button8.onTrue(new PrintCommand("climber switch (toggle)"));
 
     // ---
     JoystickButton boostButton = new JoystickButton(l_attack3, 2);
