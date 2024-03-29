@@ -41,6 +41,7 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double INTAKE_SPEED = 0.5;
+    public static final double INTAKE_SPEED_REVERSE = -INTAKE_SPEED;
     public static final double INTAKE_ADJUST_SPEED = 0.25;
     public static final int motorCanID = 10;
     public static final int BOT_DIO_SENSOR = 0;

@@ -17,12 +17,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -42,7 +44,9 @@ import frc.robot.commands.DriveCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 import frc.robot.commands.FlingCommand;
+import frc.robot.commands.ManualFlingCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ManualIntakeCommand;
 import frc.robot.commands.ZeroHeadingCommand;
 
 public class RobotContainer {
@@ -69,6 +73,38 @@ public class RobotContainer {
   private void ConfigureButtonBindings() {
     Joystick l_attack3 = new Joystick(0);
     Joystick r_attack3 = new Joystick(1);
+
+    GenericHID buttonBox = new GenericHID(2);
+
+    JoystickButton button1 = new JoystickButton(buttonBox, 1);
+    button1.onTrue(new PrintCommand("pull down"));
+
+    JoystickButton button2 = new JoystickButton(buttonBox, 2);
+    button2.onTrue(new PrintCommand("hook down"));
+
+    // reverse intake
+    JoystickButton button3 = new JoystickButton(buttonBox, 3);
+    button3.whileTrue(new ManualIntakeCommand(m_intake, true));
+
+    // manual intake
+    JoystickButton button4 = new JoystickButton(buttonBox, 4);
+    button4.whileTrue(new ManualIntakeCommand(m_intake, false));
+
+    // reverse fling
+    JoystickButton button5 = new JoystickButton(buttonBox, 5);
+    button5.whileTrue(new ManualFlingCommand(m_flinger, true));
+
+    // manual fling
+    JoystickButton button6 = new JoystickButton(buttonBox, 6);
+    button6.whileTrue(new ManualFlingCommand(m_flinger, false));
+
+    JoystickButton button7 = new JoystickButton(buttonBox, 7);
+    button7.onTrue(new PrintCommand("camera switch (toggle)"));
+
+    JoystickButton button8 = new JoystickButton(buttonBox, 8);
+    button8.onTrue(new PrintCommand("climber switch (toggle)"));
+
+    // ---
     JoystickButton boostButton = new JoystickButton(l_attack3, 2);
     m_driveTrain.setDefaultCommand(
         new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, ()-> boostButton.getAsBoolean()));
