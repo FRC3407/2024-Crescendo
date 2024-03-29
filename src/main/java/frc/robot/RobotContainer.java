@@ -17,12 +17,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -69,6 +71,33 @@ public class RobotContainer {
   private void ConfigureButtonBindings() {
     Joystick l_attack3 = new Joystick(0);
     Joystick r_attack3 = new Joystick(1);
+
+    GenericHID buttonBox = new GenericHID(2);
+
+    JoystickButton button1 = new JoystickButton(buttonBox, 1);
+    button1.onTrue(new PrintCommand("buttonbox button 1 pressed"));
+
+    JoystickButton button2 = new JoystickButton(buttonBox, 2);
+    button2.onTrue(new PrintCommand("buttonbox button 2 pressed"));
+
+    JoystickButton button3 = new JoystickButton(buttonBox, 3);
+    button3.onTrue(new PrintCommand("buttonbox button 3 pressed"));
+
+    JoystickButton button4 = new JoystickButton(buttonBox, 4);
+    button4.onTrue(new PrintCommand("buttonbox button 4 pressed"));
+
+    JoystickButton button5 = new JoystickButton(buttonBox, 5);
+    button5.onTrue(new PrintCommand("buttonbox button 5 pressed"));
+
+    JoystickButton button6 = new JoystickButton(buttonBox, 6);
+    button6.onTrue(new PrintCommand("buttonbox button 6 pressed"));
+
+    JoystickButton button7 = new JoystickButton(buttonBox, 7);
+    button7.onTrue(new PrintCommand("buttonbox button 7 pressed"));
+
+    JoystickButton button8 = new JoystickButton(buttonBox, 8);
+    button8.onTrue(new PrintCommand("buttonbox button 8 pressed"));
+
     JoystickButton boostButton = new JoystickButton(l_attack3, 2);
     m_driveTrain.setDefaultCommand(
         new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, ()-> boostButton.getAsBoolean()));
