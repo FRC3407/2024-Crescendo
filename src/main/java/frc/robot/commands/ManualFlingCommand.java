@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Flinger;
 
-public class FlingReverseCommand extends Command {
+public class ManualFlingCommand extends Command {
 
     private final Flinger m_flinger;
 
@@ -13,7 +13,7 @@ public class FlingReverseCommand extends Command {
      * 
      * @param m_flinger
      */
-    public FlingReverseCommand(Flinger m_flinger) {
+    public ManualFlingCommand(Flinger m_flinger) {
         this.m_flinger = m_flinger;
         addRequirements(m_flinger);
     }

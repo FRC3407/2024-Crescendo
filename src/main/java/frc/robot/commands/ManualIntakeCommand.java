@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.FloorIntake;
 
-public class IntakeReverseCommand extends Command {
+public class ManualIntakeCommand extends Command {
 
     private final FloorIntake m_floorIntake;
 
@@ -14,7 +14,7 @@ public class IntakeReverseCommand extends Command {
      * @param m_flinger
      * @param m_floorIntake
      */
-    public IntakeReverseCommand(FloorIntake m_floorIntake) {
+    public ManualIntakeCommand(FloorIntake m_floorIntake) {
         this.m_floorIntake = m_floorIntake;
         addRequirements(m_floorIntake);
     }
