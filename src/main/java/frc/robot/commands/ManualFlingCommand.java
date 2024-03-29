@@ -12,7 +12,7 @@ public class ManualFlingCommand extends Command {
     /**
      * Positions the ring, spins the flinger to max speed, and then fires
      * 
-     * @param m_flinger
+     * @param m_finger
      */
     public ManualFlingCommand(Flinger m_flinger, boolean reversed) {
         this.m_flinger = m_flinger;
