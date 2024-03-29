@@ -7,6 +7,7 @@ import frc.robot.subsystems.FloorIntake;
 public class ManualIntakeCommand extends Command {
 
     private final FloorIntake m_floorIntake;
+    private boolean reversed;
 
     /**
      * Runs the intake
@@ -14,19 +15,24 @@ public class ManualIntakeCommand extends Command {
      * @param m_flinger
      * @param m_floorIntake
      */
-    public ManualIntakeCommand(FloorIntake m_floorIntake) {
+    public ManualIntakeCommand(FloorIntake m_floorIntake, boolean reversed) {
         this.m_floorIntake = m_floorIntake;
+        this.reversed = reversed;
         addRequirements(m_floorIntake);
     }
 
     @Override
     public void initialize() {
-        m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED_REVERSE);
+        // ---
     }
 
     @Override
     public void execute() {
-        m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED_REVERSE);
+        if (reversed) {
+            m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED_REVERSE);
+        } else {
+            m_floorIntake.intake(Constants.IntakeConstants.INTAKE_SPEED);
+        }
     }
 
     @Override
