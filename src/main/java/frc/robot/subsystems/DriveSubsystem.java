@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.*;
@@ -29,6 +31,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoGoCommand;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -129,7 +132,8 @@ public class DriveSubsystem extends SubsystemBase {
         constraints,
         3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     );
-
+    RobotContainer.autoChooser.setDefaultOption("AutoGoCommand", new AutoGoCommand(RobotContainer.m_driveTrain));
+		RobotContainer.autoChooser.addOption("test_auto", new PathPlannerAuto("test_auto"));
   }
 
   @Override

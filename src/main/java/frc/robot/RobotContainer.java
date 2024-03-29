@@ -19,6 +19,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
@@ -46,9 +47,10 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ZeroHeadingCommand;
 
 public class RobotContainer {
-  DriveSubsystem m_driveTrain = new DriveSubsystem();
+  public static DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
+  public static SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
