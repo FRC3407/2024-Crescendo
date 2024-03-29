@@ -49,7 +49,7 @@ public class FlingCommand extends Command {
     @Override
     public boolean isFinished() {
         // Ends the command if all sensors are false
-        return timer.hasElapsed(2.5);
+        return timer.hasElapsed(1);
     }
 
 }
