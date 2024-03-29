@@ -31,7 +31,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoGoCommand;
-import frc.robot.commands.AutoGoCommandLong;
 import frc.robot.controls.Controls;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -140,6 +139,8 @@ public class DriveSubsystem extends SubsystemBase {
         3.0 // Rotation delay distance in meters. This is how far the robot should travel
             // before attempting to rotate.
     );
+    RobotContainer.autoChooser.setDefaultOption("AutoGoCommand", new AutoGoCommand(Controls.m_driveTrain));
+		RobotContainer.autoChooser.addOption("test_auto", new PathPlannerAuto("test_auto"));
   }
 
   @Override
@@ -194,7 +195,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   Rotation2d intendedRotation = new Rotation2d(getHeading().getDegrees());
   private static double timeOfLastLoop = System.currentTimeMillis();
-  public static boolean isTeleop = false;
 
   /**
    * Method to drive the robot using joystick info.
@@ -207,8 +207,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    // FIXME - Rotational drift when moving translationally, could try PID with a
-    // target rotation?
     double xSpeedCommanded;
     double ySpeedCommanded;
     m_rotationCommanded = 0;
@@ -264,7 +262,7 @@ public class DriveSubsystem extends SubsystemBase {
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = 0.0;
-    if (isTeleop) {
+    if (DriverStation.isTeleopEnabled()) {
       intendedRotation = intendedRotation
           .rotateBy(new Rotation2d((-m_rotationCommanded) * ((timeOfLastLoop - System.currentTimeMillis()) / 1000)
               * DriveConstants.kMaxAngularSpeed));

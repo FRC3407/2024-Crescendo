@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.AutoGoCommand;
-import frc.robot.commands.AutoGoCommandLong;
 import frc.robot.controls.ControlSchemeManager;
 import frc.robot.controls.Controls;
 
