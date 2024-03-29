@@ -4,30 +4,23 @@
 
 package frc.robot;
 
-import java.util.List;
-
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.AutoGoCommand;
+import frc.robot.commands.AutoGoCommandLong;
 import frc.robot.controls.ControlSchemeManager;
 import frc.robot.controls.Controls;
 
-public class RobotContainer extends TimedRobot {
+public class RobotContainer {
 
   private static final ControlSchemeManager controls = new ControlSchemeManager();
   private final Robot robot = new Robot();
+  public static SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -37,6 +30,11 @@ public class RobotContainer extends TimedRobot {
     Controls.setupControls(this.robot, controls, Controls.FeatureLevel.ALLSCHEMES);
   }
   
+  public static Command getAutonomousCommand()
+  {
+    return autoChooser.getSelected();
+  }
+
   private static double timeOfLastLoop = System.currentTimeMillis();
 
   /**

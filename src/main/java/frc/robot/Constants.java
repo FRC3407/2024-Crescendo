@@ -29,7 +29,7 @@ public final class Constants {
    */
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = .9;
-    public static final double FLINGER_INTAKE_SPEED = -0.9;
+    public static final double FLINGER_INTAKE_SPEED = -0.5;
     public static final int flingerCanID_1 = 11;
     public static final int flingerCanID_2 = 12;
   }

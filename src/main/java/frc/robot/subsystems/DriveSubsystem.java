@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.*;
@@ -25,13 +26,17 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoGoCommand;
+import frc.robot.commands.AutoGoCommandLong;
 import frc.robot.controls.Controls;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -135,11 +140,11 @@ public class DriveSubsystem extends SubsystemBase {
         3.0 // Rotation delay distance in meters. This is how far the robot should travel
             // before attempting to rotate.
     );
-
   }
 
   @Override
   public void periodic() {
+
     // Update the odometry in the periodic block
     m_field.setRobotPose(m_odometry.update(
         getHeading(),
@@ -151,12 +156,6 @@ public class DriveSubsystem extends SubsystemBase {
         }));
     SmartDashboard.putNumber("X in meters", getPose().getX());
     SmartDashboard.putNumber("Y in meters", getPose().getY());
-    SmartDashboard.putNumber("Gyro Angle", getHeading().getDegrees());
-    SmartDashboard.putNumber("Gyro Fused Yaw", m_gyro.getFusedHeading());
-    SmartDashboard.putNumber("Gyro Rate", m_gyro.getRate());
-    SmartDashboard.putNumber("Gyro Compass Heading", m_gyro.getCompassHeading());
-    SmartDashboard.putNumber("Gyro Delta", m_gyro.getCompassHeading() - getHeading().getDegrees());
-    SmartDashboard.putString("Selected Auto", Controls.getSelectedAutoCommand().getName());
     SmartDashboard.putNumber("rot", m_rotationCommanded);
     SmartDashboard.putNumber("Velocity", Math.sqrt(
         Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
@@ -164,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Velocity", m_frontRight.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Right Velocity", m_rearRight.getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("IntendedRot", intendedRotation.getDegrees());
+    SmartDashboard.putData(RobotContainer.autoChooser);
   }
 
   /**
@@ -195,6 +194,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   Rotation2d intendedRotation = new Rotation2d(getHeading().getDegrees());
   private static double timeOfLastLoop = System.currentTimeMillis();
+  public static boolean isTeleop = false;
 
   /**
    * Method to drive the robot using joystick info.
@@ -214,7 +214,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_rotationCommanded = 0;
     final boolean isStopped = Math.abs(xSpeed) <= (OIConstants.kDriveDeadband)
         && Math.abs(ySpeed) <= (OIConstants.kDriveDeadband);
-
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = isStopped ? m_currentTranslationDir : Math.atan2(ySpeed, xSpeed);
@@ -264,14 +263,20 @@ public class DriveSubsystem extends SubsystemBase {
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-
-    intendedRotation = intendedRotation
-        .rotateBy(new Rotation2d((m_rotationCommanded) * ((timeOfLastLoop - System.currentTimeMillis()) / 1000)
-            * DriveConstants.kMaxAngularSpeed));
-    timeOfLastLoop = System.currentTimeMillis();
-    double Kp = 0.1; // P gain (may be tuned)
-    double error = intendedRotation.minus(getHeading()).getDegrees(); // Calculate error
-    double rotDelivered = error * Kp; // Error times P = what to move by
+    double rotDelivered = 0.0;
+    if (isTeleop) {
+      intendedRotation = intendedRotation
+          .rotateBy(new Rotation2d((-m_rotationCommanded) * ((timeOfLastLoop - System.currentTimeMillis()) / 1000)
+              * DriveConstants.kMaxAngularSpeed));
+      timeOfLastLoop = System.currentTimeMillis();
+      double Kp = 0.1; // P gain (may be tuned)
+      double error = intendedRotation.minus(getHeading()).getDegrees(); // Calculate error
+      rotDelivered = error * Kp; // Error times P = what to move by
+    }
+    else{
+      rotDelivered = m_rotationCommanded * DriveConstants.kMaxAngularSpeed;
+    }
+    
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.controls.Input.InputDevice;
 import frc.robot.controls.Input.InputMap;
-import frc.utils.SenderNT;
 
 /**
  * ControlSchemeManager manages an array of control schemes and automatically
@@ -361,26 +360,6 @@ public class ControlSchemeManager implements Sendable {
 	}
 
 	/**
-	 * Overloaded method to publish the control scheme selector to SmartDashboard.
-	 * 
-	 * @param nt Specific Network table to publish to.
-	 */
-	public void publishSelector(SenderNT nt) {
-		this.publishSelector(nt, "Control Scheme");
-	}
-
-	/**
-	 * Overloaded method to publish the control scheme selector to SmartDashboard.
-	 * 
-	 * @param nt   Specific Network table to publish to.
-	 * @param name Name of the control scheme selector.
-	 */
-	public void publishSelector(SenderNT nt, String name) {
-		nt.putData(name + "/Selector", this.options);
-		nt.putData(name, this);
-	}
-
-	/**
 	 * Set the preference for handling ambiguous control scheme solutions.
 	 * 
 	 * @param preference AmbiguousSolution preference.
@@ -423,8 +402,8 @@ public class ControlSchemeManager implements Sendable {
 		boolean has_any = false;
 	}
 
-	private static int lastSelectedCompat = 10;
-	private static int lastSelectedId = 10;
+	private static int lastSelectedCompat = -2;
+	private static int lastSelectedId = -2;
 
 	/**
 	 * This method schedules the continuous worker responsible for selecting and
