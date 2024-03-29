@@ -88,7 +88,7 @@ public class RobotContainer {
 
     // manual intake
     JoystickButton button4 = new JoystickButton(buttonBox, 4);
-    button4.onTrue(new ManualIntakeCommand(m_intake, false));
+    button4.whileTrue(new ManualIntakeCommand(m_intake, false));
 
     // reverse fling
     JoystickButton button5 = new JoystickButton(buttonBox, 5);
@@ -96,7 +96,7 @@ public class RobotContainer {
 
     // manual fling
     JoystickButton button6 = new JoystickButton(buttonBox, 6);
-    button6.onTrue(new ManualFlingCommand(m_flinger, false));
+    button6.whileTrue(new ManualFlingCommand(m_flinger, false));
 
     JoystickButton button7 = new JoystickButton(buttonBox, 7);
     button7.onTrue(new PrintCommand("camera switch (toggle)"));
