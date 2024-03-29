@@ -98,6 +98,7 @@ public class RobotContainer {
     JoystickButton button8 = new JoystickButton(buttonBox, 8);
     button8.onTrue(new PrintCommand("buttonbox button 8 pressed"));
 
+    // ---
     JoystickButton boostButton = new JoystickButton(l_attack3, 2);
     m_driveTrain.setDefaultCommand(
         new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, ()-> boostButton.getAsBoolean()));
