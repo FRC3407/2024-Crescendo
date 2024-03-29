@@ -165,6 +165,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Right Velocity", m_rearRight.getState().speedMetersPerSecond);
     SmartDashboard.putData(RobotContainer.autoChooser);
+    RobotContainer.loopScheme();
+    Controls.pollCommands();
   }
 
   /**

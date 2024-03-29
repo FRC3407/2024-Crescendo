@@ -10,6 +10,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -18,15 +21,13 @@ import edu.wpi.first.math.util.Units;
  * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
+ * <p>
  * It is advised to statically import this class (or one of its inner classes)
- * wherever the constants are needed, to reduce verbosity.
+ * wherever the
+ * constants are needed, to reduce verbosity.
  */
 public final class Constants {
 
-  /**
-   * Constants used for the Flinger Subsystem,
-   * including Can IDs, and motor speeds
-   */
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = .9;
     public static final double FLINGER_INTAKE_SPEED = -0.5;
@@ -34,36 +35,30 @@ public final class Constants {
     public static final int flingerCanID_2 = 12;
   }
 
-  /**
-   * Constants used for the Intake Subsystem,
-   * including Can IDs, DIO ports, and motor speeds
-   */
   public static final class IntakeConstants {
-    public static final double INTAKE_SPEED = 0.5; // Percent of the motor's speed, between -1 and 1
+    public static final double INTAKE_SPEED = 0.5;
     public static final double INTAKE_ADJUST_SPEED = 0.25;
-    public static final int motorCanID = 10;       // The Can ID of the intake motor
-    public static final int BOT_DIO_SENSOR = 0;    // The DIO port of the bottom sensor, located partway into the intake
-    public static final int TOP_DIO_SENSOR = 1;    // The DIO port of the top sensor
+    public static final int motorCanID = 10;
+    public static final int BOT_DIO_SENSOR = 0;
+    public static final int TOP_DIO_SENSOR = 1;
   }
 
-  /**
-   * Driving Parameters - Note that these are not the maximum capable speeds of
-   * the robot, rather the allowed maximum speeds
-   */
   public static final class DriveConstants {
-    public static final double kMaxSpeedMetersPerSecond = 6.9;
+    // Driving Parameters - Note that these are not the maximum capable speeds of
+    // the robot, rather the allowed maximum speeds
+    public static final double kMaxSpeedMetersPerSecond = 4.8;
     public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
-    public static final double kDirectionSlewRate = 1.2;   // radians per second
-    public static final double kMagnitudeSlewRate = 2.0;   // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0;  // percent per second (1 = 100%)
+    public static final double kDirectionSlewRate = 1.2; // radians per second
+    public static final double kMagnitudeSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(22.5);
     // Distance between centers of right and left wheels on robot
     public static final double kWheelBase = Units.inchesToMeters(22.5);
     // Distance between front and back wheels on robot
-    public static final double kBaseRadius = Math.sqrt(Math.pow((kTrackWidth / 2), 2) + Math.pow((kWheelBase / 2), 2));
+    public static final double kBaseRadius = Math.sqrt(Math.pow((kTrackWidth/2), 2) + Math.pow((kWheelBase/2), 2));
     // Distance from middle of robot to a wheel
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -78,6 +73,8 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     // SPARK MAX CAN IDs
+
+    //Need to update CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
     public static final int kRearLeftDrivingCanId = 6;
     public static final int kFrontRightDrivingCanId = 4;
@@ -91,16 +88,13 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
   }
 
-  /**
-   * Constants used for swerve modules
-   */
   public static final class ModuleConstants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T.
     // This changes the drive speed of the module (a pinion gear with more teeth
     // will result in a
     // robot that drives faster).
-    // get pinion gear configuration from build team
+    //get pinion gear configuration from build team
     public static final int kDrivingMotorPinionTeeth = 14;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
@@ -164,9 +158,6 @@ public final class Constants {
     public static final double kTriggerDeadband = 0.2;
   }
 
-  /**
-   * Constants that modify robot movements and performance during autos
-   */
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -182,10 +173,45 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
-  /**
-   * Constants for Neo motors
-   */
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  /*public static class ButtonBox extends InputMap {
+    public static enum Digital implements DigitalMap {
+      B1(1), B2(2), B3(3), B4(4), B5(5), B6(6),
+      S1(7), S2(8),
+      TOTAL(16); // whatever interface board the bbox is using apparently has 12 buttons and 1
+                 // POV
+
+      public final int value;
+
+      private Digital(int v) {
+        this.value = v;
+      }
+
+      public int getValue() {
+        return this.value;
+      }
+
+      public int getTotal() {
+        return TOTAL.value;
+      }
+    }
+
+    private ButtonBox() {
+    }
+
+    public static final ButtonBox Map = new ButtonBox();
+    public static final int AXIS_COUNT = 5; // see the last comment --> the bbox apparently has 5 axis
+
+    public boolean compatible(GenericHID i) {
+      return Digital.TOTAL.compatible(i) && i.getAxisCount() == AXIS_COUNT;
+    }
+
+    public boolean compatible(int p) {
+      return Digital.TOTAL.compatible(p) && DriverStation.getStickAxisCount(p) == AXIS_COUNT;
+    }
+  }*/
+
 }

@@ -18,29 +18,24 @@ public class DriveCommand extends Command {
   private final DoubleSupplier m_linearXSupplier;
   private final DoubleSupplier m_linearYSupplier;
   private final DoubleSupplier m_angularSpeedSupplier;
-  private final BooleanSupplier m_zeroHeadingSupplier;
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier,
-      BooleanSupplier m_zeroHeadingSupplier) {
+      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
     this.m_angularSpeedSupplier = m_angularSpeedSupplier;
     this.m_linearBoostSupplier = m_linearBoostSupplier;
-    this.m_zeroHeadingSupplier = m_zeroHeadingSupplier;
     this.addRequirements(m_driveSubsystem);
   }
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier,
-      BooleanSupplier m_zeroHeadingSupplier) {
+      DoubleSupplier m_angularSpeedSupplier, DoubleSupplier m_linearBoostSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
     this.m_angularSpeedSupplier = m_angularSpeedSupplier;
     this.m_linearBoostSupplier = () -> m_linearBoostSupplier.getAsDouble() >= 0.5;
-    this.m_zeroHeadingSupplier = m_zeroHeadingSupplier;
     this.addRequirements(m_driveSubsystem);
   }
 
@@ -52,20 +47,17 @@ public class DriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double boostValue = m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1;
+    double xSpeed = MathUtil.applyDeadband(m_linearYSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    double ySpeed = MathUtil.applyDeadband(m_linearXSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    double rotSpeed = MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    ySpeed = ySpeed * boostValue;
+    xSpeed = xSpeed * boostValue;
     m_driveSubsystem.drive(
-      -MathUtil.applyDeadband(
-          m_linearYSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
-              * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
-          OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(
-          m_linearXSupplier.getAsDouble() / 2 * (m_linearBoostSupplier.getAsBoolean() == true ? 1.5 : 1)
-              * (m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1),
-          OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband),
-      true, true);
-  if (m_zeroHeadingSupplier.getAsBoolean()) {
-    m_driveSubsystem.zeroHeading();
-  }
+        -xSpeed/2,
+        -ySpeed/2,
+        -rotSpeed,
+        true, true);
   }
 
   // Called once the command ends or is interrupted.

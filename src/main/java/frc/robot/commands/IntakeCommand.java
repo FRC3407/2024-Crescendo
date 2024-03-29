@@ -13,15 +13,15 @@ public class IntakeCommand extends Command {
     /**
      * Runs the intake
      * 
-     * @param m_flinger
-     * @param m_floorIntake
+     * @param shooter
      */
-    public IntakeCommand(Flinger m_flinger, FloorIntake m_floorIntake) {
-        this.m_floorIntake = m_floorIntake;
-        this.m_flinger = m_flinger;
+    public IntakeCommand(Flinger flinger, FloorIntake floorIntake) {
+        this.m_floorIntake = floorIntake;
+        this.m_flinger = flinger;
         addRequirements(m_floorIntake);
     }
 
+    // come back, should this be || or &&? || would work for an && situation
     @Override
     public void initialize() {
         
@@ -53,6 +53,6 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return (this.m_floorIntake.getBotSensor() && this.m_floorIntake.getTopSensor()) || Flinger.flingCommandActive;
+        return this.m_floorIntake.getBotSensor() && this.m_floorIntake.getTopSensor();
     }
 }

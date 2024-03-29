@@ -12,6 +12,7 @@ import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ZeroHeadingCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.controls.ControlSchemeManager.AmbiguousSolution;
@@ -171,8 +172,7 @@ public final class Controls {
 				Xbox.Analog.RX.getDriveInputSupplier(xboxController, 0, 1.0, 1.0),
 				Xbox.Analog.RY.getDriveInputSupplier(xboxController, 0, 1.0, 1.0),
 				Xbox.Analog.LX.getDriveInputSupplier(xboxController, 0, 1.0, 1.0),
-				Xbox.Analog.LT.getDriveInputSupplier(xboxController, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Digital.B.getSupplier(xboxController));
+				Xbox.Analog.LT.getDriveInputSupplier(xboxController, OIConstants.kTriggerDeadband, 1.0, 1.0));
 		m_driveTrain.setDefaultCommand(drive_control);
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
 				() -> Xbox.Analog.RT.getValueOf(xboxController) >= OIConstants.kTriggerDeadband,
@@ -180,6 +180,9 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 				() -> Xbox.Digital.RB.getValueOf(xboxController),
 				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Zero Heading
+				() -> Xbox.Digital.B.getValueOf(xboxController),
+				new ZeroHeadingCommand(m_driveTrain)));
 	}
 
 	// Uses a Single PlayStation controller
@@ -190,8 +193,7 @@ public final class Controls {
 				PlayStation.Analog.RX.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
 				PlayStation.Analog.RY.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
 				PlayStation.Analog.LX.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
-				PlayStation.Analog.LT.getDriveInputSupplier(playstationController, 0, 1.0, 1.0),
-				PlayStation.Digital.O.getSupplier(playstationController));
+				PlayStation.Analog.LT.getDriveInputSupplier(playstationController, 0, 1.0, 1.0));
 		m_driveTrain.setDefaultCommand(drive_control);
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
 				() -> PlayStation.Analog.RT.getValueOf(playstationController) >= OIConstants.kTriggerDeadband,
@@ -199,6 +201,9 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 				() -> PlayStation.Digital.RB.getValueOf(playstationController),
 				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Zero Heading
+				() -> PlayStation.Digital.O.getValueOf(playstationController),
+				new ZeroHeadingCommand(m_driveTrain)));
 	}
 
 	// Uses two Xbox controllers
@@ -211,8 +216,7 @@ public final class Controls {
 				Xbox.Analog.RX.getDriveInputSupplier(xboxController1, 0, 1.0, 1.0),
 				Xbox.Analog.RY.getDriveInputSupplier(xboxController1, 0, 1.0, 1.0),
 				Xbox.Analog.LX.getDriveInputSupplier(xboxController1, 0, 1.0, 1.0),
-				Xbox.Analog.LT.getDriveInputSupplier(xboxController1, OIConstants.kTriggerDeadband, 1.0, 1.0),
-				Xbox.Digital.B.getSupplier(xboxController1));
+				Xbox.Analog.LT.getDriveInputSupplier(xboxController1, OIConstants.kTriggerDeadband, 1.0, 1.0));
 		m_driveTrain.setDefaultCommand(drive_control);
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
 				() -> Xbox.Analog.RT.getValueOf(xboxController1) >= OIConstants.kTriggerDeadband,
@@ -220,6 +224,9 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 				() -> Xbox.Digital.RB.getValueOf(xboxController1),
 				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Zero Heading
+				() -> Xbox.Digital.B.getValueOf(xboxController1),
+				new ZeroHeadingCommand(m_driveTrain)));
 	}
 
 	// Uses two Attack Joysticks
@@ -231,8 +238,7 @@ public final class Controls {
 				Attack3.Analog.X.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(leftStick, 0, 1.0, 1.0),
-				Attack3.Digital.TRI.getSupplier(leftStick),
-				Attack3.Digital.B2.getSupplier(rightStick));
+				Attack3.Digital.TRI.getSupplier(leftStick));
 		m_driveTrain.setDefaultCommand(drive_control);
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Fling
 				() -> Attack3.Digital.TRI.getValueOf(rightStick),
@@ -240,6 +246,9 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Intake
 				() -> Attack3.Digital.TB.getValueOf(rightStick),
 				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Zero Heading
+				() -> Attack3.Digital.B2.getValueOf(rightStick),
+				new ZeroHeadingCommand(m_driveTrain)));
 	}
 
 	// Uses two Attack Joysticks and the Button Box
@@ -252,9 +261,17 @@ public final class Controls {
 				Attack3.Analog.X.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(leftStick, 0, 1.0, 1.0),
-				Attack3.Digital.TRI.getSupplier(leftStick),
-				Attack3.Digital.B2.getSupplier(rightStick));
+				Attack3.Digital.TRI.getSupplier(leftStick));
 		m_driveTrain.setDefaultCommand(drive_control);
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Fling
+				() -> Attack3.Digital.TRI.getValueOf(rightStick),
+				new FlingCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
+				() -> Attack3.Digital.TB.getValueOf(rightStick),
+				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Zero Heading
+				() -> Attack3.Digital.B2.getValueOf(rightStick),
+				new ZeroHeadingCommand(m_driveTrain)));
 	}
 
 	// Uses two Attack Joysticks, the Button Box, and an Xbox controller
@@ -268,8 +285,7 @@ public final class Controls {
 				Attack3.Analog.X.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
 				Attack3.Analog.Y.getDriveInputSupplier(rightStick, 0, 1.0, 1.0),
 				Attack3.Analog.X.getDriveInputSupplier(leftStick, 0, 1.0, 1.0),
-				Attack3.Digital.TRI.getSupplier(leftStick),
-				Attack3.Digital.B2.getSupplier(rightStick));
+				Attack3.Digital.TRI.getSupplier(leftStick));
 		m_driveTrain.setDefaultCommand(drive_control);
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Fling
 				() -> Attack3.Digital.TRI.getValueOf(rightStick),
@@ -277,6 +293,9 @@ public final class Controls {
 		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue,   // Intake
 				() -> Attack3.Digital.TB.getValueOf(rightStick),
 				new IntakeCommand(m_flinger, m_intake)));
+		triggerList.add(new TriggerRunnable(TriggerRunnable.LoopType.onTrue, // Zero Heading
+				() -> Attack3.Digital.B2.getValueOf(rightStick),
+				new ZeroHeadingCommand(m_driveTrain)));
 	}
 	// !SECTION
 
