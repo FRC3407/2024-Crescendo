@@ -47,6 +47,8 @@ public class LightsSubsystem extends SubsystemBase {
 
   public static int POINTER = 17;
 
+  public static int TIME_WARNING = 18;
+
   public static int I2C_ADDRESS = 0x41;
   public static int BIGPID = 1;
   public static int PERIMETERID = 0;
@@ -56,6 +58,8 @@ public class LightsSubsystem extends SubsystemBase {
   public static final int MAX_ANIMATIONS = 20; // Must be 32 or less
   public static final int MAX_STRIPS = 5; // Must be 8 or less
 
+  public static int TIME_WARNING_SECONDS = 20; // Start the time warning 20 seconds before the end of the match
+
   private byte[] currentAnimation = new byte[MAX_STRIPS];
   private byte[] nextAnimation = new byte[MAX_STRIPS];
   private byte[] dataOut = new byte[1];
@@ -63,6 +67,8 @@ public class LightsSubsystem extends SubsystemBase {
   private FloorIntake m_intake;
 
   private I2C i2c = null;
+
+  public boolean hasDoneTimeWarning = false;
 
   public LightsSubsystem(Flinger flinger, FloorIntake intake) {
     i2c = new I2C(Port.kOnboard, I2C_ADDRESS);
@@ -115,6 +121,14 @@ public class LightsSubsystem extends SubsystemBase {
       if (isFlingerRunning()) {
         setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
         setAnimation(SIDEID, POINTER); // pointer.py
+      }
+      if (!hasDoneTimeWarning && DriverStation.getMatchTime() < TIME_WARNING_SECONDS) {
+        hasDoneTimeWarning = true;
+        setAnimation(PERIMETERID, TIME_WARNING); // time_warning.py
+        setAnimation(BIGPID,      TIME_WARNING); // time_warning.py
+        setAnimation(HEADID,      TIME_WARNING); // time_warning.py
+        setAnimation(BACKID,      TIME_WARNING); // time_warning.py
+        setAnimation(SIDEID,      TIME_WARNING); // time_warning.py
       }
     }
     sendAllAnimations();
