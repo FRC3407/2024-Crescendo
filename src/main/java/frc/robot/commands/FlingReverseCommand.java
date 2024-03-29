@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Flinger;
@@ -8,7 +7,6 @@ import frc.robot.subsystems.Flinger;
 public class FlingReverseCommand extends Command {
 
     private final Flinger m_flinger;
-    private Timer postShotTimer = new Timer();
 
     /**
      * Positions the ring, spins the flinger to max speed, and then fires
@@ -22,7 +20,6 @@ public class FlingReverseCommand extends Command {
 
     @Override
     public void initialize() {
-        postShotTimer.reset();
         Flinger.flingCommandActive = true;
      }
 
@@ -40,7 +37,7 @@ public class FlingReverseCommand extends Command {
     @Override
     public boolean isFinished() {
         // Ends the command if the post shot timer has surpassed half a second
-        return false;
+        return false; // ????
     }
 
 }
