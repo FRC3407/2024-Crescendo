@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intake_command"
+            "name": "fling_command"
           }
         },
         {
