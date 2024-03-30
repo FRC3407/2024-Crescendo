@@ -107,7 +107,15 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(HEADID, FLASH); // Flash.py
         setAnimation(BACKID, FLASH); // Flash.py
         setAnimation(SIDEID, FLASH); // Flash.py
-      } else {
+      } else if (DriverStation.getMatchTime() < 30) {
+        setAnimation(PERIMETERID, FILLRED); // Fill.py
+        setAnimation(BIGPID, FILLRED); // Fill.py
+        setAnimation(HEADID, FILLRED); // Fill.py
+        setAnimation(BACKID, FILLRED); // Fill.py
+        setAnimation(SIDEID, FILLRED); // Fill.py
+      }
+      
+      else {
         setAnimation(PERIMETERID, FILLGREEN); // Fill.py
         setAnimation(BIGPID, BITMAP); // animation_bitmap.py
         setAnimation(HEADID, FILLWHITE); // Fill.py
