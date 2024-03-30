@@ -12,14 +12,19 @@ import frc.robot.Constants;
 public class ClimberSubsystem extends SubsystemBase {
 
   private CANSparkMax climberMotorOne;
-  private CANSparkMax climberMoterTwo; 
+  private CANSparkMax climberMotorTwo; 
   private CANSparkMax hookRelease; 
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
   climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
-  climberMoterTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
+  climberMotorOne.setInverted(true); 
+
+  climberMotorTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
+  climberMotorTwo.setInverted(false); 
+
   hookRelease = new CANSparkMax(Constants.ClimberConstants.hookReleaseCanID, MotorType.kBrushed); 
+  hookRelease.setInverted(false); 
   }
 
   @Override
@@ -28,7 +33,7 @@ public class ClimberSubsystem extends SubsystemBase {
   }
   public void climb(double speed){
     climberMotorOne.set(speed);
-    climberMoterTwo.set(speed); 
+    climberMotorTwo.set(speed); 
   }
   public void release(double speed){
     hookRelease.set(speed); 
