@@ -28,10 +28,14 @@ import edu.wpi.first.wpilibj.GenericHID;
  */
 public final class Constants {
   public static final class ClimberConstants{
-  public static final int climberOneCanID = 21; //change id later
-  public static final int climberTwoCanID = 22; //change id later 
+  public static final int climberOneCanID = 14; 
+  public static final int climberTwoCanID = 15; 
   public static final double CLIMBER_SPEED = .5;//unknown speed
+
+  public static final int hookReleaseCanID = 13; 
+  public static final double HOOKRELEASE_SPEED = .2; 
   }
+  
   public static final class FlingerConstants {
     public static final double FLINGER_SHOOT_SPEED = .9;
     public static final double FLINGER_INTAKE_SPEED = -0.5;

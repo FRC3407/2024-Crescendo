@@ -46,6 +46,7 @@ import frc.robot.commands.DriveCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 import frc.robot.commands.FlingCommand;
+import frc.robot.commands.HookReleaseCommand;
 import frc.robot.commands.ManualFlingCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualIntakeCommand;
@@ -83,7 +84,7 @@ public class RobotContainer {
     button1.onTrue(new ClimbCommand(m_climber));
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
-    button2.onTrue(new PrintCommand("hook down"));
+    button2.onTrue(new HookReleaseCommand(m_climber));
 
     // reverse intake
     JoystickButton button3 = new JoystickButton(buttonBox, 3);

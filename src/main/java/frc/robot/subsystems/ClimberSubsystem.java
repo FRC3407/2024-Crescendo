@@ -13,11 +13,13 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private CANSparkMax climberMotorOne;
   private CANSparkMax climberMoterTwo; 
+  private CANSparkMax hookRelease; 
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
   climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
   climberMoterTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
+  hookRelease = new CANSparkMax(Constants.ClimberConstants.hookReleaseCanID, MotorType.kBrushless); 
   }
 
   @Override
@@ -27,6 +29,9 @@ public class ClimberSubsystem extends SubsystemBase {
   public void climb(double speed){
     climberMotorOne.set(speed);
     climberMoterTwo.set(speed); 
+  }
+  public void release(double speed){
+    hookRelease.set(speed); 
   }
 
 }
