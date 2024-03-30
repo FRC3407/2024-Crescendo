@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2003286640025244,
-      "y": 5.511817049731372
+      "x": 0.6744662599645491,
+      "y": 4.440615856320681
     },
-    "rotation": 179.88592205664497
+    "rotation": 120.20930697310772
   },
   "command": {
     "type": "sequential",
@@ -20,12 +20,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "fling"
+            "pathName": "espace_r_path"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "escape_autos",
   "choreoAuto": false
 }

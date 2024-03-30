@@ -19,10 +19,13 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -63,7 +66,8 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // return new AutoGoCommand(m_driveTrain);
-    return new PathPlannerAuto("ls_s2");
+    double wait_seconds = SmartDashboard.getNumber("Auto Wait Seconds", 0.0);
+    return Commands.waitSeconds(wait_seconds).andThen(new PathPlannerAuto("ls_s2"));
   }
 
   private void ConfigureButtonBindings() {
