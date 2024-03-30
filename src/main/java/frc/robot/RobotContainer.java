@@ -81,10 +81,10 @@ public class RobotContainer {
     GenericHID buttonBox = new GenericHID(2);
 
     JoystickButton button1 = new JoystickButton(buttonBox, 1);
-    button1.onTrue(new ClimbCommand(m_climber));
+    button1.whileTrue(new ClimbCommand(m_climber));
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
-    button2.onTrue(new HookReleaseCommand(m_climber));
+    button2.whileTrue(new HookReleaseCommand(m_climber));
 
     // reverse intake
     JoystickButton button3 = new JoystickButton(buttonBox, 3);

@@ -19,7 +19,7 @@ public class ClimberSubsystem extends SubsystemBase {
   public ClimberSubsystem() {
   climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
   climberMoterTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
-  hookRelease = new CANSparkMax(Constants.ClimberConstants.hookReleaseCanID, MotorType.kBrushless); 
+  hookRelease = new CANSparkMax(Constants.ClimberConstants.hookReleaseCanID, MotorType.kBrushed); 
   }
 
   @Override

@@ -13,6 +13,7 @@ public class HookReleaseCommand extends Command {
 
   public HookReleaseCommand(ClimberSubsystem hookRelease) {
     this.hookRelease = hookRelease; 
+    addRequirements(hookRelease);
   }
 
   // Called when the command is initially scheduled.

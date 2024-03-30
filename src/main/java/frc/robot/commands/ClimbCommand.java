@@ -14,6 +14,7 @@ public class ClimbCommand extends Command {
 
   public ClimbCommand(ClimberSubsystem climber) {
      this.climber = climber; 
+     addRequirements(climber); 
   }
 
   // Called when the command is initially scheduled.
