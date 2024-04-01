@@ -65,7 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
 
   // Slew rate filter variables for controlling lateral acceleration
-  private double m_currentRotation = 0.0;
+  private double m_rotationCommanded = 0.0;
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
 
@@ -151,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Compass Heading", m_gyro.getCompassHeading());
     SmartDashboard.putNumber("Gyro Delta", m_gyro.getCompassHeading() - getHeading().getDegrees());
     // SmartDashboard.putString("Selected Auto", Controls.getSelectedAutoCommand().getName());
-    SmartDashboard.putNumber("rot", m_currentRotation);
+    SmartDashboard.putNumber("rot", m_rotationCommanded);
     SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
     SmartDashboard.putNumber("Front Left Velocity", m_frontLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Front Right Velocity", m_frontRight.getState().speedMetersPerSecond);
@@ -184,6 +184,9 @@ public class DriveSubsystem extends SubsystemBase {
         },
         pose);
   }
+
+  Rotation2d intendedRotation = new Rotation2d(getHeading().getDegrees());
+  private static double timeOfLastLoop = System.currentTimeMillis();
 
   /**
    * Method to drive the robot using joystick info.
@@ -240,18 +243,30 @@ public class DriveSubsystem extends SubsystemBase {
 
       xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
       ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-      m_currentRotation = m_rotLimiter.calculate(rot);
+      m_rotationCommanded = m_rotLimiter.calculate(rot);
 
     } else {
       xSpeedCommanded = xSpeed;
       ySpeedCommanded = ySpeed;
-      m_currentRotation = rot;
+      m_rotationCommanded = rot;
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
+    double rotDelivered = 0.0;
+    if (DriverStation.isTeleopEnabled()) {
+      intendedRotation = intendedRotation
+          .rotateBy(new Rotation2d((-m_rotationCommanded) * ((timeOfLastLoop - System.currentTimeMillis()) / 1000)
+              * DriveConstants.kMaxAngularSpeed));
+      timeOfLastLoop = System.currentTimeMillis();
+      double Kp = 0.1; // P gain (may be tuned)
+      double error = intendedRotation.minus(getHeading()).getDegrees(); // Calculate error
+      rotDelivered = error * Kp; // Error times P = what to move by
+    }
+    else{
+      rotDelivered = m_rotationCommanded * DriveConstants.kMaxAngularSpeed;
+    }
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
