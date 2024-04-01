@@ -132,8 +132,7 @@ public class DriveSubsystem extends SubsystemBase {
         constraints,
         3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     );
-    RobotContainer.autoChooser.setDefaultOption("AutoGoCommand", new AutoGoCommand(RobotContainer.m_driveTrain));
-		RobotContainer.autoChooser.addOption("test_auto", new PathPlannerAuto("test_auto"));
+    RobotContainer.setAutoCommands();
   }
 
   @Override

@@ -63,9 +63,16 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake_command", new IntakeCommand(m_flinger, m_intake));
   }
 
-  public Command getAutonomousCommand() {
-    // return new AutoGoCommand(m_driveTrain);
-    return new PathPlannerAuto("test_auto");
+  public Command getAutonomousCommand()
+  {
+    return autoChooser.getSelected();
+  }
+
+  //Called in DriveSubsystem.java to prevent adding commands before their subsystems are initialized
+  public static void setAutoCommands()
+  {
+    autoChooser.setDefaultOption("AutoGoCommand", new AutoGoCommand(m_driveTrain));
+		autoChooser.addOption("test_auto", new PathPlannerAuto("test_auto"));
   }
 
   private void ConfigureButtonBindings() {
@@ -82,52 +89,4 @@ public class RobotContainer {
     JoystickButton zeroHeadingButton = new JoystickButton(r_attack3, 7);
     zeroHeadingButton.onTrue(new ZeroHeadingCommand(m_driveTrain));
   }
-  // /**
-  // * Use this to pass the autonomous command to the main {@link Robot} class.
-  // *
-  // * @return the command to run in autonomous
-  // */
-  // public Command getAutonomousCommand() {
-  // // Create config for trajectory
-  // TrajectoryConfig config = new TrajectoryConfig(
-  // AutoConstants.kMaxSpeedMetersPerSecond,
-  // AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-  // // Add kinematics to ensure max speed is actually obeyed
-  // .setKinematics(DriveConstants.kDriveKinematics);
-
-  // // An example trajectory to follow. All units in meters.
-  // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-  // // Start at the origin facing the +X direction
-  // new Pose2d(0, 0, new Rotation2d(0)),
-  // // Pass through these two interior waypoints, making an 's' curve path
-  // List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-  // // End 3 meters straight ahead of where we started, facing forward
-  // new Pose2d(3, 0, new Rotation2d(0)),
-  // config);
-
-  // var thetaController = new ProfiledPIDController(
-  // AutoConstants.kPThetaController, 0, 0,
-  // AutoConstants.kThetaControllerConstraints);
-  // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-  // SwerveControllerCommand swerveControllerCommand = new
-  // SwerveControllerCommand(
-  // exampleTrajectory,
-  // Controls.m_driveTrain::getPose, // Functional interface to feed supplier
-  // DriveConstants.kDriveKinematics,
-
-  // // Position controllers
-  // new PIDController(AutoConstants.kPXController, 0, 0),
-  // new PIDController(AutoConstants.kPYController, 0, 0),
-  // thetaController,
-  // Controls.m_driveTrain::setModuleStates,
-  // Controls.m_driveTrain);
-
-  // // Reset odometry to the starting pose of the trajectory.
-  // Controls.m_driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
-
-  // // Run path following command, then stop at the end.
-  // return swerveControllerCommand.andThen(() -> Controls.m_driveTrain.drive(0,
-  // 0, 0, false, false));
-  // }
 }
