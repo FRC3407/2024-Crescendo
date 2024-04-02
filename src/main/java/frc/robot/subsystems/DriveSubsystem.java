@@ -139,8 +139,6 @@ public class DriveSubsystem extends SubsystemBase {
         3.0 // Rotation delay distance in meters. This is how far the robot should travel
             // before attempting to rotate.
     );
-    RobotContainer.autoChooser.setDefaultOption("AutoGoCommand", new AutoGoCommand(Controls.m_driveTrain));
-		RobotContainer.autoChooser.addOption("test_auto", new PathPlannerAuto("test_auto"));
   }
 
   @Override
@@ -164,7 +162,6 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Velocity", m_frontRight.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Right Velocity", m_rearRight.getState().speedMetersPerSecond);
-    SmartDashboard.putData(RobotContainer.autoChooser);
     RobotContainer.loopScheme();
     Controls.pollCommands();
   }
@@ -194,9 +191,6 @@ public class DriveSubsystem extends SubsystemBase {
         },
         pose);
   }
-
-  Rotation2d intendedRotation = new Rotation2d(getHeading().getDegrees());
-  private static double timeOfLastLoop = System.currentTimeMillis();
 
   /**
    * Method to drive the robot using joystick info.
@@ -263,19 +257,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = 0.0;
-    if (DriverStation.isTeleopEnabled()) {
-      intendedRotation = intendedRotation
-          .rotateBy(new Rotation2d((-m_rotationCommanded) * ((timeOfLastLoop - System.currentTimeMillis()) / 1000)
-              * DriveConstants.kMaxAngularSpeed));
-      timeOfLastLoop = System.currentTimeMillis();
-      double Kp = 0.1; // P gain (may be tuned)
-      double error = intendedRotation.minus(getHeading()).getDegrees(); // Calculate error
-      rotDelivered = error * Kp; // Error times P = what to move by
-    }
-    else{
-      rotDelivered = m_rotationCommanded * DriveConstants.kMaxAngularSpeed;
-    }
+    double rotDelivered = m_rotationCommanded * DriveConstants.kMaxAngularSpeed;
     
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
@@ -327,7 +309,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    intendedRotation = new Rotation2d(0);
     offset = -m_gyro.getFusedHeading();
     m_gyro.reset();
   }

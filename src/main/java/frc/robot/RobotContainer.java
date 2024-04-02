@@ -20,7 +20,6 @@ public class RobotContainer {
 
   private static final ControlSchemeManager controls = new ControlSchemeManager();
   private final Robot robot = new Robot();
-  public static SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -33,7 +32,7 @@ public class RobotContainer {
   
   public static Command getAutonomousCommand()
   {
-    return autoChooser.getSelected();
+    return new PathPlannerAuto("test_auto");
   }
 
   private static double timeOfLastLoop = System.currentTimeMillis();
