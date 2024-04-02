@@ -186,7 +186,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   Rotation2d intendedRotation = new Rotation2d(getHeading().getDegrees());
-  private static double timeOfLastLoop = System.currentTimeMillis();
+  private static long timeOfLastLoop = System.currentTimeMillis();
 
   /**
    * Method to drive the robot using joystick info.
@@ -257,11 +257,11 @@ public class DriveSubsystem extends SubsystemBase {
     double rotDelivered = 0.0;
     if (DriverStation.isTeleopEnabled()) {
       intendedRotation = intendedRotation
-          .rotateBy(new Rotation2d((-m_rotationCommanded) * ((timeOfLastLoop - System.currentTimeMillis()) / 1000)
+          .rotateBy(new Rotation2d((m_rotationCommanded) * ((System.currentTimeMillis()-timeOfLastLoop) / 1000.0)
               * DriveConstants.kMaxAngularSpeed));
       timeOfLastLoop = System.currentTimeMillis();
-      double Kp = 0.1; // P gain (may be tuned)
-      double error = intendedRotation.minus(getHeading()).getDegrees(); // Calculate error
+      double Kp = 0.8; // P gain (may be tuned)
+      double error = intendedRotation.minus(getHeading()).getRadians(); // Calculate error
       rotDelivered = error * Kp; // Error times P = what to move by
     }
     else{
