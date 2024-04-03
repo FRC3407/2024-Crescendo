@@ -29,6 +29,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.controls.Controls;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -157,6 +158,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Velocity", m_frontRight.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Right Velocity", m_rearRight.getState().speedMetersPerSecond);
+    RobotContainer.loopScheme();
+    Controls.pollCommands();
   }
 
   /**
