@@ -10,10 +10,18 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.*;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -61,6 +69,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private Field2d m_field = new Field2d();
+  private SwerveDrivePoseEstimator posEstimate;
+  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics();
 
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
 
@@ -129,7 +139,18 @@ public class DriveSubsystem extends SubsystemBase {
         constraints,
         3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     );
-
+    posEstimate = new SwerveDrivePoseEstimator(
+      m_kinematics,
+      getHeading(),
+      new SwerveModulePosition[] {
+        m_frontLeft.getPosition(),
+        m_frontRight.getPosition(),
+        m_rearLeft.getPosition(),
+        m_rearRight.getPosition(),
+    },
+      new Pose2d(),
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
   }
 
   @Override
@@ -341,4 +362,40 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveRobotRelative(ChassisSpeeds speeds){
     this.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond,false,false);
   }
+
+      Pose3d[] AprilTagList = { //AprilTag field locations (in meters)
+            new Pose3d(15.079472, .245872, 1.355852, new Rotation3d(0, 0, 2.094395102)), // 1
+            new Pose3d(16.185134, .883666, 1.355852, new Rotation3d(0, 0, 2.094395102)), // 2
+            new Pose3d(16.579342, 4.982718, 1.451102, new Rotation3d(0, 0, 3.141492654)), // 3
+            new Pose3d(16.579342, 5.547868, 1.451102, new Rotation3d(0, 0, 3.141492654)), // 4
+            new Pose3d(14.700758, 8.2042, 1.355852, new Rotation3d(0, 0, 4.71238898)), // 5
+            new Pose3d(1.8415, 8.2042, 1.355852, new Rotation3d(0, 0, 4.71238898)), // 6
+            new Pose3d(-.0381, 5.547868, 1.451102, new Rotation3d(0, 0, 0)), // 7
+            new Pose3d(-.0381, 4.982718, 1.451102, new Rotation3d(0, 0, 0)), // 8
+            new Pose3d(0.356108, .883666, 1.355852, new Rotation3d(0, 0, 1.047197551)), // 9
+            new Pose3d(1.461516, .245872, 1.355852, new Rotation3d(0, 0, 1.047197551)), // 10
+            new Pose3d(11.9047, 3.7132, 1.3208, new Rotation3d(0, 0, 5.235987756)), // 11
+            new Pose3d(11.9047, 4.4983, 1.3208, new Rotation3d(0, 0, 1.047197551)), // 12
+            new Pose3d(11.22019, 4.105148, 1.3208, new Rotation3d(0, 0, 3.141492654)), // 13
+            new Pose3d(5.3207, 4.105148, 1.3208, new Rotation3d(0, 0, 0)), // 14
+            new Pose3d(4.641, 4.49834, 1.3208, new Rotation3d(0, 0, 2.094395102)), // 15
+            new Pose3d(4.641, 3.713226, 1.3208, new Rotation3d(0, 0, 4.188790205)), // 16
+    };
+
+    public void applyVisionUpdate(long tagNumber, Translation3d targetTranslation, double ts) {
+        if(tagNumber<=0)
+        {
+            return;
+        }
+        Pose3d targetTagPos = AprilTagList[(((int) tagNumber) - 1)];
+        targetTranslation.rotateBy(new
+        Rotation3d(0,0,m_gyro.getRotation2d().getRadians()));
+
+        Pose3d robotPos = targetTagPos.transformBy(
+        new Transform3d(targetTranslation, new Rotation3d(0, 0,
+        0)));
+
+        this.posEstimate.addVisionMeasurement(new
+        Pose2d(robotPos.getX(),robotPos.getY(),m_gyro.getRotation2d()), ts);
+    }
 }
