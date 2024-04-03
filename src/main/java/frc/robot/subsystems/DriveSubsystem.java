@@ -260,7 +260,7 @@ public class DriveSubsystem extends SubsystemBase {
           .rotateBy(new Rotation2d((m_rotationCommanded) * ((System.currentTimeMillis()-timeOfLastLoop) / 1000.0)
               * DriveConstants.kMaxAngularSpeed));
       timeOfLastLoop = System.currentTimeMillis();
-      double Kp = 0.8; // P gain (may be tuned)
+      double Kp = 6; // P gain (may be tuned)
       double error = intendedRotation.minus(getHeading()).getRadians(); // Calculate error
       rotDelivered = error * Kp; // Error times P = what to move by
     }
