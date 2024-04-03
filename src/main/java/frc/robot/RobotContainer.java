@@ -15,6 +15,14 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -22,13 +30,22 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
+import frc.robot.commands.AutoGoCommand;
+import frc.robot.commands.ClimbCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.ManualFlingCommand;
@@ -41,6 +58,8 @@ import frc.robot.commands.ZeroHeadingCommand;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
+import frc.robot.commands.HookReleaseCommand;
+import frc.robot.commands.ManualFlingCommand;
 
 public class RobotContainer {
   static boolean visionAutoSelection = false;
@@ -48,6 +67,7 @@ public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
+  ClimberSubsystem m_climber = new ClimberSubsystem(); 
 
   SendableChooser<Command> autoChooser;
 
@@ -90,10 +110,10 @@ public class RobotContainer {
     GenericHID buttonBox = new GenericHID(2);
 
     JoystickButton button1 = new JoystickButton(buttonBox, 1);
-    button1.onTrue(new PrintCommand("pull down"));
+    button1.whileTrue(new ClimbCommand(m_climber));
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
-    button2.onTrue(new PrintCommand("hook down"));
+    button2.whileTrue(new HookReleaseCommand(m_climber));
 
     // reverse intake
     JoystickButton button3 = new JoystickButton(buttonBox, 3);
