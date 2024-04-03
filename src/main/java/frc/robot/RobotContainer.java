@@ -4,8 +4,14 @@
 
 package frc.robot;
 
-import java.util.List;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -17,11 +23,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -38,25 +43,33 @@ import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.ClimbCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FlingCommand;
+import frc.robot.commands.ManualFlingCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ManualIntakeCommand;
+import frc.robot.commands.ZeroHeadingCommand;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-import frc.robot.commands.FlingCommand;
 import frc.robot.commands.HookReleaseCommand;
 import frc.robot.commands.ManualFlingCommand;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ManualIntakeCommand;
-import frc.robot.commands.ZeroHeadingCommand;
 
 public class RobotContainer {
+  static boolean visionAutoSelection = false;
+
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
   ClimberSubsystem m_climber = new ClimberSubsystem(); 
+
+  SendableChooser<Command> autoChooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -67,11 +80,27 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("fling_command", new FlingCommand(m_flinger, m_intake));
     NamedCommands.registerCommand("intake_command", new IntakeCommand(m_flinger, m_intake));
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
+  /**
+   * Get the selected Auto Command 
+   * @implNote We should write the robot code in C++
+   * @return The Auto Command Object
+   */
   public Command getAutonomousCommand() {
-    // return new AutoGoCommand(m_driveTrain);
-    return new PathPlannerAuto("test_auto");
+    if (visionAutoSelection) {
+      String visionAuto = NetworkTableInstance.getDefault().getEntry("").getString("null");
+
+      if (visionAuto != "null") {
+        return new PathPlannerAuto(visionAuto);
+      }
+    }
+
+    return autoChooser.getSelected();
   }
 
   private void ConfigureButtonBindings() {
