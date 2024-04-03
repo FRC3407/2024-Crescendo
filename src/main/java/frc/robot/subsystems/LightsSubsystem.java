@@ -54,7 +54,7 @@ public class LightsSubsystem extends SubsystemBase {
   public static int SIDEID = 2;
   public static int HEADID = 3;
   public static int BACKID = 4;
-  
+
   public static final int MAX_ANIMATIONS = 31; // Must be 31 or less
   public static final int MAX_STRIPS = 5; // Must be 8 or less
 
@@ -95,7 +95,14 @@ public class LightsSubsystem extends SubsystemBase {
       setAnimation(SIDEID, MATRIX); // matrix.py
 
     } else {
-      if (isIntakeRunning()) {
+
+      if (DriverStation.getMatchTime() < 30) {
+        setAnimation(PERIMETERID, FILLRED); // Fill.py
+        setAnimation(BIGPID, FILLRED); // Fill.py
+        setAnimation(HEADID, FILLRED); // Fill.py
+        setAnimation(BACKID, FILLRED); // Fill.py
+        setAnimation(SIDEID, FILLRED); // Fill.py
+      } else if (isIntakeRunning()) {
         setAnimation(PERIMETERID, CIRCLE1); // circle_spinner.py
         setAnimation(BIGPID, ORANGE_REVERSE_MATRIX); // orange_reverse_matrix.py
         setAnimation(HEADID, CIRCLE2); // circle_spinner.py
@@ -107,15 +114,7 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(HEADID, FLASH); // Flash.py
         setAnimation(BACKID, FLASH); // Flash.py
         setAnimation(SIDEID, FLASH); // Flash.py
-      } else if (DriverStation.getMatchTime() < 30) {
-        setAnimation(PERIMETERID, FILLRED); // Fill.py
-        setAnimation(BIGPID, FILLRED); // Fill.py
-        setAnimation(HEADID, FILLRED); // Fill.py
-        setAnimation(BACKID, FILLRED); // Fill.py
-        setAnimation(SIDEID, FILLRED); // Fill.py
-      }
-      
-      else {
+      } else {
         setAnimation(PERIMETERID, FILLGREEN); // Fill.py
         setAnimation(BIGPID, BITMAP); // animation_bitmap.py
         setAnimation(HEADID, FILLWHITE); // Fill.py
@@ -127,6 +126,7 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(SIDEID, POINTER); // pointer.py
       }
     }
+
     sendAllAnimations();
   }
 
@@ -172,5 +172,9 @@ public class LightsSubsystem extends SubsystemBase {
   private void sendOneAnimation(int stripNumber) {
     dataOut[0] = nextAnimation[stripNumber];
     i2c.writeBulk(dataOut, dataOut.length);
+
+    int stripNumbr = (nextAnimation[stripNumber] & 0xE0) >> 5;
+    int animNumber = nextAnimation[stripNumber] & 0x1F;
+    System.out.println("I2C: SEND(" + stripNumbr + "," + animNumber + ")");
   }
 }
