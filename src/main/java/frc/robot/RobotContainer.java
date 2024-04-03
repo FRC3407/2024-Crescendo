@@ -52,6 +52,8 @@ import frc.robot.commands.ManualFlingCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualIntakeCommand;
 import frc.robot.commands.ZeroHeadingCommand;
+import frc.robot.controls.ControlSchemeManager;
+import frc.robot.controls.Controls;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -63,12 +65,8 @@ import frc.robot.commands.ManualFlingCommand;
 
 public class RobotContainer {
   static boolean visionAutoSelection = false;
-
-  DriveSubsystem m_driveTrain = new DriveSubsystem();
-  Flinger m_flinger = new Flinger();
-  FloorIntake m_intake = new FloorIntake();
-  ClimberSubsystem m_climber = new ClimberSubsystem(); 
-
+  private static final ControlSchemeManager controls = new ControlSchemeManager();
+  private final Robot robot = new Robot();
   SendableChooser<Command> autoChooser;
 
   /**
@@ -76,19 +74,19 @@ public class RobotContainer {
    */
   public RobotContainer() {
     System.out.println("Using Wpilib Version " + WPILibVersion.Version);
-    ConfigureButtonBindings();
 
-    NamedCommands.registerCommand("fling_command", new FlingCommand(m_flinger, m_intake));
-    NamedCommands.registerCommand("intake_command", new IntakeCommand(m_flinger, m_intake));
+    NamedCommands.registerCommand("fling_command", new FlingCommand(Controls.m_flinger, Controls.m_intake));
+    NamedCommands.registerCommand("intake_command", new IntakeCommand(Controls.m_flinger, Controls.m_intake));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    Controls.setupControls(this.robot, controls, Controls.FeatureLevel.ALLSCHEMES);
   }
 
   /**
    * Get the selected Auto Command 
-   * @implNote We should write the robot code in C++
    * @return The Auto Command Object
    */
   public Command getAutonomousCommand() {
@@ -103,98 +101,63 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
-  private void ConfigureButtonBindings() {
-    Joystick l_attack3 = new Joystick(0);
-    Joystick r_attack3 = new Joystick(1);
-
-    GenericHID buttonBox = new GenericHID(2);
-
-    JoystickButton button1 = new JoystickButton(buttonBox, 1);
-    button1.whileTrue(new ClimbCommand(m_climber));
-
-    JoystickButton button2 = new JoystickButton(buttonBox, 2);
-    button2.whileTrue(new HookReleaseCommand(m_climber));
-
-    // reverse intake
-    JoystickButton button3 = new JoystickButton(buttonBox, 3);
-    button3.whileTrue(new ManualIntakeCommand(m_intake, true));
-
-    // manual intake
-    JoystickButton button4 = new JoystickButton(buttonBox, 4);
-    button4.whileTrue(new ManualIntakeCommand(m_intake, false));
-
-    // reverse fling
-    JoystickButton button5 = new JoystickButton(buttonBox, 5);
-    button5.whileTrue(new ManualFlingCommand(m_flinger, true));
-
-    // manual fling
-    JoystickButton button6 = new JoystickButton(buttonBox, 6);
-    button6.whileTrue(new ManualFlingCommand(m_flinger, false));
-
-    JoystickButton button7 = new JoystickButton(buttonBox, 7);
-    button7.onTrue(new PrintCommand("camera switch (toggle)"));
-
-    JoystickButton button8 = new JoystickButton(buttonBox, 8);
-    button8.onTrue(new PrintCommand("climber switch (toggle)"));
-
-    // ---
-    JoystickButton boostButton = new JoystickButton(l_attack3, 2);
-    m_driveTrain.setDefaultCommand(
-        new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, ()-> boostButton.getAsBoolean()));
-
-    JoystickButton flingButton = new JoystickButton(r_attack3, 1);
-    flingButton.onTrue(new FlingCommand(m_flinger, m_intake));
-    JoystickButton intakeButton = new JoystickButton(r_attack3, 2);
-    intakeButton.onTrue(new IntakeCommand(m_flinger, m_intake));
-    JoystickButton zeroHeadingButton = new JoystickButton(r_attack3, 7);
-    zeroHeadingButton.onTrue(new ZeroHeadingCommand(m_driveTrain));
+  private static double timeOfLastLoop = System.currentTimeMillis();
+  /**
+   * Polls the control scheme manager to see if the current scheme 
+   * should be changed to a more compatible scheme
+   */
+  public static void loopScheme() {
+    // If 2 seconds have elapse since the last control scheme check
+    if (System.currentTimeMillis() - timeOfLastLoop > 2000) {
+      controls.loopScheme();
+      timeOfLastLoop = System.currentTimeMillis();
+    }
   }
-  // /**
-  // * Use this to pass the autonomous command to the main {@link Robot} class.
-  // *
-  // * @return the command to run in autonomous
-  // */
-  // public Command getAutonomousCommand() {
-  // // Create config for trajectory
-  // TrajectoryConfig config = new TrajectoryConfig(
-  // AutoConstants.kMaxSpeedMetersPerSecond,
-  // AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-  // // Add kinematics to ensure max speed is actually obeyed
-  // .setKinematics(DriveConstants.kDriveKinematics);
 
-  // // An example trajectory to follow. All units in meters.
-  // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-  // // Start at the origin facing the +X direction
-  // new Pose2d(0, 0, new Rotation2d(0)),
-  // // Pass through these two interior waypoints, making an 's' curve path
-  // List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-  // // End 3 meters straight ahead of where we started, facing forward
-  // new Pose2d(3, 0, new Rotation2d(0)),
-  // config);
+  // private void ConfigureButtonBindings() {
+  //   Joystick l_attack3 = new Joystick(0);
+  //   Joystick r_attack3 = new Joystick(1);
 
-  // var thetaController = new ProfiledPIDController(
-  // AutoConstants.kPThetaController, 0, 0,
-  // AutoConstants.kThetaControllerConstraints);
-  // thetaController.enableContinuousInput(-Math.PI, Math.PI);
+  //   GenericHID buttonBox = new GenericHID(2);
 
-  // SwerveControllerCommand swerveControllerCommand = new
-  // SwerveControllerCommand(
-  // exampleTrajectory,
-  // Controls.m_driveTrain::getPose, // Functional interface to feed supplier
-  // DriveConstants.kDriveKinematics,
+  //   JoystickButton button1 = new JoystickButton(buttonBox, 1);
+  //   button1.whileTrue(new ClimbCommand(m_climber));
 
-  // // Position controllers
-  // new PIDController(AutoConstants.kPXController, 0, 0),
-  // new PIDController(AutoConstants.kPYController, 0, 0),
-  // thetaController,
-  // Controls.m_driveTrain::setModuleStates,
-  // Controls.m_driveTrain);
+  //   JoystickButton button2 = new JoystickButton(buttonBox, 2);
+  //   button2.whileTrue(new HookReleaseCommand(m_climber));
 
-  // // Reset odometry to the starting pose of the trajectory.
-  // Controls.m_driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
+  //   // reverse intake
+  //   JoystickButton button3 = new JoystickButton(buttonBox, 3);
+  //   button3.whileTrue(new ManualIntakeCommand(m_intake, true));
 
-  // // Run path following command, then stop at the end.
-  // return swerveControllerCommand.andThen(() -> Controls.m_driveTrain.drive(0,
-  // 0, 0, false, false));
+  //   // manual intake
+  //   JoystickButton button4 = new JoystickButton(buttonBox, 4);
+  //   button4.whileTrue(new ManualIntakeCommand(m_intake, false));
+
+  //   // reverse fling
+  //   JoystickButton button5 = new JoystickButton(buttonBox, 5);
+  //   button5.whileTrue(new ManualFlingCommand(m_flinger, true));
+
+  //   // manual fling
+  //   JoystickButton button6 = new JoystickButton(buttonBox, 6);
+  //   button6.whileTrue(new ManualFlingCommand(m_flinger, false));
+
+  //   JoystickButton button7 = new JoystickButton(buttonBox, 7);
+  //   button7.onTrue(new PrintCommand("camera switch (toggle)"));
+
+  //   JoystickButton button8 = new JoystickButton(buttonBox, 8);
+  //   button8.onTrue(new PrintCommand("climber switch (toggle)"));
+
+  //   // ---
+  //   JoystickButton boostButton = new JoystickButton(l_attack3, 2);
+  //   m_driveTrain.setDefaultCommand(
+  //       new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, ()-> boostButton.getAsBoolean()));
+
+  //   JoystickButton flingButton = new JoystickButton(r_attack3, 1);
+  //   flingButton.onTrue(new FlingCommand(m_flinger, m_intake));
+  //   JoystickButton intakeButton = new JoystickButton(r_attack3, 2);
+  //   intakeButton.onTrue(new IntakeCommand(m_flinger, m_intake));
+  //   JoystickButton zeroHeadingButton = new JoystickButton(r_attack3, 7);
+  //   zeroHeadingButton.onTrue(new ZeroHeadingCommand(m_driveTrain));
   // }
 }
