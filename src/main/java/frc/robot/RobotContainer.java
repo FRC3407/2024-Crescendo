@@ -66,8 +66,8 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // return new AutoGoCommand(m_driveTrain);
-    double wait_seconds = SmartDashboard.getNumber("Auto Wait Seconds", 0.0);
-    return Commands.waitSeconds(wait_seconds).andThen(new PathPlannerAuto("ls_s2"));
+    //return Commands.waitSeconds(m_driveTrain.wait_seconds).andThen(new PathPlannerAuto("ls_s2"));
+    return new PathPlannerAuto("m_s2");
   }
 
   private void ConfigureButtonBindings() {
