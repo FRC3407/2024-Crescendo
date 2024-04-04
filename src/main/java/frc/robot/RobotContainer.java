@@ -108,8 +108,8 @@ public class RobotContainer {
         return new PathPlannerAuto(visionAuto);
       }
     }
-
-    return autoChooser.getSelected();
+    
+    return Commands.waitSeconds(m_driveTrain.wait_seconds).andThen(autoChooser.getSelected());
   }
 
   private void ConfigureButtonBindings() {

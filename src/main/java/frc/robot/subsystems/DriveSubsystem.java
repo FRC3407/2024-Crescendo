@@ -118,19 +118,19 @@ public class DriveSubsystem extends SubsystemBase {
       this // Reference to this subsystem to set requirements
     );
     // Load the path we want to pathfind to and follow
-    PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
 
-    // Create the constraints to use while pathfinding. The constraints defined in the path will only be used for the path.
-    PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
+    // // Create the constraints to use while pathfinding. The constraints defined in the path will only be used for the path.
+    // PathConstraints constraints = new PathConstraints(
+    //     3.0, 4.0,
+    //     Units.degreesToRadians(540), Units.degreesToRadians(720));
 
-    // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
-        path,
-        constraints,
-        3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-    );
+    // // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    // Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
+    //     path,
+    //     constraints,
+    //     3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+    // );
 
   }
 
@@ -160,6 +160,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Right Velocity", m_rearRight.getState().speedMetersPerSecond);
     wait_seconds = SmartDashboard.getNumber("Auto Wait Seconds", 0.0);
+    SmartDashboard.putNumber("Auto Wait Seconds", wait_seconds);
   }
 
   /**
