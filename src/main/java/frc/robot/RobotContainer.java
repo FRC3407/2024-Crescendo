@@ -41,6 +41,8 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
+import frc.robot.subsystems.LightsSubsystem;
+import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.ClimbCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -67,7 +69,8 @@ public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
-  ClimberSubsystem m_climber = new ClimberSubsystem(); 
+  ClimberSubsystem m_climber = new ClimberSubsystem();
+  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake);
 
   SendableChooser<Command> autoChooser;
 
@@ -87,7 +90,7 @@ public class RobotContainer {
   }
 
   /**
-   * Get the selected Auto Command 
+   * Get the selected Auto Command
    * @implNote We should write the robot code in C++
    * @return The Auto Command Object
    */
