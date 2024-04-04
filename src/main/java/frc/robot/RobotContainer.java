@@ -4,8 +4,14 @@
 
 package frc.robot;
 
-import java.util.List;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -17,6 +23,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -25,6 +34,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -33,25 +43,42 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.commands.AutoGoCommand;
+import frc.robot.commands.AutoGoCommand;
+import frc.robot.commands.ClimbCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FlingCommand;
+import frc.robot.commands.ManualFlingCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ManualIntakeCommand;
+import frc.robot.commands.ZeroHeadingCommand;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-import frc.robot.commands.FlingCommand;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ZeroHeadingCommand;
+import frc.robot.commands.HookReleaseCommand;
+import frc.robot.commands.ManualFlingCommand;
 
 public class RobotContainer {
+  static boolean visionAutoSelection = false;
+
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
+  ClimberSubsystem m_climber = new ClimberSubsystem();
+  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake);
+
+  SendableChooser<Command> autoChooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -62,17 +89,64 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("fling_command", new FlingCommand(m_flinger, m_intake));
     NamedCommands.registerCommand("intake_command", new IntakeCommand(m_flinger, m_intake));
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
+  /**
+   * Get the selected Auto Command
+   * @implNote We should write the robot code in C++
+   * @return The Auto Command Object
+   */
   public Command getAutonomousCommand() {
-    // return new AutoGoCommand(m_driveTrain);
-    //return Commands.waitSeconds(m_driveTrain.wait_seconds).andThen(new PathPlannerAuto("ls_s2"));
-    return new PathPlannerAuto("m_s2");
+    if (visionAutoSelection) {
+      String visionAuto = NetworkTableInstance.getDefault().getEntry("").getString("null");
+
+      if (visionAuto != "null") {
+        return new PathPlannerAuto(visionAuto);
+      }
+    }
+
+    return autoChooser.getSelected();
   }
 
   private void ConfigureButtonBindings() {
     Joystick l_attack3 = new Joystick(0);
     Joystick r_attack3 = new Joystick(1);
+
+    GenericHID buttonBox = new GenericHID(2);
+
+    JoystickButton button1 = new JoystickButton(buttonBox, 1);
+    button1.whileTrue(new ClimbCommand(m_climber));
+
+    JoystickButton button2 = new JoystickButton(buttonBox, 2);
+    button2.whileTrue(new HookReleaseCommand(m_climber));
+
+    // reverse intake
+    JoystickButton button3 = new JoystickButton(buttonBox, 3);
+    button3.whileTrue(new ManualIntakeCommand(m_intake, true));
+
+    // manual intake
+    JoystickButton button4 = new JoystickButton(buttonBox, 4);
+    button4.whileTrue(new ManualIntakeCommand(m_intake, false));
+
+    // reverse fling
+    JoystickButton button5 = new JoystickButton(buttonBox, 5);
+    button5.whileTrue(new ManualFlingCommand(m_flinger, true));
+
+    // manual fling
+    JoystickButton button6 = new JoystickButton(buttonBox, 6);
+    button6.whileTrue(new ManualFlingCommand(m_flinger, false));
+
+    JoystickButton button7 = new JoystickButton(buttonBox, 7);
+    button7.onTrue(new PrintCommand("camera switch (toggle)"));
+
+    JoystickButton button8 = new JoystickButton(buttonBox, 8);
+    button8.onTrue(new PrintCommand("climber switch (toggle)"));
+
+    // ---
     JoystickButton boostButton = new JoystickButton(l_attack3, 2);
     m_driveTrain.setDefaultCommand(
         new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getX, ()-> boostButton.getAsBoolean()));
