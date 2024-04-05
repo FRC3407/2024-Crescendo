@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2354236697055714,
+        "x": 2.235423669705572,
         "y": 5.57614009614318
       },
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "intake",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -50,8 +50,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 0.75,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
