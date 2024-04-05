@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "fling_command"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "espace_m_path"
