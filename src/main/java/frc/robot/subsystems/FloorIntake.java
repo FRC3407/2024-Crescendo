@@ -71,9 +71,9 @@ public class FloorIntake extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder b) {
-        b.addBooleanProperty("Bottom Sensor", this::getBotSensor, null);
-        b.addBooleanProperty("Top Sensor", this::getTopSensor, null);
-        b.addDoubleProperty("Intake RPM", this.intakeMotor.getEncoder()::getVelocity, null);
+        b.addBooleanProperty("Bottom Sensor", ()->this.getBotSensor(), null);
+        b.addBooleanProperty("Top Sensor", ()->this.getTopSensor(), null);
+        b.addDoubleProperty("Intake RPM", ()->this.intakeMotor.getEncoder().getVelocity(), null);
     }
 
 

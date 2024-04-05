@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 public class ClimberSubsystem extends SubsystemBase {
@@ -37,6 +38,22 @@ public class ClimberSubsystem extends SubsystemBase {
   }
   public void release(double speed){
     hookRelease.set(speed); 
+  }
+
+  @Override
+  public void initSendable(SendableBuilder b) {
+    b.addDoubleProperty("Climber 1 encoder position", ()->this.climberMotorOne.getEncoder().getPosition(), null);
+    b.addDoubleProperty("Climber 2 encoder position", ()->this.climberMotorTwo.getEncoder().getPosition(), null);
+    b.addDoubleProperty("Climber hook release encoder position", ()->this.hookRelease.getEncoder().getPosition(), null);
+    b.addDoubleProperty("Climber 1 current", ()->this.climberMotorOne.getOutputCurrent(), null);
+    b.addDoubleProperty("Climber 2 current", ()->this.climberMotorTwo.getOutputCurrent(), null);
+    b.addDoubleProperty("Climber hook release current", ()->this.hookRelease.getOutputCurrent(), null);
+    b.addDoubleProperty("Climber 1 raw output", ()->this.climberMotorOne.getAppliedOutput(), null);
+    b.addDoubleProperty("Climber 2 raw output", ()->this.climberMotorTwo.getAppliedOutput(), null);
+    b.addDoubleProperty("Climber hook release raw output", ()->this.hookRelease.getAppliedOutput(), null);
+    b.addDoubleProperty("Climber 1 voltage", ()->this.climberMotorOne.getBusVoltage(), null);
+    b.addDoubleProperty("Climber 2 voltage", ()->this.climberMotorTwo.getBusVoltage(), null);
+    b.addDoubleProperty("Climber hook release voltage", ()->this.hookRelease.getBusVoltage(), null);
   }
 
 }

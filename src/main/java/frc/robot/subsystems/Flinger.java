@@ -64,14 +64,14 @@ public class Flinger extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder b) {
-        b.addDoubleProperty("Encoder RPM 1", this::getRPM_1, null);
-        b.addDoubleProperty("Encoder RPM 2", this::getRPM_2, null);
-        b.addDoubleProperty("Target RPM 1", this::getTargetRPM, null);
-        b.addDoubleProperty("Target RPM 2", this::getTargetRPM, null);
-        b.addDoubleProperty("Output Current 1", this.flingerMotor_1::getOutputCurrent, null);
-        b.addDoubleProperty("Output Current 2", this.flingerMotor_2::getOutputCurrent, null);
-        b.addDoubleProperty("Bus Voltage 1", this.flingerMotor_1::getBusVoltage, null);
-        b.addDoubleProperty("Bus Voltage 2", this.flingerMotor_2::getBusVoltage, null);
+        b.addDoubleProperty("Encoder RPM 1", ()->this.getRPM_1(), null);
+        b.addDoubleProperty("Encoder RPM 2", ()->this.getRPM_2(), null);
+        b.addDoubleProperty("Target RPM 1", ()->this.getTargetRPM(), null);
+        b.addDoubleProperty("Target RPM 2", ()->this.getTargetRPM(), null);
+        b.addDoubleProperty("Output Current 1", ()->this.flingerMotor_1.getOutputCurrent(), null);
+        b.addDoubleProperty("Output Current 2", ()->this.flingerMotor_2.getOutputCurrent(), null);
+        b.addDoubleProperty("Bus Voltage 1", ()->this.flingerMotor_1.getBusVoltage(), null);
+        b.addDoubleProperty("Bus Voltage 2", ()->this.flingerMotor_2.getBusVoltage(), null);
     }
 
 }
