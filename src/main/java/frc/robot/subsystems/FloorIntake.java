@@ -5,6 +5,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
+
 import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -25,9 +27,9 @@ public class FloorIntake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
-        SmartDashboard.putBoolean("Top Sensor", getTopSensor());
-        SmartDashboard.putNumber("Intake Velocity", intakeMotor.getEncoder().getVelocity());
+        // SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
+        // SmartDashboard.putBoolean("Top Sensor", getTopSensor());
+        // SmartDashboard.putNumber("Intake Velocity", intakeMotor.getEncoder().getVelocity());
     }
 
     @Override
@@ -64,6 +66,14 @@ public class FloorIntake extends SubsystemBase {
      */
     public boolean getTopSensor() {
         return sensorTop.get();
+    }
+
+
+    @Override
+    public void initSendable(SendableBuilder b) {
+        b.addBooleanProperty("Bottom Sensor", this::getBotSensor, null);
+        b.addBooleanProperty("Top Sensor", this::getTopSensor, null);
+        b.addDoubleProperty("Intake RPM", this.intakeMotor.getEncoder()::getVelocity, null);
     }
 
 

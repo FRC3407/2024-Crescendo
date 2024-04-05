@@ -53,6 +53,7 @@ import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.ClimbCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DataLogManager;
 
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
@@ -93,6 +94,10 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Flinger", this.m_flinger);
+    SmartDashboard.putData("Intake", this.m_intake);
+
+    if(Robot.isReal()) DataLogManager.start();
   }
 
   /**
