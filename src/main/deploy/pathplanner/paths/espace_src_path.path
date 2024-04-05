@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2354236697055696,
-        "y": 5.57614009614318
+        "x": 0.7036808379666589,
+        "y": 4.411401278318571
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2354236697055727,
-        "y": 5.57614009614318
+        "x": 0.8984446913140571,
+        "y": 3.3888910482447305
       },
       "isLocked": false,
-      "linkedName": "fling_pos"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 5.57614009614318
+        "x": 5.095605730950489,
+        "y": 0.6914116793832654
       },
       "prevControl": {
-        "x": 2.3914569545951565,
-        "y": 5.57614009614318
+        "x": 4.129755699294124,
+        "y": 0.6914116793832654
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,10 +32,10 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxVelocity": 0.75,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "mid_paths",
+  "folder": "escape_paths",
   "previewStartingState": {
-    "rotation": 179.5843264630735,
+    "rotation": 120.96375653207356,
     "velocity": 0
   },
   "useDefaultConstraints": false

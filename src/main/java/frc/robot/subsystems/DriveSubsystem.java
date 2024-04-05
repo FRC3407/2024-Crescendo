@@ -73,6 +73,8 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
+  public double wait_seconds;
+
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -119,22 +121,19 @@ public class DriveSubsystem extends SubsystemBase {
         this // Reference to this subsystem to set requirements
     );
     // Load the path we want to pathfind to and follow
-    PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
 
-    // Create the constraints to use while pathfinding. The constraints defined in
-    // the path will only be used for the path.
-    PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
+    // // Create the constraints to use while pathfinding. The constraints defined in the path will only be used for the path.
+    // PathConstraints constraints = new PathConstraints(
+    //     3.0, 4.0,
+    //     Units.degreesToRadians(540), Units.degreesToRadians(720));
 
-    // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
-        path,
-        constraints,
-        3.0 // Rotation delay distance in meters. This is how far the robot should travel
-            // before attempting to rotate.
-    );
-
+    // // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    // Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
+    //     path,
+    //     constraints,
+    //     3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+    // );
   }
 
   @Override
@@ -164,6 +163,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Velocity", m_frontRight.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Right Velocity", m_rearRight.getState().speedMetersPerSecond);
+    wait_seconds = SmartDashboard.getNumber("Auto Wait Seconds", 0.0);
+    SmartDashboard.putNumber("Auto Wait Seconds", wait_seconds);
   }
 
   /**
@@ -290,6 +291,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+    SmartDashboard.putNumber("Auto Wait Seconds", 0.0);
   }
 
   /**
@@ -364,7 +367,8 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Method that will drive the robot Robot Relative.
    */
-  public void driveRobotRelative(ChassisSpeeds speeds) {
-    this.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false, false);
+
+  public void driveRobotRelative(ChassisSpeeds speeds){
+    this.drive(speeds.vxMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.vyMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.omegaRadiansPerSecond,false,false);
   }
 }

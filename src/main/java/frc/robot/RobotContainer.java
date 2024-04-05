@@ -27,9 +27,15 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -41,6 +47,8 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
+import frc.robot.subsystems.LightsSubsystem;
+import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.ClimbCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -67,7 +75,8 @@ public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
-  ClimberSubsystem m_climber = new ClimberSubsystem(); 
+  ClimberSubsystem m_climber = new ClimberSubsystem();
+  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake);
 
   SendableChooser<Command> autoChooser;
 
@@ -87,7 +96,7 @@ public class RobotContainer {
   }
 
   /**
-   * Get the selected Auto Command 
+   * Get the selected Auto Command
    * @implNote We should write the robot code in C++
    * @return The Auto Command Object
    */
@@ -99,8 +108,8 @@ public class RobotContainer {
         return new PathPlannerAuto(visionAuto);
       }
     }
-
-    return autoChooser.getSelected();
+    
+    return Commands.waitSeconds(m_driveTrain.wait_seconds).andThen(autoChooser.getSelected());
   }
 
   private void ConfigureButtonBindings() {
