@@ -94,6 +94,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("DriveBase", this.m_driveTrain);
     SmartDashboard.putData("Flinger", this.m_flinger);
     SmartDashboard.putData("Intake", this.m_intake);
 
