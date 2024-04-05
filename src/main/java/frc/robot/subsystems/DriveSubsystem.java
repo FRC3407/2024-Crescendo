@@ -91,31 +91,34 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Field", m_field);
     // Configure AutoBuilder last
     AutoBuilder.configureHolonomic(
-      this::getPose, // Robot pose supplier
-      this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-      this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-      this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-      new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-        new PIDConstants(Constants.ModuleConstants.kPPDrivingP, 
-          Constants.ModuleConstants.kPPDrivingI, Constants.ModuleConstants.kPPDrivingD), // Translation PID constants
-        new PIDConstants(Constants.ModuleConstants.kPPTurningP, 
-          Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD), // Rotation PID constants
-        Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-        Constants.DriveConstants.kBaseRadius, // Drive base radius in metbers. Distance from robot center to furthest module.
-        new ReplanningConfig() // Default path replanning config. See the API for the options here
+        this::getPose, // Robot pose supplier
+        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants(Constants.ModuleConstants.kPPDrivingP,
+                Constants.ModuleConstants.kPPDrivingI, Constants.ModuleConstants.kPPDrivingD), // Translation PID
+                                                                                               // constants
+            new PIDConstants(Constants.ModuleConstants.kPPTurningP,
+                Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD), // Rotation PID constants
+            Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+            Constants.DriveConstants.kBaseRadius, // Drive base radius in metbers. Distance from robot center to
+                                                  // furthest module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
-      () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          return alliance.get() == DriverStation.Alliance.Red;
-        }
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
           return false;
-      },
-      this // Reference to this subsystem to set requirements
+        },
+        this // Reference to this subsystem to set requirements
     );
     // Load the path we want to pathfind to and follow
     // PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
@@ -131,7 +134,6 @@ public class DriveSubsystem extends SubsystemBase {
     //     constraints,
     //     3.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     // );
-
   }
 
   @Override
@@ -152,9 +154,11 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Rate", m_gyro.getRate());
     SmartDashboard.putNumber("Gyro Compass Heading", m_gyro.getCompassHeading());
     SmartDashboard.putNumber("Gyro Delta", m_gyro.getCompassHeading() - getHeading().getDegrees());
-    // SmartDashboard.putString("Selected Auto", Controls.getSelectedAutoCommand().getName());
+    // SmartDashboard.putString("Selected Auto",
+    // Controls.getSelectedAutoCommand().getName());
     SmartDashboard.putNumber("rot", m_rotationCommanded);
-    SmartDashboard.putNumber("Velocity", Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
+    SmartDashboard.putNumber("Velocity", Math.sqrt(
+        Math.pow(getChassisSpeeds().vxMetersPerSecond, 2.0) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2.0)));
     SmartDashboard.putNumber("Front Left Velocity", m_frontLeft.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Front Right Velocity", m_frontRight.getState().speedMetersPerSecond);
     SmartDashboard.putNumber("Rear Left Velocity", m_rearLeft.getState().speedMetersPerSecond);
@@ -191,6 +195,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   Rotation2d intendedRotation = new Rotation2d(getHeading().getDegrees());
   private static long timeOfLastLoop = System.currentTimeMillis();
+  double integral = 0.0;
+  double Kp = 6;
+  double ki = 0;
+  double kd = 0;
+  double error = 0.0;
+  double prevError = 0.0;
 
   /**
    * Method to drive the robot using joystick info.
@@ -206,9 +216,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     double xSpeedCommanded;
     double ySpeedCommanded;
-    final boolean isStopped = Math.abs(xSpeed) <= (OIConstants.kDriveDeadband / 2.0)
-            && Math.abs(ySpeed) <= (OIConstants.kDriveDeadband / 2.0);
-
+    final boolean isStopped = xSpeed == 0 && ySpeed == 0;
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = isStopped ? m_currentTranslationDir : Math.atan2(ySpeed, xSpeed);
@@ -261,14 +269,14 @@ public class DriveSubsystem extends SubsystemBase {
     double rotDelivered = 0.0;
     if (DriverStation.isTeleopEnabled()) {
       intendedRotation = intendedRotation
-          .rotateBy(new Rotation2d((m_rotationCommanded) * ((System.currentTimeMillis()-timeOfLastLoop) / 1000.0)
+          .rotateBy(new Rotation2d((m_rotationCommanded) * ((System.currentTimeMillis() - timeOfLastLoop) / 1000.0)
               * DriveConstants.kMaxAngularSpeed));
       timeOfLastLoop = System.currentTimeMillis();
-      double Kp = 6; // P gain (may be tuned)
-      double error = intendedRotation.minus(getHeading()).getRadians(); // Calculate error
-      rotDelivered = error * Kp; // Error times P = what to move by
-    }
-    else{
+      error = intendedRotation.minus(getHeading()).getRadians(); // Calculate error
+      integral+=error;
+      rotDelivered = (error * Kp) + (ki*integral)+(kd*(error-prevError)); // Error times P = what to move by
+      prevError = error;
+    } else {
       rotDelivered = m_rotationCommanded * DriveConstants.kMaxAngularSpeed;
     }
 
@@ -348,18 +356,18 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public ChassisSpeeds getChassisSpeeds() {
     ChassisSpeeds chassis_speed = Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(
-      m_frontLeft.getState(), 
-      m_frontRight.getState(), 
-      m_rearLeft.getState(), 
-      m_rearRight.getState()
-      );
-      
+        m_frontLeft.getState(),
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState());
+
     return chassis_speed;
   }
 
   /**
    * Method that will drive the robot Robot Relative.
    */
+
   public void driveRobotRelative(ChassisSpeeds speeds){
     this.drive(speeds.vxMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.vyMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.omegaRadiansPerSecond,false,false);
   }
