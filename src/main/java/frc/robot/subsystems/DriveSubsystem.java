@@ -215,7 +215,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     double xSpeedCommanded;
     double ySpeedCommanded;
-    final boolean isStopped = (Math.abs(xSpeed) <= OIConstants.kDriveDeadband/2 && Math.abs(ySpeed) <= OIConstants.kDriveDeadband/2);
+    final boolean isStopped = xSpeed == 0 && ySpeed == 0;
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = isStopped ? m_currentTranslationDir : Math.atan2(ySpeed, xSpeed);
