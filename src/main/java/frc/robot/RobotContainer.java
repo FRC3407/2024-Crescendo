@@ -54,7 +54,7 @@ import frc.robot.commands.ClimbCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DataLogManager;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.ManualFlingCommand;
@@ -97,8 +97,12 @@ public class RobotContainer {
     SmartDashboard.putData("DriveBase", this.m_driveTrain);
     SmartDashboard.putData("Flinger", this.m_flinger);
     SmartDashboard.putData("Intake", this.m_intake);
+    SmartDashboard.putData("Climber", this.m_climber);
 
-    if(Robot.isReal()) DataLogManager.start();
+    if(Robot.isReal()) {
+      DataLogManager.start();                               // log all NT data
+      DriverStation.startDataLog(DataLogManager.getLog());  // log all controller inputs
+    }
   }
 
   /**

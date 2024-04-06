@@ -20,6 +20,8 @@ public class FloorIntake extends SubsystemBase {
     private DigitalInput sensorBot = new DigitalInput(Constants.IntakeConstants.BOT_DIO_SENSOR);
     private DigitalInput sensorTop = new DigitalInput(Constants.IntakeConstants.TOP_DIO_SENSOR);
 
+    private double m_intakeSpeedTarget = 0.0;
+
     public FloorIntake() {
         intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
         intakeMotor.setInverted(false);
@@ -27,9 +29,9 @@ public class FloorIntake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
-        // SmartDashboard.putBoolean("Top Sensor", getTopSensor());
-        // SmartDashboard.putNumber("Intake Velocity", intakeMotor.getEncoder().getVelocity());
+        SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
+        SmartDashboard.putBoolean("Top Sensor", getTopSensor());
+        SmartDashboard.putNumber("Intake Velocity", intakeMotor.getEncoder().getVelocity());
     }
 
     @Override
@@ -43,6 +45,7 @@ public class FloorIntake extends SubsystemBase {
      * @param speed
      */
     public void intake(double speed) {
+        m_intakeSpeedTarget = speed;
         intakeMotor.set(speed);
     }
 
@@ -71,9 +74,16 @@ public class FloorIntake extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder b) {
+        // motor
+        b.addDoubleProperty("Intake Motor/Encoder RPM", ()->this.intakeMotor.getEncoder().getVelocity(), null);
+        b.addDoubleProperty("Intake Motor/Current", ()->this.intakeMotor.getOutputCurrent(), null);
+        b.addDoubleProperty("Intake Motor/Voltage", ()->this.intakeMotor.getBusVoltage(), null);
+        b.addDoubleProperty("Intake Motor/Applied speed", ()->this.intakeMotor.get(), null);
+        b.addDoubleProperty("Intake Motor/Temperature", ()->this.intakeMotor.getMotorTemperature(), null);
+        // targets/state
         b.addBooleanProperty("Bottom Sensor", ()->this.getBotSensor(), null);
         b.addBooleanProperty("Top Sensor", ()->this.getTopSensor(), null);
-        b.addDoubleProperty("Intake RPM", ()->this.intakeMotor.getEncoder().getVelocity(), null);
+        b.addDoubleProperty("Target Speed", ()->m_intakeSpeedTarget, null);
     }
 
 
