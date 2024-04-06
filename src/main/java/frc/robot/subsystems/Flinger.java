@@ -26,8 +26,12 @@ public class Flinger extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
+    public void periodic() {    // uncomment these in case the sendablebuilder logging fails!
+        // SmartDashboard.putNumber("Flinger Encoder Velocity 1", getRPM_1());
+        // SmartDashboard.putNumber("Flinger Target Velocity 1", getTargetRPM());
         
+        // SmartDashboard.putNumber("Flinger Encoder Velocity 2", getRPM_2());
+        // SmartDashboard.putNumber("Flinger Target Velocity 2", getTargetRPM());
     }
 
     @Override
