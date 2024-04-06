@@ -27,8 +27,8 @@ public class FloorIntake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
-        // SmartDashboard.putBoolean("Top Sensor", getTopSensor());
+        SmartDashboard.putBoolean("Bot Sensor", getBotSensor());
+        SmartDashboard.putBoolean("Top Sensor", getTopSensor());
         // SmartDashboard.putNumber("Intake Velocity", intakeMotor.getEncoder().getVelocity());
     }
 
