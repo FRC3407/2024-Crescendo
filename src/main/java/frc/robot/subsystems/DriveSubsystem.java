@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.*;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -65,7 +66,15 @@ public class DriveSubsystem extends SubsystemBase {
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
 
   // Slew rate filter variables for controlling lateral acceleration
+  private double m_rotationInput = 0.0;
+  private double m_xSpeedInput = 0.0;
+  private double m_ySpeedInput = 0.0;
+  private double m_rotationDelivered = 0.0;
+  private double m_xSpeedDelivered = 0.0;
+  private double m_ySpeedDelivered = 0.0;
   private double m_rotationCommanded = 0.0;
+  private double m_xSpeedCommanded = 0.0;   // used in drive, exported so they can be logged
+  private double m_ySpeedCommanded = 0.0;
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
 
@@ -214,8 +223,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
 
-    double xSpeedCommanded;
-    double ySpeedCommanded;
+    m_rotationInput = rot;
+    m_xSpeedInput = xSpeed;
+    m_ySpeedInput = ySpeed;
+
     final boolean isStopped = xSpeed == 0 && ySpeed == 0;
     if (rateLimit) {
       // Convert XY to polar for rate limiting
@@ -253,20 +264,20 @@ public class DriveSubsystem extends SubsystemBase {
       }
       m_prevTime = currentTime;
 
-      xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
-      ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
+      m_xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
+      m_ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
       m_rotationCommanded = m_rotLimiter.calculate(rot);
 
     } else {
-      xSpeedCommanded = xSpeed;
-      ySpeedCommanded = ySpeed;
+      m_xSpeedCommanded = xSpeed;
+      m_ySpeedCommanded = ySpeed;
       m_rotationCommanded = rot;
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = 0.0;
+    m_xSpeedDelivered = m_xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
+    m_ySpeedDelivered = m_ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
+    m_rotationDelivered = 0.0;
     if (DriverStation.isTeleopEnabled()) {
       intendedRotation = intendedRotation
           .rotateBy(new Rotation2d((m_rotationCommanded) * ((System.currentTimeMillis() - timeOfLastLoop) / 1000.0)
@@ -274,17 +285,17 @@ public class DriveSubsystem extends SubsystemBase {
       timeOfLastLoop = System.currentTimeMillis();
       error = intendedRotation.minus(getHeading()).getRadians(); // Calculate error
       integral+=error;
-      rotDelivered = (error * Kp) + (ki*integral)+(kd*(error-prevError)); // Error times P = what to move by
+      m_rotationDelivered = (error * Kp) + (ki*integral)+(kd*(error-prevError)); // Error times P = what to move by
       prevError = error;
     } else {
-      rotDelivered = m_rotationCommanded * DriveConstants.kMaxAngularSpeed;
+      m_rotationDelivered = m_rotationCommanded * DriveConstants.kMaxAngularSpeed;
     }
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(m_xSpeedDelivered, m_ySpeedDelivered, m_rotationDelivered,
                 getHeading())
-            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+            : new ChassisSpeeds(m_xSpeedDelivered, m_ySpeedDelivered, m_rotationDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -371,4 +382,19 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveRobotRelative(ChassisSpeeds speeds){
     this.drive(speeds.vxMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.vyMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.omegaRadiansPerSecond,false,false);
   }
+
+
+  @Override
+  public void initSendable(SendableBuilder b) {
+    b.addDoubleProperty("Rotation Input", ()->m_rotationInput, null);
+    b.addDoubleProperty("X Speed Input", ()->m_xSpeedInput, null);
+    b.addDoubleProperty("Y Speed Input", ()->m_ySpeedInput, null);
+    b.addDoubleProperty("Rotation Commanded", ()->m_rotationCommanded, null);
+    b.addDoubleProperty("X Speed Commanded", ()->m_xSpeedCommanded, null);
+    b.addDoubleProperty("Y Speed Commanded", ()->m_ySpeedCommanded, null);
+    b.addDoubleProperty("Rotation Delivered", ()->m_rotationDelivered, null);
+    b.addDoubleProperty("X Speed Delivered", ()->m_xSpeedDelivered, null);
+    b.addDoubleProperty("Y Speed Delivered", ()->m_ySpeedDelivered, null);
+  }
+
 }

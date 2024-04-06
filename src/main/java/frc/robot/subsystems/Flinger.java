@@ -26,8 +26,12 @@ public class Flinger extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
+    public void periodic() {    // uncomment these in case the sendablebuilder logging fails!
+        // SmartDashboard.putNumber("Flinger Encoder Velocity 1", getRPM_1());
+        // SmartDashboard.putNumber("Flinger Target Velocity 1", getTargetRPM());
         
+        // SmartDashboard.putNumber("Flinger Encoder Velocity 2", getRPM_2());
+        // SmartDashboard.putNumber("Flinger Target Velocity 2", getTargetRPM());
     }
 
     @Override
@@ -64,14 +68,20 @@ public class Flinger extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder b) {
-        b.addDoubleProperty("Encoder RPM 1", this::getRPM_1, null);
-        b.addDoubleProperty("Encoder RPM 2", this::getRPM_2, null);
-        b.addDoubleProperty("Target RPM 1", this::getTargetRPM, null);
-        b.addDoubleProperty("Target RPM 2", this::getTargetRPM, null);
-        b.addDoubleProperty("Output Current 1", this.flingerMotor_1::getOutputCurrent, null);
-        b.addDoubleProperty("Output Current 2", this.flingerMotor_2::getOutputCurrent, null);
-        b.addDoubleProperty("Bus Voltage 1", this.flingerMotor_1::getBusVoltage, null);
-        b.addDoubleProperty("Bus Voltage 2", this.flingerMotor_2::getBusVoltage, null);
+        // motors
+        b.addDoubleProperty("Flinger Motor 1/Encoder RPM", ()->this.getRPM_1(), null);
+        b.addDoubleProperty("Flinger Motor 2/Encoder RPM", ()->this.getRPM_2(), null);
+        b.addDoubleProperty("Flinger Motor 1/Current", ()->this.flingerMotor_1.getOutputCurrent(), null);
+        b.addDoubleProperty("Flinger Motor 2/Current", ()->this.flingerMotor_2.getOutputCurrent(), null);
+        b.addDoubleProperty("Flinger Motor 1/Bus Voltage", ()->this.flingerMotor_1.getBusVoltage(), null);
+        b.addDoubleProperty("Flinger Motor 2/Bus Voltage", ()->this.flingerMotor_2.getBusVoltage(), null);
+        b.addDoubleProperty("Flinger Motor 1/Applied speed", ()->this.flingerMotor_1.get(), null);
+        b.addDoubleProperty("Flinger Motor 2/Applied speed", ()->this.flingerMotor_2.get(), null);
+        b.addDoubleProperty("Flinger Motor 1/Temperature", ()->this.flingerMotor_1.getMotorTemperature(), null);
+        b.addDoubleProperty("Flinger Motor 2/Temperature", ()->this.flingerMotor_2.getMotorTemperature(), null);
+        // targets
+        b.addDoubleProperty("Target RPM", ()->this.getTargetRPM(), null);
+        b.addDoubleProperty("Target raw speed", ()->targetSpeed, null);
     }
 
 }
