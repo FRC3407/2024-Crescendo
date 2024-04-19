@@ -16,24 +16,24 @@
     },
     {
       "anchor": {
-        "x": 1.1173895611349738,
-        "y": 5.58
+        "x": 1.2354236697055696,
+        "y": 5.57614009614318
       },
       "prevControl": {
-        "x": 1.357389561134974,
-        "y": 5.58
+        "x": 1.4754236697055698,
+        "y": 5.57614009614318
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "fling_pos"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 0.75,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

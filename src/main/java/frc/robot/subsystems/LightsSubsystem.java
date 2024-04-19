@@ -50,12 +50,14 @@ public class LightsSubsystem extends SubsystemBase {
   public static int TIME_WARNING = 18;
 
   public static int I2C_ADDRESS = 0x41;
-  public static int BIGPID = 1;
+
   public static int PERIMETERID = 0;
-  public static int HEADID = 2;
-  public static int BACKID = 3;
-  public static int SIDEID = 4;
-  public static final int MAX_ANIMATIONS = 20; // Must be 32 or less
+  public static int BIGPID = 1;
+  public static int SIDEID = 2;
+  public static int HEADID = 3;
+  public static int BACKID = 4;
+
+  public static final int MAX_ANIMATIONS = 31; // Must be 31 or less
   public static final int MAX_STRIPS = 5; // Must be 8 or less
 
   public static int TIME_WARNING_SECONDS = 20; // Start the time warning 20 seconds before the end of the match
@@ -99,7 +101,14 @@ public class LightsSubsystem extends SubsystemBase {
       setAnimation(SIDEID, MATRIX); // matrix.py
 
     } else {
-      if (isIntakeRunning()) {
+
+      if (DriverStation.getMatchTime() < 30) {
+        setAnimation(PERIMETERID, FILLRED); // Fill.py
+        setAnimation(BIGPID, FILLRED); // Fill.py
+        setAnimation(HEADID, FILLRED); // Fill.py
+        setAnimation(BACKID, FILLRED); // Fill.py
+        setAnimation(SIDEID, FILLRED); // Fill.py
+      } else if (isIntakeRunning()) {
         setAnimation(PERIMETERID, CIRCLE1); // circle_spinner.py
         setAnimation(BIGPID, ORANGE_REVERSE_MATRIX); // orange_reverse_matrix.py
         setAnimation(HEADID, CIRCLE2); // circle_spinner.py
@@ -131,6 +140,7 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(SIDEID,      TIME_WARNING); // time_warning.py
       }
     }
+
     sendAllAnimations();
   }
 
@@ -143,7 +153,7 @@ public class LightsSubsystem extends SubsystemBase {
     for (int s = 0; s < MAX_STRIPS; s++) {
       Integer b = Integer.valueOf(((s << 4) & 0xF0) | (MAX_ANIMATIONS & 0x0F));
       nextAnimation[s] = b.byteValue();
-      currentAnimation[s] = (byte) 0;
+      currentAnimation[s] = (byte) MAX_ANIMATIONS;
     }
   }
 
@@ -176,5 +186,9 @@ public class LightsSubsystem extends SubsystemBase {
   private void sendOneAnimation(int stripNumber) {
     dataOut[0] = nextAnimation[stripNumber];
     i2c.writeBulk(dataOut, dataOut.length);
+
+    int stripNumbr = (nextAnimation[stripNumber] & 0xE0) >> 5;
+    int animNumber = nextAnimation[stripNumber] & 0x1F;
+    System.out.println("I2C: SEND(" + stripNumbr + "," + animNumber + ")");
   }
 }
