@@ -2,7 +2,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogTrigger;
@@ -17,10 +19,13 @@ public class FloorIntake extends SubsystemBase {
     private CANSparkMax intakeMotor;
     private DigitalInput sensorBot = new DigitalInput(Constants.IntakeConstants.BOT_DIO_SENSOR);
     private DigitalInput sensorTop = new DigitalInput(Constants.IntakeConstants.TOP_DIO_SENSOR);
+    private RelativeEncoder intakEncoder;
 
     public FloorIntake() {
         intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
         intakeMotor.setInverted(false);
+        intakEncoder = intakeMotor.getEncoder();
+
     }
 
     @Override
@@ -45,7 +50,7 @@ public class FloorIntake extends SubsystemBase {
     }
 
     public double getMotorSpeed() {
-        return intakeMotor.get();
+        return intakEncoder.getVelocity();
     }
 
     /**

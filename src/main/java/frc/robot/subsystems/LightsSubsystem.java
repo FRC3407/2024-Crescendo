@@ -78,11 +78,11 @@ public class LightsSubsystem extends SubsystemBase {
   }
 
   private boolean isFlingerRunning() {
-    return Math.abs(m_flinger.getRPM_1()) > 0;
+    return Math.abs(m_flinger.getRPM_1()) > 0.1;
   }
 
   private boolean isIntakeRunning() {
-    return Math.abs(m_intake.getMotorSpeed()) > 0;
+    return Math.abs(m_intake.getMotorSpeed()) > 0.1;
   }
 
   @Override
@@ -96,24 +96,28 @@ public class LightsSubsystem extends SubsystemBase {
 
     } else {
 
-      if (DriverStation.getMatchTime() < 30) {
-        setAnimation(PERIMETERID, FILLRED); // Fill.py
-        setAnimation(BIGPID, FILLRED); // Fill.py
-        setAnimation(HEADID, FILLRED); // Fill.py
-        setAnimation(BACKID, FILLRED); // Fill.py
-        setAnimation(SIDEID, FILLRED); // Fill.py
-      } else if (isIntakeRunning()) {
-        setAnimation(PERIMETERID, CIRCLE1); // circle_spinner.py
-        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX); // orange_reverse_matrix.py
-        setAnimation(HEADID, CIRCLE2); // circle_spinner.py
-        setAnimation(BACKID, CIRCLE3); // circle_spinner.py
-        setAnimation(SIDEID, ORANGE_REVERSE_MATRIX1); // orange_reverse_matrix.py
-      } else if (isNoteLoaded()) {
+      // if (DriverStation.getMatchTime() < 30) {
+      //   setAnimation(PERIMETERID, FILLRED); // Fill.py
+      //   setAnimation(BIGPID, FILLRED); // Fill.py
+      //   setAnimation(HEADID, FILLRED); // Fill.py
+      //   setAnimation(BACKID, FILLRED); // Fill.py
+      //   setAnimation(SIDEID, FILLRED); // Fill.py
+      if (isNoteLoaded()) {
         setAnimation(PERIMETERID, FLASH); // Flash.py
         setAnimation(BIGPID, FLASH); // Flash.py
         setAnimation(HEADID, FLASH); // Flash.py
         setAnimation(BACKID, FLASH); // Flash.py
         setAnimation(SIDEID, FLASH); // Flash.py
+      }
+      else if (isIntakeRunning()) {
+        setAnimation(PERIMETERID, CIRCLE1); // circle_spinner.py
+        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX); // orange_reverse_matrix.py
+        setAnimation(HEADID, CIRCLE2); // circle_spinner.py
+        setAnimation(BACKID, CIRCLE3); // circle_spinner.py
+        setAnimation(SIDEID, ORANGE_REVERSE_MATRIX1); // orange_reverse_matrix.py
+      } else if (isFlingerRunning()) {
+        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
+        setAnimation(SIDEID, POINTER); // pointer.py
       } else {
         setAnimation(PERIMETERID, FILLGREEN); // Fill.py
         setAnimation(BIGPID, BITMAP); // animation_bitmap.py
@@ -121,10 +125,7 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(BACKID, FILLRED); // Fill.py
         setAnimation(SIDEID, FILLGREEN); // Fill.py
       }
-      if (isFlingerRunning()) {
-        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
-        setAnimation(SIDEID, POINTER); // pointer.py
-      }
+      
     }
 
     sendAllAnimations();
