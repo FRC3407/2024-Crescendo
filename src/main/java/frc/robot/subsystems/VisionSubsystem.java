@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.IntegerArrayTopic;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -20,7 +21,7 @@ public class VisionSubsystem extends SubsystemBase {
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem() {
     instance = NetworkTableInstance.getDefault();
-    topic1 = instance.getIntegerArrayTopic("/Vision Server/Pipelines/bv2024/ids");
+    topic1 = instance.getIntegerArrayTopic("/Vision Server/Pipelines/driverCam/ids");
     idSub = topic1.subscribe(new long[0]);
   }
 
@@ -41,5 +42,8 @@ public class VisionSubsystem extends SubsystemBase {
         return true;
     }
     return false;
+  }
+  public void onTagVisible(int tagID, Command cmd) {
+    
   }
 }
