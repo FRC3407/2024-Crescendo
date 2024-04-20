@@ -72,10 +72,13 @@ public class LightsSubsystem extends SubsystemBase {
 
   public boolean hasDoneTimeWarning = false;
 
-  public LightsSubsystem(Flinger flinger, FloorIntake intake) {
+  public VisionSubsystem m_VisionSubsystem;
+
+  public LightsSubsystem(Flinger flinger, FloorIntake intake, VisionSubsystem vision) {
     i2c = new I2C(Port.kOnboard, I2C_ADDRESS);
     m_flinger = flinger;
     m_intake = intake;
+    m_VisionSubsystem = vision;
     clearAllAnimations();
   }
 
@@ -139,6 +142,14 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(BACKID,      TIME_WARNING); // time_warning.py
         setAnimation(SIDEID,      TIME_WARNING); // time_warning.py
       }
+    }
+
+    if (m_VisionSubsystem.isTagVisible(3)) {
+      setAnimation(PERIMETERID, FLASH); // flash.py
+      setAnimation(BIGPID,      FLASH); // flash.py
+      setAnimation(HEADID,      FLASH); // flash.py
+      setAnimation(BACKID,      FLASH); // flash.py
+      setAnimation(SIDEID,      FLASH); // flash.py
     }
 
     sendAllAnimations();
