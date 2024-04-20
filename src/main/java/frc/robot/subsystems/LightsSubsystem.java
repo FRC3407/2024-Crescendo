@@ -118,11 +118,11 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(BACKID, CIRCLE3); // circle_spinner.py
         setAnimation(SIDEID, ORANGE_REVERSE_MATRIX1); // orange_reverse_matrix.py
       } else if (isNoteLoaded()) {
-        setAnimation(PERIMETERID, FLASH); // Flash.py
-        setAnimation(BIGPID, FLASH); // Flash.py
-        setAnimation(HEADID, FLASH); // Flash.py
-        setAnimation(BACKID, FLASH); // Flash.py
-        setAnimation(SIDEID, FLASH); // Flash.py
+        setAnimation(PERIMETERID, FILLGREEN); // FILLGREEN.py
+        setAnimation(BIGPID, FILLGREEN); // FILLGREEN.py
+        setAnimation(HEADID, FILLGREEN); // FILLGREEN.py
+        setAnimation(BACKID, FILLGREEN); // FILLGREEN.py
+        setAnimation(SIDEID, FILLGREEN); // FILLGREEN.py
       } else {
         setAnimation(PERIMETERID, FILLGREEN); // Fill.py
         setAnimation(BIGPID, BITMAP); // animation_bitmap.py
@@ -145,11 +145,17 @@ public class LightsSubsystem extends SubsystemBase {
     }
 
     if (m_VisionSubsystem.isTagVisible(3)) {
-      setAnimation(PERIMETERID, FLASH); // flash.py
-      setAnimation(BIGPID,      FLASH); // flash.py
-      setAnimation(HEADID,      FLASH); // flash.py
-      setAnimation(BACKID,      FLASH); // flash.py
-      setAnimation(SIDEID,      FLASH); // flash.py
+      setAnimation(PERIMETERID, FILLGREEN); // FILLGREEN.py
+      setAnimation(BIGPID,      FILLGREEN); // FILLGREEN.py
+      setAnimation(HEADID,      FILLGREEN); // FILLGREEN.py
+      setAnimation(BACKID,      FILLGREEN); // FILLGREEN.py
+      setAnimation(SIDEID,      FILLGREEN); // FILLGREEN.py
+    }if (m_VisionSubsystem.isTagVisible(15)) {
+      setAnimation(PERIMETERID, FILLWHITE); // FILLGREEN.py
+      setAnimation(BIGPID,      FILLWHITE); // FILLGREEN.py
+      setAnimation(HEADID,      FILLWHITE); // FILLGREEN.py
+      setAnimation(BACKID,      FILLWHITE); // FILLGREEN.py
+      setAnimation(SIDEID,      FILLWHITE); // FILLGREEN.py
     }
 
     sendAllAnimations();

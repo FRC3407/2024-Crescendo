@@ -27,6 +27,8 @@ public class VisionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    long[] ids = idSub.get();
+    // if (ids.length != 0)
   }
 
   // Search for a tag ID in the tags list
