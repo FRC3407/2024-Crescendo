@@ -33,4 +33,16 @@ public class VisionSubsystem extends SubsystemBase {
       System.out.println(id);
     }
   }
+
+  // Search for a tag ID in the tags list
+  public boolean isTagVisible(int tagID) {
+    long[] ids = idSub.get();
+    if (ids.length == 0) return false;
+    if (ids.length == 1 && ids[0] == tagID) return true;
+    for (int i=0;i<ids.length;i++) {
+      if (ids[i]==tagID)
+        return true;
+    }
+    return false;
+  }
 }
