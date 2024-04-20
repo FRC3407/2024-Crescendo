@@ -2,6 +2,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,6 +15,9 @@ public class Flinger extends SubsystemBase {
     private CANSparkMax flingerMotor_2; 
     private double targetSpeed;
     public static boolean flingCommandActive = false;
+    private RelativeEncoder flingerEncoder1;
+    private RelativeEncoder flingerEncoder2;
+
     
     public Flinger() {
         flingerMotor_1 = new CANSparkMax(Constants.FlingerConstants.flingerCanID_1, MotorType.kBrushless);
@@ -21,6 +25,9 @@ public class Flinger extends SubsystemBase {
 
         flingerMotor_2 = new CANSparkMax(Constants.FlingerConstants.flingerCanID_2, MotorType.kBrushless);
         flingerMotor_2.setInverted(false);
+        flingerEncoder1 = flingerMotor_1.getEncoder();
+        flingerEncoder2 = flingerMotor_2.getEncoder();
+
     }
 
     @Override
@@ -55,12 +62,12 @@ public class Flinger extends SubsystemBase {
 
     public double getRPM_1()
     {
-        return flingerMotor_1.getEncoder().getVelocity();
+        return flingerEncoder1.getVelocity();
     }
 
     public double getRPM_2()
     {
-        return flingerMotor_2.getEncoder().getVelocity();
+        return flingerEncoder2.getVelocity();
     }
 
 }
