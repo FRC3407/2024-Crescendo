@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.FloatArrayTopic;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
@@ -17,12 +19,16 @@ public class VisionSubsystem extends SubsystemBase {
   public NetworkTableInstance instance;
   public IntegerArrayTopic topic1;
   public final IntegerArraySubscriber idSub;
+  private boolean startAdd;
+  private ArrayList<Long> idList = new ArrayList<Long>();
+
   // public NetworkTable table;
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem() {
     instance = NetworkTableInstance.getDefault();
     topic1 = instance.getIntegerArrayTopic("/Vision Server/Pipelines/driverCam/ids");
     idSub = topic1.subscribe(new long[0]);
+    startAdd = false;
   }
 
   @Override
@@ -43,7 +49,33 @@ public class VisionSubsystem extends SubsystemBase {
     }
     return false;
   }
-  public void onTagVisible(int tagID, Command cmd) {
-    
+
+  public long whichTagVisible() {
+    long[] ids = idSub.get();
+    if (ids.length == 0)
+    {
+      return -1;
+    }
+    return ids[0];
   }
+  
+  public void getTagList() {
+    if(isTagVisible(5)) {
+      startAdd = true;
+      boolean onContinue = false;
+    }
+    if (isTagVisible(35)) {
+      startAdd = false;
+    }
+    if(startAdd && !isTagVisible(35) && !isTagVisible(5) && !isTagVisible(11)) {
+      long id = whichTagVisible();
+      idList.add(id);
+    }
+
+
+
+  }
+
+  // public void onTagVisible(int tagID, Command cmd) { }
+
 }
