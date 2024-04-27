@@ -105,24 +105,29 @@ public class LightsSubsystem extends SubsystemBase {
 
     } else {
 
-      if (DriverStation.getMatchTime() < 30) {
-        setAnimation(PERIMETERID, FILLRED); // Fill.py
-        setAnimation(BIGPID, FILLRED); // Fill.py
-        setAnimation(HEADID, FILLRED); // Fill.py
-        setAnimation(BACKID, FILLRED); // Fill.py
-        setAnimation(SIDEID, FILLRED); // Fill.py
-      } else if (isIntakeRunning()) {
+      // if (DriverStation.getMatchTime() < 30) {
+      //   setAnimation(PERIMETERID, FILLRED); // Fill.py
+      //   setAnimation(BIGPID, FILLRED); // Fill.py
+      //   setAnimation(HEADID, FILLRED); // Fill.py
+      //   setAnimation(BACKID, FILLRED); // Fill.py
+      //   setAnimation(SIDEID, FILLRED); // Fill.py
+      // }
+      if (isNoteLoaded()) {
+        setAnimation(PERIMETERID, FLASH); // Flash.py
+        setAnimation(BIGPID, FLASH); // Flash.py
+        setAnimation(HEADID, FLASH); // Flash.py
+        setAnimation(BACKID, FLASH); // Flash.py
+        setAnimation(SIDEID, FLASH); // Flash.py
+      }
+      else if (isIntakeRunning()) {
         setAnimation(PERIMETERID, CIRCLE1); // circle_spinner.py
         setAnimation(BIGPID, ORANGE_REVERSE_MATRIX); // orange_reverse_matrix.py
         setAnimation(HEADID, CIRCLE2); // circle_spinner.py
         setAnimation(BACKID, CIRCLE3); // circle_spinner.py
         setAnimation(SIDEID, ORANGE_REVERSE_MATRIX1); // orange_reverse_matrix.py
-      } else if (isNoteLoaded()) {
-        setAnimation(PERIMETERID, FILLGREEN); // FILLGREEN.py
-        setAnimation(BIGPID, FILLGREEN); // FILLGREEN.py
-        setAnimation(HEADID, FILLGREEN); // FILLGREEN.py
-        setAnimation(BACKID, FILLGREEN); // FILLGREEN.py
-        setAnimation(SIDEID, FILLGREEN); // FILLGREEN.py
+      } else if (isFlingerRunning()) {
+        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
+        setAnimation(SIDEID, POINTER); // pointer.py
       } else {
         setAnimation(PERIMETERID, FILLGREEN); // Fill.py
         setAnimation(BIGPID, BITMAP); // animation_bitmap.py
@@ -130,18 +135,7 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(BACKID, FILLRED); // Fill.py
         setAnimation(SIDEID, FILLGREEN); // Fill.py
       }
-      if (isFlingerRunning()) {
-        setAnimation(BIGPID, ORANGE_REVERSE_MATRIX2); // orange_reverse_matrix.py
-        setAnimation(SIDEID, POINTER); // pointer.py
-      }
-      if (!hasDoneTimeWarning && DriverStation.getMatchTime() < TIME_WARNING_SECONDS) {
-        hasDoneTimeWarning = true;
-        setAnimation(PERIMETERID, TIME_WARNING); // time_warning.py
-        setAnimation(BIGPID,      TIME_WARNING); // time_warning.py
-        setAnimation(HEADID,      TIME_WARNING); // time_warning.py
-        setAnimation(BACKID,      TIME_WARNING); // time_warning.py
-        setAnimation(SIDEID,      TIME_WARNING); // time_warning.py
-      }
+      
     }
 
     if (m_VisionSubsystem.isTagVisible(3)) {
