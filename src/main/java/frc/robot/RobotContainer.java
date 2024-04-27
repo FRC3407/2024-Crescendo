@@ -77,8 +77,8 @@ public class RobotContainer {
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
   ClimberSubsystem m_climber = new ClimberSubsystem();
-  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake);
   VisionSubsystem m_vision = new VisionSubsystem();
+  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake, m_vision);
 
   SendableChooser<Command> autoChooser;
 
@@ -96,10 +96,7 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    if(m_vision.isTagVisible(2))
-    {
-      new AutoGoCommand(m_driveTrain);
-    }
+    
    }
 
   /**

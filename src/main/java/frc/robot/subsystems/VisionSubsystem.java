@@ -21,6 +21,8 @@ public class VisionSubsystem extends SubsystemBase {
   public final IntegerArraySubscriber idSub;
   private boolean startAdd;
   private ArrayList<Long> idList = new ArrayList<Long>();
+  private long lastTagSeen;
+  private boolean canContinue;
 
   // public NetworkTable table;
   /** Creates a new VisionSubsystem. */
@@ -29,6 +31,8 @@ public class VisionSubsystem extends SubsystemBase {
     topic1 = instance.getIntegerArrayTopic("/Vision Server/Pipelines/driverCam/ids");
     idSub = topic1.subscribe(new long[0]);
     startAdd = false;
+    lastTagSeen = 0;
+    canContinue = false;
   }
 
   @Override
@@ -36,6 +40,8 @@ public class VisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     long[] ids = idSub.get();
     // if (ids.length != 0)
+    setTagList();
+    System.out.println(startAdd + "," + canContinue + "," + idList);
   }
 
   // Search for a tag ID in the tags list
@@ -59,21 +65,27 @@ public class VisionSubsystem extends SubsystemBase {
     return ids[0];
   }
   
-  public void getTagList() {
-    if(isTagVisible(5)) {
+  public void setTagList() {
+    long id = whichTagVisible();
+    if (id == -1) {
+      return;
+    }
+    if(id == 5) {
       startAdd = true;
-      boolean onContinue = false;
+      idList.clear();
     }
-    if (isTagVisible(35)) {
+    if (id == 35) {
       startAdd = false;
+      canContinue = false;
     }
-    if(startAdd && !isTagVisible(35) && !isTagVisible(5) && !isTagVisible(11)) {
-      long id = whichTagVisible();
+    if(id == 11) {
+      canContinue = true;
+    }
+    if(startAdd && canContinue && id != 11 && id != 5) {
       idList.add(id);
+      System.out.println("TAG SCANNED: " + id);
+      canContinue = false;
     }
-
-
-
   }
 
   // public void onTagVisible(int tagID, Command cmd) { }
