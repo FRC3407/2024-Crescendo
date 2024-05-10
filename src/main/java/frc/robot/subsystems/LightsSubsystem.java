@@ -47,6 +47,8 @@ public class LightsSubsystem extends SubsystemBase {
 
   public static int POINTER = 17;
 
+  public static int TIME_WARNING = 18;
+
   public static int I2C_ADDRESS = 0x41;
 
   public static int PERIMETERID = 0;
@@ -58,6 +60,8 @@ public class LightsSubsystem extends SubsystemBase {
   public static final int MAX_ANIMATIONS = 31; // Must be 31 or less
   public static final int MAX_STRIPS = 5; // Must be 8 or less
 
+  public static int TIME_WARNING_SECONDS = 20; // Start the time warning 20 seconds before the end of the match
+
   private byte[] currentAnimation = new byte[MAX_STRIPS];
   private byte[] nextAnimation = new byte[MAX_STRIPS];
   private byte[] dataOut = new byte[1];
@@ -66,10 +70,15 @@ public class LightsSubsystem extends SubsystemBase {
 
   private I2C i2c = null;
 
-  public LightsSubsystem(Flinger flinger, FloorIntake intake) {
+  public boolean hasDoneTimeWarning = false;
+
+  public VisionSubsystem m_VisionSubsystem;
+
+  public LightsSubsystem(Flinger flinger, FloorIntake intake, VisionSubsystem vision) {
     i2c = new I2C(Port.kOnboard, I2C_ADDRESS);
     m_flinger = flinger;
     m_intake = intake;
+    m_VisionSubsystem = vision;
     clearAllAnimations();
   }
 
@@ -78,11 +87,11 @@ public class LightsSubsystem extends SubsystemBase {
   }
 
   private boolean isFlingerRunning() {
-    return Math.abs(m_flinger.getRPM_1()) > 0.1;
+    return Math.abs(m_flinger.getRPM_1()) > 0;
   }
 
   private boolean isIntakeRunning() {
-    return Math.abs(m_intake.getMotorSpeed()) > 0.1;
+    return Math.abs(m_intake.getMotorSpeed()) > 0;
   }
 
   @Override
@@ -127,6 +136,20 @@ public class LightsSubsystem extends SubsystemBase {
         setAnimation(SIDEID, FILLGREEN); // Fill.py
       }
       
+    }
+
+    if (m_VisionSubsystem.isTagVisible(3)) {
+      setAnimation(PERIMETERID, FILLGREEN); // FILLGREEN.py
+      setAnimation(BIGPID,      FILLGREEN); // FILLGREEN.py
+      setAnimation(HEADID,      FILLGREEN); // FILLGREEN.py
+      setAnimation(BACKID,      FILLGREEN); // FILLGREEN.py
+      setAnimation(SIDEID,      FILLGREEN); // FILLGREEN.py
+    }if (m_VisionSubsystem.isTagVisible(15)) {
+      setAnimation(PERIMETERID, FILLWHITE); // FILLGREEN.py
+      setAnimation(BIGPID,      FILLWHITE); // FILLGREEN.py
+      setAnimation(HEADID,      FILLWHITE); // FILLGREEN.py
+      setAnimation(BACKID,      FILLWHITE); // FILLGREEN.py
+      setAnimation(SIDEID,      FILLWHITE); // FILLGREEN.py
     }
 
     sendAllAnimations();
