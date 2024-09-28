@@ -69,6 +69,7 @@ import frc.robot.commands.ZeroHeadingCommand;
  */
 import frc.robot.commands.HookReleaseCommand;
 import frc.robot.commands.ManualFlingCommand;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
   static boolean visionAutoSelection = false;
@@ -77,7 +78,8 @@ public class RobotContainer {
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
   ClimberSubsystem m_climber = new ClimberSubsystem();
-  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake, new VisionSubsystem());
+  VisionSubsystem m_vision = new VisionSubsystem();
+  LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake, m_vision);
 
   SendableChooser<Command> autoChooser;
 
@@ -94,7 +96,9 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
-  }
+
+    
+   }
 
   /**
    * Get the selected Auto Command

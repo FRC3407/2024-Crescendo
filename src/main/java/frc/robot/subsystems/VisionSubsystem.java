@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.FloatArrayTopic;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
@@ -17,12 +19,20 @@ public class VisionSubsystem extends SubsystemBase {
   public NetworkTableInstance instance;
   public IntegerArrayTopic topic1;
   public final IntegerArraySubscriber idSub;
+  private boolean startAdd;
+  private ArrayList<Long> idList = new ArrayList<Long>();
+  private long lastTagSeen;
+  private boolean canContinue;
+
   // public NetworkTable table;
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem() {
     instance = NetworkTableInstance.getDefault();
     topic1 = instance.getIntegerArrayTopic("/Vision Server/Pipelines/driverCam/ids");
     idSub = topic1.subscribe(new long[0]);
+    startAdd = false;
+    lastTagSeen = 0;
+    canContinue = false;
   }
 
   @Override
@@ -30,6 +40,8 @@ public class VisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     long[] ids = idSub.get();
     // if (ids.length != 0)
+    setTagList();
+    System.out.println(startAdd + "," + canContinue + "," + idList);
   }
 
   // Search for a tag ID in the tags list
@@ -43,7 +55,39 @@ public class VisionSubsystem extends SubsystemBase {
     }
     return false;
   }
-  public void onTagVisible(int tagID, Command cmd) {
-    
+
+  public long whichTagVisible() {
+    long[] ids = idSub.get();
+    if (ids.length == 0)
+    {
+      return -1;
+    }
+    return ids[0];
   }
+  
+  public void setTagList() {
+    long id = whichTagVisible();
+    if (id == -1) {
+      return;
+    }
+    if(id == 5) {
+      startAdd = true;
+      idList.clear();
+    }
+    if (id == 35) {
+      startAdd = false;
+      canContinue = false;
+    }
+    if(id == 11) {
+      canContinue = true;
+    }
+    if(startAdd && canContinue && id != 11 && id != 5) {
+      idList.add(id);
+      System.out.println("TAG SCANNED: " + id);
+      canContinue = false;
+    }
+  }
+
+  // public void onTagVisible(int tagID, Command cmd) { }
+
 }

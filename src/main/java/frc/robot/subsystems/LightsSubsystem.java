@@ -105,14 +105,14 @@ public class LightsSubsystem extends SubsystemBase {
 
     } else {
 
-      // if (DriverStation.getMatchTime() < 30) {
-      //   setAnimation(PERIMETERID, FILLRED); // Fill.py
-      //   setAnimation(BIGPID, FILLRED); // Fill.py
-      //   setAnimation(HEADID, FILLRED); // Fill.py
-      //   setAnimation(BACKID, FILLRED); // Fill.py
-      //   setAnimation(SIDEID, FILLRED); // Fill.py
-      // }
-      if (isNoteLoaded()) {
+      if (DriverStation.getMatchTime() < 30) {
+        setAnimation(PERIMETERID, FILLRED); // Fill.py
+        setAnimation(BIGPID, FILLRED); // Fill.py
+        setAnimation(HEADID, FILLRED); // Fill.py
+        setAnimation(BACKID, FILLRED); // Fill.py
+        setAnimation(SIDEID, FILLRED); // Fill.py
+      }
+      else if (isNoteLoaded()) {
         setAnimation(PERIMETERID, FLASH); // Flash.py
         setAnimation(BIGPID, FLASH); // Flash.py
         setAnimation(HEADID, FLASH); // Flash.py
