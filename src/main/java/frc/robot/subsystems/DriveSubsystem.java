@@ -55,6 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Field2d m_field = new Field2d();
 
   // Slew rate filter variables for controlling lateral acceleration
+  private double m_currentRotation = 0.0;
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
 
@@ -195,7 +196,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     double xSpeedCommanded;
     double ySpeedCommanded;
-    double rotSpeedCommanded;
+
     final boolean isStopped = xSpeed == 0 && ySpeed == 0;
     if (rateLimit) {
       // Convert XY to polar for rate limiting
@@ -235,18 +236,18 @@ public class DriveSubsystem extends SubsystemBase {
 
       xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
       ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-      rotSpeedCommanded = m_rotLimiter.calculate(rot);
+      m_currentRotation = m_rotLimiter.calculate(rot);
 
     } else {
       xSpeedCommanded = xSpeed;
       ySpeedCommanded = ySpeed;
-      rotSpeedCommanded = rot;
+      m_currentRotation = rot;
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = rotSpeedCommanded * DriveConstants.kMaxAngularSpeed;
+    double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
