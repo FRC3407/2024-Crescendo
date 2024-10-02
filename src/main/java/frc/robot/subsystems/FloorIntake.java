@@ -19,12 +19,12 @@ public class FloorIntake extends SubsystemBase {
     private CANSparkMax intakeMotor;
     private DigitalInput sensorBot = new DigitalInput(Constants.IntakeConstants.BOT_DIO_SENSOR);
     private DigitalInput sensorTop = new DigitalInput(Constants.IntakeConstants.TOP_DIO_SENSOR);
-    private RelativeEncoder intakEncoder;
+    private RelativeEncoder intakeEncoder;
 
     public FloorIntake() {
         intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
         intakeMotor.setInverted(false);
-        intakEncoder = intakeMotor.getEncoder();
+        intakeEncoder = intakeMotor.getEncoder();
 
     }
 
@@ -50,7 +50,7 @@ public class FloorIntake extends SubsystemBase {
     }
 
     public double getMotorSpeed() {
-        return intakEncoder.getVelocity();
+        return intakeEncoder.getVelocity();
     }
 
     /**
