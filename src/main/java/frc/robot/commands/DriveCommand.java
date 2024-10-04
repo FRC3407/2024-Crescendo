@@ -17,14 +17,14 @@ public class DriveCommand extends Command {
   private final BooleanSupplier m_linearBoostSupplier;
   private final DoubleSupplier m_linearXSupplier;
   private final DoubleSupplier m_linearYSupplier;
-  private final DoubleSupplier m_angularSpeedSupplier;
+  private final DoubleSupplier m_rotDirectionSupplier;
 
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-      DoubleSupplier m_angularSpeedSupplier, BooleanSupplier m_linearBoostSupplier) {
+  DoubleSupplier m_rotDirectionSupplier, BooleanSupplier m_linearBoostSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
-    this.m_angularSpeedSupplier = m_angularSpeedSupplier;
+    this.m_rotDirectionSupplier = m_rotDirectionSupplier;
     this.m_linearBoostSupplier = m_linearBoostSupplier;
 
     this.addRequirements(m_driveSubsystem);
@@ -41,7 +41,15 @@ public class DriveCommand extends Command {
     double boostValue = m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1;
     double xSpeed = MathUtil.applyDeadband(m_linearYSupplier.getAsDouble(), OIConstants.kDriveDeadband);
     double ySpeed = MathUtil.applyDeadband(m_linearXSupplier.getAsDouble(), OIConstants.kDriveDeadband);
-    double rotSpeed = MathUtil.applyDeadband(m_angularSpeedSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    double targetRotation = MathUtil.applyDeadband(m_rotDirectionSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    double currentRotation = m_driveSubsystem.getHeading().getDegrees();
+    double rotSpeed = 0;
+    if (targetRotation - currentRotation >= 180){
+       rotSpeed = (targetRotation + currentRotation)/180;
+    }
+    if (targetRotation - currentRotation < 180){
+       rotSpeed =  (targetRotation - currentRotation)/180;//turning logic :(
+    }
     ySpeed = ySpeed * boostValue;
     xSpeed = xSpeed * boostValue;
     m_driveSubsystem.drive(
