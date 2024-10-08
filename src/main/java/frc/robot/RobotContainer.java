@@ -153,7 +153,7 @@ public class RobotContainer {
     // ---
     JoystickButton boostButton = new JoystickButton(l_attack3, 2);
     m_driveTrain.setDefaultCommand(
-        new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getDirectionDegrees, ()-> boostButton.getAsBoolean()));
+        new DriveCommand(m_driveTrain, r_attack3::getX, r_attack3::getY, l_attack3::getDirectionDegrees, l_attack3::getMagnitude, ()-> boostButton.getAsBoolean()));
 
     JoystickButton flingButton = new JoystickButton(r_attack3, 1);
     flingButton.onTrue(new FlingCommand(m_flinger, m_intake));

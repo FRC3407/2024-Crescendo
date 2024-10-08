@@ -18,15 +18,15 @@ public class DriveCommand extends Command {
   private final DoubleSupplier m_linearXSupplier;
   private final DoubleSupplier m_linearYSupplier;
   private final DoubleSupplier m_rotDirectionSupplier;
-
+  private final DoubleSupplier m_magnitudeSupplier;
   public DriveCommand(DriveSubsystem subsystem, DoubleSupplier m_linearXSupplier, DoubleSupplier m_linearYSupplier,
-  DoubleSupplier m_rotDirectionSupplier, BooleanSupplier m_linearBoostSupplier) {
+  DoubleSupplier m_rotDirectionSupplier, DoubleSupplier m_magnitudeSupplier, BooleanSupplier m_linearBoostSupplier) {
     this.m_driveSubsystem = subsystem;
     this.m_linearXSupplier = m_linearXSupplier;
     this.m_linearYSupplier = m_linearYSupplier;
     this.m_rotDirectionSupplier = m_rotDirectionSupplier;
     this.m_linearBoostSupplier = m_linearBoostSupplier;
-
+    this.m_magnitudeSupplier = m_magnitudeSupplier;
     this.addRequirements(m_driveSubsystem);
   }
 
@@ -41,24 +41,27 @@ public class DriveCommand extends Command {
     double boostValue = m_linearBoostSupplier.getAsBoolean() == true ? 2 : 1;
     double xSpeed = MathUtil.applyDeadband(m_linearYSupplier.getAsDouble(), OIConstants.kDriveDeadband);
     double ySpeed = MathUtil.applyDeadband(m_linearXSupplier.getAsDouble(), OIConstants.kDriveDeadband);
-    double targetRotation = MathUtil.applyDeadband(m_rotDirectionSupplier.getAsDouble(), OIConstants.kDriveDeadband);
+    double targetRotation = m_rotDirectionSupplier.getAsDouble();
     double currentRotation = m_driveSubsystem.getHeading().getDegrees();
     double rotSpeed = 0;
-    if (targetRotation - currentRotation >= 180){
-       rotSpeed = (targetRotation + currentRotation)/180;
-    }
-    if (targetRotation - currentRotation < 180){
-       rotSpeed =  (targetRotation - currentRotation)/180;//turning logic :(
+    double turnStickMagnitude = m_magnitudeSupplier.getAsDouble();
+    if (turnStickMagnitude > OIConstants.kDriveDeadband){//deadzone for turning
+      if (targetRotation - currentRotation >= 180){//turning logic
+        rotSpeed = (targetRotation + currentRotation)/180;
+      }
+      if (targetRotation - currentRotation < 180){
+        rotSpeed =  (targetRotation - currentRotation)/180;
+      }
     }
     ySpeed = ySpeed * boostValue;
     xSpeed = xSpeed * boostValue;
     m_driveSubsystem.drive(
-        -xSpeed/2,
-        -ySpeed/2,
-        -rotSpeed,
-        true, true);
+      -xSpeed/2,
+      -ySpeed/2,
+      -rotSpeed,
+     true, true);
   }
-
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
