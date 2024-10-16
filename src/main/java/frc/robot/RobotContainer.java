@@ -83,6 +83,18 @@ public class RobotContainer {
 
   SendableChooser<Command> autoChooser;
 
+  // Constants
+  public static int JOYSTICK_BOOST_ID = 2;
+
+  public static int BUTTON_BOX_CLIMB_ID = 1;
+  public static int BUTTON_BOX_HOOK_RELEASE_ID = 2;
+  public static int BUTTON_BOX_MANUAL_INTAKE_REVERSE_ID = 3;
+  public static int BUTTON_BOX_MANUAL_INTAKE_ID = 4;
+  public static int BUTTON_BOX_MANUAL_FLING_REVERSE_ID = 5;
+  public static int BUTTON_BOX_MANUAL_FLING_ID = 6;
+  public static int BUTTON_BOX_CAMERA_SWITCH_ID = 7;
+  public static int BUTTON_BOX_CLIMBER_SWITCH_ID = 8;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -123,32 +135,32 @@ public class RobotContainer {
 
     GenericHID buttonBox = new GenericHID(2);
 
-    JoystickButton button1 = new JoystickButton(buttonBox, 1);
+    JoystickButton button1 = new JoystickButton(buttonBox, BUTTON_BOX_CLIMB_ID);
     button1.whileTrue(new ClimbCommand(m_climber));
 
-    JoystickButton button2 = new JoystickButton(buttonBox, 2);
+    JoystickButton button2 = new JoystickButton(buttonBox, BUTTON_BOX_HOOK_RELEASE_ID);
     button2.whileTrue(new HookReleaseCommand(m_climber));
 
     // reverse intake
-    JoystickButton button3 = new JoystickButton(buttonBox, 3);
+    JoystickButton button3 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_INTAKE_REVERSE_ID);
     button3.whileTrue(new ManualIntakeCommand(m_intake, true));
 
     // manual intake
-    JoystickButton button4 = new JoystickButton(buttonBox, 4);
+    JoystickButton button4 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_INTAKE_ID);
     button4.whileTrue(new ManualIntakeCommand(m_intake, false));
 
     // reverse fling
-    JoystickButton button5 = new JoystickButton(buttonBox, 5);
+    JoystickButton button5 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_FLING_REVERSE_ID);
     button5.whileTrue(new ManualFlingCommand(m_flinger, true));
 
     // manual fling
-    JoystickButton button6 = new JoystickButton(buttonBox, 6);
+    JoystickButton button6 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_FLING_ID);
     button6.whileTrue(new ManualFlingCommand(m_flinger, false));
 
-    JoystickButton button7 = new JoystickButton(buttonBox, 7);
+    JoystickButton button7 = new JoystickButton(buttonBox, BUTTON_BOX_CAMERA_SWITCH_ID);
     button7.onTrue(new PrintCommand("camera switch (toggle)"));
 
-    JoystickButton button8 = new JoystickButton(buttonBox, 8);
+    JoystickButton button8 = new JoystickButton(buttonBox, BUTTON_BOX_CLIMBER_SWITCH_ID);
     button8.onTrue(new PrintCommand("climber switch (toggle)"));
 
     // ---
