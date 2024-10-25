@@ -105,7 +105,9 @@ public class LightsSubsystem extends SubsystemBase {
 
     } else {
 
-      if (DriverStation.getMatchTime() < 30) {
+      if (DriverStation.getMatchTime() < 30 && DriverStation.getMatchTime() > 0) {
+        // We check if it's greater than 0 because the timer is always -1 when not in competition or practice mode
+        
         setAnimation(PERIMETERID, FILLRED); // Fill.py
         setAnimation(BIGPID, FILLRED); // Fill.py
         setAnimation(HEADID, FILLRED); // Fill.py
