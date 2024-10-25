@@ -88,7 +88,7 @@ public class LightsSubsystem extends SubsystemBase {
   }
 
   private boolean isFlingerRunning() {
-    return Math.abs(m_flinger.getRPM_1()) > 0;
+    return Math.abs(m_flinger.getRPM_1()) > Constants.FlingerConstants.FLINGER_RPM_DEADZONE;
   }
 
   private boolean isIntakeRunning() {
