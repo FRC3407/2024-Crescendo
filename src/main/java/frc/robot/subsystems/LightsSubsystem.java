@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 /**
  * Subsystem to controll all the lights running on the external lights
@@ -87,11 +88,11 @@ public class LightsSubsystem extends SubsystemBase {
   }
 
   private boolean isFlingerRunning() {
-    return Math.abs(m_flinger.getRPM_1()) > 0;
+    return Math.abs(m_flinger.getRPM_1()) > Constants.FlingerConstants.FLINGER_RPM_DEADZONE;
   }
 
   private boolean isIntakeRunning() {
-    return Math.abs(m_intake.getMotorSpeed()) > 0;
+    return Math.abs(m_intake.getMotorSpeed()) > Constants.IntakeConstants.INTAKE_RPM_DEADZONE;
   }
 
   @Override
@@ -105,7 +106,9 @@ public class LightsSubsystem extends SubsystemBase {
 
     } else {
 
-      if (DriverStation.getMatchTime() < 30) {
+      if (DriverStation.getMatchTime() < 30 && DriverStation.getMatchTime() > 0) {
+        // We check if it's greater than 0 because the timer is always -1 when not in competition or practice mode
+
         setAnimation(PERIMETERID, FILLRED); // Fill.py
         setAnimation(BIGPID, FILLRED); // Fill.py
         setAnimation(HEADID, FILLRED); // Fill.py

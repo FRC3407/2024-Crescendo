@@ -41,6 +41,8 @@ public final class Constants {
     public static final double FLINGER_INTAKE_SPEED = -0.5;
     public static final int flingerCanID_1 = 11;
     public static final int flingerCanID_2 = 12;
+    // A small value to detect if the intake is not moving
+    public static final double INTAKE_RPM_DEADZONE = IntakeConstants.INTAKE_RPM_DEADZONE;
   }
 
   public static final class IntakeConstants {
@@ -50,6 +52,8 @@ public final class Constants {
     public static final int motorCanID = 10;
     public static final int BOT_DIO_SENSOR = 0;
     public static final int TOP_DIO_SENSOR = 1;
+    // A small value to detect if the intake is not moving
+    public static final double INTAKE_RPM_DEADZONE = 1;
   }
 
   public static final class DriveConstants {
