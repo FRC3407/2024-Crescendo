@@ -18,8 +18,8 @@ public class CameraSubsystem extends SubsystemBase {
     camera1.setFPS(7);
 
     camera2 = CameraServer.startAutomaticCapture(1);
-    camera1.setResolution(320, 240);
-    camera1.setFPS(7);
+    camera2.setResolution(320, 240);
+    camera2.setFPS(7);
     // you left your computer unattended lol 
     // dont push to main!
     // you are a wonderful programmer ;)
