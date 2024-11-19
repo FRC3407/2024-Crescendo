@@ -23,13 +23,13 @@ public class HookReleaseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookRelease.release(Constants.ClimberConstants.HOOKRELEASE_SPEED);
+    hookRelease.release();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hookRelease.release(0); 
+    hookRelease.stop(); 
   }
 
   // Returns true when the command should end.
