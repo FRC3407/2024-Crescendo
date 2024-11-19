@@ -5,8 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,66 +13,58 @@ import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
 
+  private static enum ClimberState {
+    IDLE, UP, CLIMBING
+  };
+
   private CANSparkMax climberMotorOne;
-  private SparkMaxPIDController pidControllerOne;
   private CANSparkMax climberMotorTwo;
-  private SparkMaxPIDController pidControllerTwo;
+  private RelativeEncoder encoderOne;
+  private RelativeEncoder encoderTwo;
+  private ClimberState climberState = ClimberState.IDLE;
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
     climberMotorOne.setInverted(true);
-    pidControllerOne = climberMotorOne.getPIDController();
+    encoderOne = climberMotorOne.getEncoder();
 
     climberMotorTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
     climberMotorTwo.setInverted(false);
-    pidControllerTwo = climberMotorOne.getPIDController();
-
-    disablePID();
+    encoderTwo = climberMotorTwo.getEncoder();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (climberState == ClimberState.UP) {
+      if (encoderOne.getPosition() < 5) {
+        climberMotorOne.set(0.5);
+      } else {
+        climberMotorOne.stopMotor();
+      }
+      if (encoderTwo.getPosition() < 5) {
+        climberMotorTwo.set(0.5);
+      } else {
+        climberMotorTwo.stopMotor();
+      }
+    }
+    if (climberState == ClimberState.CLIMBING) {
+      //TODO : drive each motor forward until we've climbed.
+    }
   }
 
-  protected void enablePID() {
-    pidControllerOne.setP(1); // TODO: tune PID parameters
-    pidControllerOne.setI(0);
-    pidControllerOne.setD(0);
-    pidControllerTwo.setP(1);
-    pidControllerTwo.setI(0);
-    pidControllerTwo.setD(0);
-  }
-
-  protected void disablePID() {
-    pidControllerOne.setP(0);
-    pidControllerOne.setI(0);
-    pidControllerOne.setD(0);
-    pidControllerTwo.setP(0);
-    pidControllerTwo.setI(0);
-    pidControllerTwo.setD(0);
-  }
-
-  protected void setPosition(double n) {
-    pidControllerOne.setReference(n, ControlType.kPosition);
-    pidControllerTwo.setReference(n, ControlType.kPosition);
-  }
 
   public void armsUp() {
-    enablePID();
-    setPosition(5); // TODO: determine setpoint for arm all the way up.
+    climberState = ClimberState.UP;
   }
 
   public void climb() {
-    disablePID();
-    // TODO: drive motor forward until we have climbed.
+    climberState = ClimberState.CLIMBING;
   }
 
   public void stop() {
     climberMotorOne.stopMotor();
     climberMotorTwo.stopMotor();
-    disablePID();
   }
 
 }
