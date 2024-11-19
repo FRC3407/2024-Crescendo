@@ -23,7 +23,7 @@ public class HookReleaseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hookRelease.release();
+    hookRelease.climb();
   }
 
   // Called once the command ends or is interrupted.

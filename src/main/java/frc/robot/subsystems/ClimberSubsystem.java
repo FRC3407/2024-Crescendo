@@ -24,16 +24,12 @@ public class ClimberSubsystem extends SubsystemBase {
     climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
     climberMotorOne.setInverted(true);
     pidControllerOne = climberMotorOne.getPIDController();
-    pidControllerOne.setP(1);    // TODO: tune PID parameters
-    pidControllerOne.setI(0);
-    pidControllerOne.setD(0);
 
     climberMotorTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
     climberMotorTwo.setInverted(false);
     pidControllerTwo = climberMotorOne.getPIDController();
-    pidControllerTwo.setP(1);
-    pidControllerTwo.setI(0);
-    pidControllerTwo.setD(0);
+
+    disablePID();
   }
 
   @Override
@@ -41,22 +37,43 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  private void setPosition(double n) {
+  protected void enablePID() {
+    pidControllerOne.setP(1); // TODO: tune PID parameters
+    pidControllerOne.setI(0);
+    pidControllerOne.setD(0);
+    pidControllerTwo.setP(1);
+    pidControllerTwo.setI(0);
+    pidControllerTwo.setD(0);
+  }
+
+  protected void disablePID() {
+    pidControllerOne.setP(0);
+    pidControllerOne.setI(0);
+    pidControllerOne.setD(0);
+    pidControllerTwo.setP(0);
+    pidControllerTwo.setI(0);
+    pidControllerTwo.setD(0);
+  }
+
+  protected void setPosition(double n) {
     pidControllerOne.setReference(n, ControlType.kPosition);
     pidControllerTwo.setReference(n, ControlType.kPosition);
   }
 
-  public void climb() {
+  public void armsUp() {
+    enablePID();
     setPosition(5); // TODO: determine setpoint for arm all the way up.
   }
 
-  public void release() {
-    setPosition(10); // TODO: determine setpoint for arm wound up
+  public void climb() {
+    disablePID();
+    // TODO: drive motor forward until we have climbed.
   }
 
   public void stop() {
     climberMotorOne.stopMotor();
     climberMotorTwo.stopMotor();
+    disablePID();
   }
 
 }
