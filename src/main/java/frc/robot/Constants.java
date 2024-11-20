@@ -42,7 +42,7 @@ public final class Constants {
     public static final int flingerCanID_1 = 11;
     public static final int flingerCanID_2 = 12;
     // A small value to detect if the intake is not moving
-    public static final double INTAKE_RPM_DEADZONE = IntakeConstants.INTAKE_RPM_DEADZONE;
+    public static final double FLINGER_RPM_DEADZONE = IntakeConstants.INTAKE_RPM_DEADZONE;
   }
 
   public static final class IntakeConstants {
