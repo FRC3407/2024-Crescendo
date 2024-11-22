@@ -56,6 +56,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FlingCommand;
+import frc.robot.commands.HooksUpCommand;
 import frc.robot.commands.ManualFlingCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualIntakeCommand;
@@ -66,7 +67,6 @@ import frc.robot.commands.ZeroHeadingCommand;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-import frc.robot.commands.HookReleaseCommand;
 import frc.robot.commands.ManualFlingCommand;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -126,7 +126,7 @@ public class RobotContainer {
     button1.whileTrue(new ClimbCommand(m_climber));
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
-    button2.whileTrue(new HookReleaseCommand(m_climber));
+    button2.whileTrue(new HooksUpCommand(m_climber));
 
     // reverse intake
     JoystickButton button3 = new JoystickButton(buttonBox, 3);

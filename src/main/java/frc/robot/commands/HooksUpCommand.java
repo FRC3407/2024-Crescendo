@@ -7,12 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class ClimbCommand extends Command {
+public class HooksUpCommand extends Command {
   private final ClimberSubsystem m_climberSubsystem;
+  public static final double HOOK_UP_POSITION = 120;
   public static final double HOOK_SPEED = 0.5;
-
-  /** Creates a new ClimbCommand. */
-  public ClimbCommand(ClimberSubsystem climberSubsystem) {
+  /** Creates a new HooksUpCommand. */
+  public HooksUpCommand(ClimberSubsystem climberSubsystem) {
     m_climberSubsystem = climberSubsystem;
     addRequirements(climberSubsystem);
   }
@@ -24,8 +24,15 @@ public class ClimbCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climberSubsystem.moveHookOne(HOOK_SPEED);
-    m_climberSubsystem.moveHookTwo(HOOK_SPEED);
+    if (m_climberSubsystem.getHookOnePosition() < HOOK_UP_POSITION)
+      m_climberSubsystem.moveHookOne(HOOK_SPEED);
+    else
+      m_climberSubsystem.moveHookOne(0);
+
+    if (m_climberSubsystem.getHookTwoPosition() < HOOK_UP_POSITION)
+      m_climberSubsystem.moveHookTwo(HOOK_SPEED);
+    else
+      m_climberSubsystem.moveHookTwo(0);
   }
 
   // Called once the command ends or is interrupted.
@@ -38,6 +45,7 @@ public class ClimbCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (m_climberSubsystem.getHookOnePosition() >= HOOK_UP_POSITION &&
+            m_climberSubsystem.getHookTwoPosition() >= HOOK_UP_POSITION);
   }
 }
