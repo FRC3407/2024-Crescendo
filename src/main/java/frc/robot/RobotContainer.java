@@ -126,8 +126,8 @@ public class RobotContainer {
     GenericHID buttonBox = new GenericHID(2);
 
     CommandXboxController xbox = new CommandXboxController(3);
-    xbox.x().whileTrue(new FallCommand(m_climber, 0.05, true));
-    xbox.b().whileTrue(new FallCommand(m_climber, 0.05, false));
+    xbox.x().whileTrue(new FallCommand(m_climber, 0.15, true));
+    xbox.b().whileTrue(new FallCommand(m_climber, 0.15, false));
 
     JoystickButton button1 = new JoystickButton(buttonBox, 1);
     button1.whileTrue(new ClimbCommand(m_climber));
