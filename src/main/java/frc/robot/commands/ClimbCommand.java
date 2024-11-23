@@ -9,12 +9,18 @@ import frc.robot.subsystems.ClimberSubsystem;
 
 public class ClimbCommand extends Command {
   private final ClimberSubsystem m_climberSubsystem;
-  public static final double HOOK_SPEED = 0.1;
+  public static final double HOOK_SPEED = 0.2;
+  private double hookspeed = HOOK_SPEED;
 
   /** Creates a new ClimbCommand. */
-  public ClimbCommand(ClimberSubsystem climberSubsystem) {
+  public ClimbCommand(ClimberSubsystem climberSubsystem, double speed) {
     m_climberSubsystem = climberSubsystem;
     addRequirements(climberSubsystem);
+    hookspeed = speed;
+  }
+
+  public ClimbCommand(ClimberSubsystem climberSubsystem) {
+    this(climberSubsystem, HOOK_SPEED);
   }
 
   // Called when the command is initially scheduled.
@@ -24,8 +30,8 @@ public class ClimbCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climberSubsystem.moveHookOne(HOOK_SPEED);
-    m_climberSubsystem.moveHookTwo(HOOK_SPEED);
+    m_climberSubsystem.moveHookOne(hookspeed);
+    m_climberSubsystem.moveHookTwo(hookspeed);
   }
 
   // Called once the command ends or is interrupted.

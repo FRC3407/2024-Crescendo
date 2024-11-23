@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
+import edu.wpi.first.wpilibj.XboxController;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -39,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -55,6 +57,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FallCommand;
 import frc.robot.commands.FlingCommand;
 import frc.robot.commands.HooksUpCommand;
 import frc.robot.commands.ManualFlingCommand;
@@ -121,6 +124,10 @@ public class RobotContainer {
     Joystick r_attack3 = new Joystick(1);
 
     GenericHID buttonBox = new GenericHID(2);
+
+    CommandXboxController xbox = new CommandXboxController(3);
+    xbox.x().whileTrue(new FallCommand(m_climber, 0.05, true));
+    xbox.b().whileTrue(new FallCommand(m_climber, 0.05, false));
 
     JoystickButton button1 = new JoystickButton(buttonBox, 1);
     button1.whileTrue(new ClimbCommand(m_climber));
