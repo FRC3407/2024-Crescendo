@@ -9,7 +9,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 
 public class ClimbCommand extends Command {
   private final ClimberSubsystem m_climberSubsystem;
-  public static final double HOOK_SPEED = 0.5;
+  public static final double HOOK_SPEED = 0.1;
 
   /** Creates a new ClimbCommand. */
   public ClimbCommand(ClimberSubsystem climberSubsystem) {

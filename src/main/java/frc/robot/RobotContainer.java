@@ -126,7 +126,7 @@ public class RobotContainer {
     button1.whileTrue(new ClimbCommand(m_climber));
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
-    button2.whileTrue(new HooksUpCommand(m_climber));
+    button2.onTrue(new HooksUpCommand(m_climber));
 
     // reverse intake
     JoystickButton button3 = new JoystickButton(buttonBox, 3);
