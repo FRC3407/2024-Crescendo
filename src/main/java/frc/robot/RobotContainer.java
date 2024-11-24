@@ -45,11 +45,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
 import frc.robot.subsystems.LightsSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.ClimbCommand;
@@ -82,8 +84,21 @@ public class RobotContainer {
   ClimberSubsystem m_climber = new ClimberSubsystem();
   VisionSubsystem m_vision = new VisionSubsystem();
   LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake, m_vision);
+  CameraSubsystem m_cameras = new CameraSubsystem();
 
   SendableChooser<Command> autoChooser;
+
+  // Constants
+  public static int JOYSTICK_BOOST_ID = 2;
+
+  public static int BUTTON_BOX_CLIMB_ID = 1;
+  public static int BUTTON_BOX_HOOK_RELEASE_ID = 2;
+  public static int BUTTON_BOX_MANUAL_INTAKE_REVERSE_ID = 3;
+  public static int BUTTON_BOX_MANUAL_INTAKE_ID = 4;
+  public static int BUTTON_BOX_MANUAL_FLING_REVERSE_ID = 5;
+  public static int BUTTON_BOX_MANUAL_FLING_ID = 6;
+  public static int BUTTON_BOX_CAMERA_SWITCH_ID = 7;
+  public static int BUTTON_BOX_CLIMBER_SWITCH_ID = 8;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -136,25 +151,25 @@ public class RobotContainer {
     button2.onTrue(new HooksUpCommand(m_climber));
 
     // reverse intake
-    JoystickButton button3 = new JoystickButton(buttonBox, 3);
+    JoystickButton button3 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_INTAKE_REVERSE_ID);
     button3.whileTrue(new ManualIntakeCommand(m_intake, true));
 
     // manual intake
-    JoystickButton button4 = new JoystickButton(buttonBox, 4);
+    JoystickButton button4 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_INTAKE_ID);
     button4.whileTrue(new ManualIntakeCommand(m_intake, false));
 
     // reverse fling
-    JoystickButton button5 = new JoystickButton(buttonBox, 5);
+    JoystickButton button5 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_FLING_REVERSE_ID);
     button5.whileTrue(new ManualFlingCommand(m_flinger, true));
 
     // manual fling
-    JoystickButton button6 = new JoystickButton(buttonBox, 6);
+    JoystickButton button6 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_FLING_ID);
     button6.whileTrue(new ManualFlingCommand(m_flinger, false));
 
-    JoystickButton button7 = new JoystickButton(buttonBox, 7);
+    JoystickButton button7 = new JoystickButton(buttonBox, BUTTON_BOX_CAMERA_SWITCH_ID);
     button7.onTrue(new PrintCommand("camera switch (toggle)"));
 
-    JoystickButton button8 = new JoystickButton(buttonBox, 8);
+    JoystickButton button8 = new JoystickButton(buttonBox, BUTTON_BOX_CLIMBER_SWITCH_ID);
     button8.onTrue(new PrintCommand("climber switch (toggle)"));
 
     // ---
