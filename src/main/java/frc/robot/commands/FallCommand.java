@@ -7,15 +7,20 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class HooksUpCommand extends Command {
+public class FallCommand extends Command {
   private final ClimberSubsystem m_climberSubsystem;
-  public static final double HOOK_UP_POSITION = 36;
-  public static final double HOOK_SPEED = 0.05;
-  /** Creates a new HooksUpCommand. */
-  public HooksUpCommand(ClimberSubsystem climberSubsystem) {
+  public static final double HOOK_SPEED = -0.2;
+  private double hookspeed = HOOK_SPEED;
+  private boolean hookside;
+  /** Creates a new ClimbCommand. */
+  public FallCommand(ClimberSubsystem climberSubsystem, double speed, boolean side) { //left is true, right is false side
     m_climberSubsystem = climberSubsystem;
     addRequirements(climberSubsystem);
+    hookspeed = -speed;
+    hookside = side;
   }
+
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -24,15 +29,13 @@ public class HooksUpCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_climberSubsystem.getHookOnePosition() < HOOK_UP_POSITION)
-      m_climberSubsystem.moveHookOne(HOOK_SPEED);
-    else
-      m_climberSubsystem.moveHookOne(0);
-
-    if (m_climberSubsystem.getHookTwoPosition() < HOOK_UP_POSITION)
-      m_climberSubsystem.moveHookTwo(HOOK_SPEED);
-    else
-      m_climberSubsystem.moveHookTwo(0);
+    if (hookside == true){
+      m_climberSubsystem.moveHookOne(hookspeed);
+      
+    }
+    else {
+      m_climberSubsystem.moveHookTwo(hookspeed);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,7 +48,6 @@ public class HooksUpCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_climberSubsystem.getHookOnePosition() >= HOOK_UP_POSITION &&
-            m_climberSubsystem.getHookTwoPosition() >= HOOK_UP_POSITION);
+    return false;
   }
 }
