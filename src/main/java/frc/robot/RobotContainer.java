@@ -141,7 +141,6 @@ public class RobotContainer {
     GenericHID buttonBox = new GenericHID(2);
 
     CommandXboxController xbox = new CommandXboxController(3);
-    xbox.x().whileTrue(new FallCommand(m_climber, 0.15, true));
     xbox.b().whileTrue(new FallCommand(m_climber, 0.15, false));
 
     JoystickButton button1 = new JoystickButton(buttonBox, 1);
@@ -149,6 +148,11 @@ public class RobotContainer {
 
     JoystickButton button2 = new JoystickButton(buttonBox, 2);
     button2.onTrue(new HooksUpCommand(m_climber));
+
+    JoystickButton button10 = new JoystickButton(l_attack3, 10);
+      button10.whileTrue(new FallCommand(m_climber, 0.15, true));
+    JoystickButton button11 = new JoystickButton(l_attack3, 11);
+      button11.whileTrue(new FallCommand(m_climber, 0.15, false));
 
     // reverse intake
     JoystickButton button3 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_INTAKE_REVERSE_ID);

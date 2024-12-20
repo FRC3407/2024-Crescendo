@@ -30,7 +30,7 @@ public class ClimbCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climberSubsystem.moveHookOne(hookspeed);
+    m_climberSubsystem.moveHookOne(-hookspeed);
     m_climberSubsystem.moveHookTwo(hookspeed);
   }
 

@@ -24,7 +24,7 @@ public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
-    climberMotorOne.setInverted(true);
+    climberMotorOne.setInverted(false);
     climberEncoderOne = climberMotorOne.getEncoder();
     climberEncoderOne.setPositionConversionFactor(360 / 42);
 

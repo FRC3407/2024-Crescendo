@@ -25,7 +25,7 @@ public class HooksUpCommand extends Command {
   @Override
   public void execute() {
     if (m_climberSubsystem.getHookOnePosition() < HOOK_UP_POSITION)
-      m_climberSubsystem.moveHookOne(HOOK_SPEED);
+      m_climberSubsystem.moveHookOne(-HOOK_SPEED);
     else
       m_climberSubsystem.moveHookOne(0);
 
