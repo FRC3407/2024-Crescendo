@@ -92,6 +92,7 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     SmartDashboard.putData("Field", m_field);
     // Configure AutoBuilder last
+/* 
     AutoBuilder.configureHolonomic(
         this::getPose, // Robot pose supplier
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -122,6 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
     );
+    */
     // Load the path we want to pathfind to and follow
     // PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
 
