@@ -6,13 +6,9 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.networktables.DoubleTopic;
-import edu.wpi.first.networktables.FloatArrayTopic;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.IntegerArrayTopic;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {

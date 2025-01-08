@@ -5,26 +5,26 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.spark.SparkClosedLoopController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.ModuleConstants;
 
-public class SwerveModule {
-  private final CANSparkMax m_drivingSparkMax;
-  private final CANSparkMax m_turningSparkMax;
+public class MAXSwerveModule {
+  private final SparkMax m_drivingSparkMax;
+  private final SparkMax m_turningSparkMax;
 
   private final RelativeEncoder m_drivingEncoder;
   private final AbsoluteEncoder m_turningEncoder;
 
-  private final SparkMaxPIDController m_drivingPIDController;
-  private final SparkMaxPIDController m_turningPIDController;
+  private final SparkClosedLoopController m_drivingPIDController;
+  private final SparkClosedLoopController m_turningPIDController;
 
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
@@ -35,14 +35,14 @@ public class SwerveModule {
    * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
    * Encoder.
    */
-  public SwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
-    m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
+  public MAXSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
+    m_drivingSparkMax = new SparkMax(drivingCANId, MotorType.kBrushless);
+    m_turningSparkMax = new SparkMax(turningCANId, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
     // them. This is useful in case a SPARK MAX is swapped out.
-    m_drivingSparkMax.restoreFactoryDefaults();
-    m_turningSparkMax.restoreFactoryDefaults();
+    // m_drivingSparkMax.restoreFactoryDefaults();
+    // m_turningSparkMax.restoreFactoryDefaults();
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
     m_drivingEncoder = m_drivingSparkMax.getEncoder();

@@ -4,26 +4,26 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 public class ClimberSubsystem extends SubsystemBase {
 
-  private CANSparkMax climberMotorOne;
-  private CANSparkMax climberMotorTwo; 
-  private CANSparkMax hookRelease; 
+  private SparkMax climberMotorOne;
+  private SparkMax climberMotorTwo; 
+  private SparkMax hookRelease; 
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
-  climberMotorOne = new CANSparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
+  climberMotorOne = new SparkMax(Constants.ClimberConstants.climberOneCanID, MotorType.kBrushless);
   climberMotorOne.setInverted(true); 
 
-  climberMotorTwo = new CANSparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
+  climberMotorTwo = new SparkMax(Constants.ClimberConstants.climberTwoCanID, MotorType.kBrushless);
   climberMotorTwo.setInverted(false); 
 
-  hookRelease = new CANSparkMax(Constants.ClimberConstants.hookReleaseCanID, MotorType.kBrushed); 
+  hookRelease = new SparkMax(Constants.ClimberConstants.hookReleaseCanID, MotorType.kBrushed); 
   hookRelease.setInverted(false); 
   }
 

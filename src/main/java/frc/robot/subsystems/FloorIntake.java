@@ -1,14 +1,9 @@
-
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.AnalogTrigger;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,13 +11,13 @@ import frc.robot.Constants;
 
 public class FloorIntake extends SubsystemBase {
 
-    private CANSparkMax intakeMotor;
+    private SparkMax intakeMotor;
     private DigitalInput sensorBot = new DigitalInput(Constants.IntakeConstants.BOT_DIO_SENSOR);
     private DigitalInput sensorTop = new DigitalInput(Constants.IntakeConstants.TOP_DIO_SENSOR);
     private RelativeEncoder intakeEncoder;
 
     public FloorIntake() {
-        intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
+        intakeMotor = new SparkMax(Constants.IntakeConstants.motorCanID, MotorType.kBrushless);
         intakeMotor.setInverted(false);
         intakeEncoder = intakeMotor.getEncoder();
 
