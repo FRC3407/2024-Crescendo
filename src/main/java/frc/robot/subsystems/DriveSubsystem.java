@@ -3,15 +3,16 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
+import com.pathplanner.lib.config.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.*;
 import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
-
+import com.studica.frc.AHRS.NavXComType; 
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -87,28 +88,31 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       });
-
+      RobotConfig config;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     SmartDashboard.putData("Field", m_field);
     // Configure AutoBuilder last
-/* 
-    AutoBuilder.configureHolonomic(
+    
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+    }
+    AutoBuilder.configure(
         this::getPose, // Robot pose supplier
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
         this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        new PPHolonomicDriveController( // HolonomicDriveControlerr prolly should go in contrants
             new PIDConstants(Constants.ModuleConstants.kPPDrivingP,
                 Constants.ModuleConstants.kPPDrivingI, Constants.ModuleConstants.kPPDrivingD), // Translation PID
                                                                                                // constants
             new PIDConstants(Constants.ModuleConstants.kPPTurningP,
-                Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD), // Rotation PID constants
-            Constants.DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-            Constants.DriveConstants.kBaseRadius, // Drive base radius in metbers. Distance from robot center to
-                                                  // furthest module.
-            new ReplanningConfig() // Default path replanning config. See the API for the options here
+                Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD) // Rotation PID constants
         ),
+            config,
         () -> {
           // Boolean supplier that controls when the path will be mirrored for the red
           // alliance
@@ -123,7 +127,7 @@ public class DriveSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
     );
-    */
+
     // Load the path we want to pathfind to and follow
     // PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
 
@@ -372,7 +376,7 @@ public class DriveSubsystem extends SubsystemBase {
    * Method that will drive the robot Robot Relative.
    */
 
-  public void driveRobotRelative(ChassisSpeeds speeds){
+  public void driveRobotRelative(ChassisSpeeds speeds, DriveFeedforwards feedforwards){//not using feed forwards 
     this.drive(speeds.vxMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.vyMetersPerSecond/Constants.DriveConstants.kMaxSpeedMetersPerSecond, speeds.omegaRadiansPerSecond,false,false);
   }
 }
