@@ -37,7 +37,7 @@ public class VisionSubsystem extends SubsystemBase {
     long[] ids = idSub.get();
     // if (ids.length != 0)
     setTagList();
-    System.out.println(startAdd + "," + canContinue + "," + idList);
+    // System.out.println(startAdd + "," + canContinue + "," + idList);
   }
 
   // Search for a tag ID in the tags list

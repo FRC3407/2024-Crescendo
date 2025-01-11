@@ -77,7 +77,7 @@ public class RobotContainer {
   DriveSubsystem m_driveTrain = new DriveSubsystem();
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
-  ClimberSubsystem m_climber = new ClimberSubsystem();
+  //ClimberSubsystem m_climber = new ClimberSubsystem();
   VisionSubsystem m_vision = new VisionSubsystem();
   LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake, m_vision);
 
@@ -105,9 +105,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("fling_command", new FlingCommand(m_flinger, m_intake));
     NamedCommands.registerCommand("intake_command", new IntakeCommand(m_flinger, m_intake));
 
-    autoChooser = AutoBuilder.buildAutoChooser();
+    //autoChooser = AutoBuilder.buildAutoChooser();
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
 
     
    }
@@ -136,10 +136,10 @@ public class RobotContainer {
     GenericHID buttonBox = new GenericHID(2);
 
     JoystickButton button1 = new JoystickButton(buttonBox, BUTTON_BOX_CLIMB_ID);
-    button1.whileTrue(new ClimbCommand(m_climber));
+    //button1.whileTrue(new ClimbCommand(m_climber));
 
     JoystickButton button2 = new JoystickButton(buttonBox, BUTTON_BOX_HOOK_RELEASE_ID);
-    button2.whileTrue(new HookReleaseCommand(m_climber));
+    //button2.whileTrue(new HookReleaseCommand(m_climber));
 
     // reverse intake
     JoystickButton button3 = new JoystickButton(buttonBox, BUTTON_BOX_MANUAL_INTAKE_REVERSE_ID);
