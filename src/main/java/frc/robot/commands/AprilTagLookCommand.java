@@ -31,6 +31,7 @@ public class AprilTagLookCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("im going");
     var result = visionSubsystem.camera.getLatestResult();
     if (result.hasTargets()) {
       PhotonTrackedTarget target = result.getBestTarget();
@@ -39,6 +40,7 @@ public class AprilTagLookCommand extends Command {
         System.out.println("i did it");
         return;
       }
+      System.out.println("yaw: " + yaw);
       DriveCommand command = new DriveCommand(driveSubsystem,
         () -> 0,
         () -> 0,

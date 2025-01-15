@@ -33,7 +33,7 @@ public class VisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     var result = camera.getLatestResult();
     if (result.hasTargets()) {
-      System.out.println("OH MY GOD ITS AN APRILTAG!");
+      // System.out.println("OH MY GOD ITS AN APRILTAG!");
       // System.out.println(result.getTargets());
       PhotonTrackedTarget target = result.getBestTarget();
       

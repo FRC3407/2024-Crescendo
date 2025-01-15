@@ -179,7 +179,7 @@ public class RobotContainer {
     zeroHeadingButton.onTrue(new ZeroHeadingCommand(m_driveTrain));
 
     JoystickButton testButton = new JoystickButton(xboxController, 3); // X button
-    testButton.onTrue(new AprilTagLookCommand(m_vision, m_driveTrain));
+    testButton.whileTrue(new AprilTagLookCommand(m_vision, m_driveTrain));
 
   }
   // /**
