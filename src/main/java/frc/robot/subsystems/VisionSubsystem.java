@@ -4,7 +4,11 @@
 
 package frc.robot.subsystems;
 
+import java.io.Serial;
 import java.util.ArrayList;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.IntegerArrayTopic;
@@ -13,14 +17,28 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
 
+  PhotonCamera camera;
+
   // public NetworkTable table;
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem() {
+    System.out.println("hello im vision");
+    camera = new PhotonCamera("Arducam");
+
   }
 
   @Override
   public void periodic() {
+    // System.out.println("i see");
     // This method will be called once per scheduler run
+    var result = camera.getLatestResult();
+    if (result.hasTargets()) {
+      System.out.println("OH MY GOD ITS AN APRILTAG!");
+      // System.out.println(result.getTargets());
+      PhotonTrackedTarget target = result.getBestTarget();
+      // target.
+    }
+
   }
 
 }
