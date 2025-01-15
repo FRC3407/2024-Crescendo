@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
 
-  PhotonCamera camera;
+  public PhotonCamera camera;
 
   // public NetworkTable table;
   /** Creates a new VisionSubsystem. */
@@ -36,7 +36,7 @@ public class VisionSubsystem extends SubsystemBase {
       System.out.println("OH MY GOD ITS AN APRILTAG!");
       // System.out.println(result.getTargets());
       PhotonTrackedTarget target = result.getBestTarget();
-      // target.
+      
     }
 
   }

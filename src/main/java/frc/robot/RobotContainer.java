@@ -49,6 +49,7 @@ import frc.robot.subsystems.Flinger;
 import frc.robot.subsystems.FloorIntake;
 import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.commands.AprilTagLookCommand;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.AutoGoCommand;
 import frc.robot.commands.ClimbCommand;
@@ -122,7 +123,7 @@ public class RobotContainer {
       String visionAuto = NetworkTableInstance.getDefault().getEntry("").getString("null");
 
       if (visionAuto != "null") {
-        return new PathPlannerAuto(visionAuto);
+        // return new PathPlannerAuto(visionAuto);
       }
     }
     
@@ -132,8 +133,10 @@ public class RobotContainer {
   private void ConfigureButtonBindings() {
     Joystick l_attack3 = new Joystick(0);
     Joystick r_attack3 = new Joystick(1);
-
+    
     GenericHID buttonBox = new GenericHID(2);
+
+    XboxController xboxController = new XboxController(3);
 
     JoystickButton button1 = new JoystickButton(buttonBox, BUTTON_BOX_CLIMB_ID);
     //button1.whileTrue(new ClimbCommand(m_climber));
@@ -174,6 +177,10 @@ public class RobotContainer {
     intakeButton.onTrue(new IntakeCommand(m_flinger, m_intake));
     JoystickButton zeroHeadingButton = new JoystickButton(r_attack3, 7);
     zeroHeadingButton.onTrue(new ZeroHeadingCommand(m_driveTrain));
+
+    JoystickButton testButton = new JoystickButton(xboxController, 3); // X button
+    testButton.onTrue(new AprilTagLookCommand(m_vision, m_driveTrain));
+
   }
   // /**
   // * Use this to pass the autonomous command to the main {@link Robot} class.

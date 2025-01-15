@@ -100,33 +100,33 @@ public class DriveSubsystem extends SubsystemBase {
       // Handle exception as needed
       e.printStackTrace();
     }
-    AutoBuilder.configure(
-        this::getPose, // Robot pose supplier
-        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-        this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        new PPHolonomicDriveController( // HolonomicDriveControlerr prolly should go in contrants
-            new PIDConstants(Constants.ModuleConstants.kPPDrivingP,
-                Constants.ModuleConstants.kPPDrivingI, Constants.ModuleConstants.kPPDrivingD), // Translation PID
-                                                                                               // constants
-            new PIDConstants(Constants.ModuleConstants.kPPTurningP,
-                Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD) // Rotation PID constants
-        ),
-            config,
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red
-          // alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    // AutoBuilder.configure(
+    //     this::getPose, // Robot pose supplier
+    //     this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+    //     this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    //     this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+    //     new PPHolonomicDriveController( // HolonomicDriveControlerr prolly should go in contrants
+    //         new PIDConstants(Constants.ModuleConstants.kPPDrivingP,
+    //             Constants.ModuleConstants.kPPDrivingI, Constants.ModuleConstants.kPPDrivingD), // Translation PID
+    //                                                                                            // constants
+    //         new PIDConstants(Constants.ModuleConstants.kPPTurningP,
+    //             Constants.ModuleConstants.kPPTurningI, Constants.ModuleConstants.kPPTurningD) // Rotation PID constants
+    //     ),
+    //         config,
+    //     () -> {
+    //       // Boolean supplier that controls when the path will be mirrored for the red
+    //       // alliance
+    //       // This will flip the path being followed to the red side of the field.
+    //       // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        },
-        this // Reference to this subsystem to set requirements
-    );
+    //       var alliance = DriverStation.getAlliance();
+    //       if (alliance.isPresent()) {
+    //         return alliance.get() == DriverStation.Alliance.Red;
+    //       }
+    //       return false;
+    //     },
+    //     this // Reference to this subsystem to set requirements
+    // );
 
     // Load the path we want to pathfind to and follow
     // PathPlannerPath path = PathPlannerPath.fromPathFile("T1");
