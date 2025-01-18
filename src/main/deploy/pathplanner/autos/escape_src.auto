@@ -20,6 +20,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "escape_autos",
+  "folder": "autos",
   "choreoAuto": false
 }

@@ -107,9 +107,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("fling_command", new FlingCommand(m_flinger, m_intake));
     NamedCommands.registerCommand("intake_command", new IntakeCommand(m_flinger, m_intake));
 
-    //autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = AutoBuilder.buildAutoChooser();
 
-    //SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     
    }
