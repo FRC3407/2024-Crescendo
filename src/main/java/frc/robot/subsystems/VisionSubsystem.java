@@ -66,7 +66,7 @@ public class VisionSubsystem extends SubsystemBase {
     if (id == -1) {
       return;
     }
-    if(id == 5) {
+    if(id == 62) { // used to be 5
       startAdd = true;
       idList.clear();
     }
@@ -74,10 +74,10 @@ public class VisionSubsystem extends SubsystemBase {
       startAdd = false;
       canContinue = false;
     }
-    if(id == 11) {
+    if(id == 166) { //used to be 11
       canContinue = true;
     }
-    if(startAdd && canContinue && id != 11 && id != 5) {
+    if(startAdd && canContinue && id != 166 && id != 62) {
       idList.add(id);
       System.out.println("TAG SCANNED: " + id);
       canContinue = false;
