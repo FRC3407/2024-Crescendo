@@ -81,7 +81,6 @@ public class RobotContainer {
   //ClimberSubsystem m_climber = new ClimberSubsystem();
   VisionSubsystem m_vision = new VisionSubsystem();
   LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake, m_vision);
-  CameraSubsystem m_cameras = new CameraSubsystem();
 
   SendableChooser<Command> autoChooser;
 
