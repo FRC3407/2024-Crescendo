@@ -141,19 +141,19 @@ public class LightsSubsystem extends SubsystemBase {
       
     }
 
-    if (m_VisionSubsystem.isTagVisible(3)) {
-      setAnimation(PERIMETERID, FILLGREEN); // FILLGREEN.py
-      setAnimation(BIGPID,      FILLGREEN); // FILLGREEN.py
-      setAnimation(HEADID,      FILLGREEN); // FILLGREEN.py
-      setAnimation(BACKID,      FILLGREEN); // FILLGREEN.py
-      setAnimation(SIDEID,      FILLGREEN); // FILLGREEN.py
-    }if (m_VisionSubsystem.isTagVisible(15)) {
-      setAnimation(PERIMETERID, FILLWHITE); // FILLGREEN.py
-      setAnimation(BIGPID,      FILLWHITE); // FILLGREEN.py
-      setAnimation(HEADID,      FILLWHITE); // FILLGREEN.py
-      setAnimation(BACKID,      FILLWHITE); // FILLGREEN.py
-      setAnimation(SIDEID,      FILLWHITE); // FILLGREEN.py
-    }
+    // if (m_VisionSubsystem.isTagVisible(3)) {
+    //   setAnimation(PERIMETERID, FILLGREEN); // FILLGREEN.py
+    //   setAnimation(BIGPID,      FILLGREEN); // FILLGREEN.py
+    //   setAnimation(HEADID,      FILLGREEN); // FILLGREEN.py
+    //   setAnimation(BACKID,      FILLGREEN); // FILLGREEN.py
+    //   setAnimation(SIDEID,      FILLGREEN); // FILLGREEN.py
+    // }if (m_VisionSubsystem.isTagVisible(15)) {
+    //   setAnimation(PERIMETERID, FILLWHITE); // FILLGREEN.py
+    //   setAnimation(BIGPID,      FILLWHITE); // FILLGREEN.py
+    //   setAnimation(HEADID,      FILLWHITE); // FILLGREEN.py
+    //   setAnimation(BACKID,      FILLWHITE); // FILLGREEN.py
+    //   setAnimation(SIDEID,      FILLWHITE); // FILLGREEN.py
+    // }
 
     sendAllAnimations();
   }
