@@ -10,8 +10,12 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class AutoGoCommand extends Command{
     Timer timer;
+    double xs,ys,rs;
     private final DriveSubsystem m_driveTrain;
-    public AutoGoCommand(DriveSubsystem subsystem){
+    public AutoGoCommand(DriveSubsystem subsystem, double xs, double ys, double rs){
+        this.xs = xs;
+        this.ys = ys;
+        this.rs = rs;
         this.m_driveTrain = subsystem;
         timer = new Timer();
     }
@@ -21,13 +25,14 @@ public class AutoGoCommand extends Command{
         timer.start();
     }
     public void execute() {
-        m_driveTrain.drive(0.1, 0, 0, true, true);
+        System.out.println("im drivven babyyy");
+        m_driveTrain.drive(xs, ys, rs, true, true);
     }
     public void end(boolean interrupted) {
         m_driveTrain.drive(0, 0, 0, true, true);
     }
     public boolean isFinished() {
-        if (timer.hasElapsed(3) == true){
+        if (timer.hasElapsed(1) == true){
             return true;}
         else{return false;}
     }

@@ -79,7 +79,7 @@ public class RobotContainer {
   Flinger m_flinger = new Flinger();
   FloorIntake m_intake = new FloorIntake();
   //ClimberSubsystem m_climber = new ClimberSubsystem();
-  VisionSubsystem m_vision = new VisionSubsystem();
+  VisionSubsystem m_vision = new VisionSubsystem(m_driveTrain);
   LightsSubsystem m_lights = new LightsSubsystem(m_flinger, m_intake, m_vision);
 
   SendableChooser<Command> autoChooser;

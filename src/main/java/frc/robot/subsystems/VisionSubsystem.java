@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.lang.constant.DirectMethodHandleDesc;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,12 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.AutoGoCommand;
 
 public class VisionSubsystem extends SubsystemBase {
+  DriveSubsystem m_driveTrain;
   PhotonCamera camera = new PhotonCamera("Back Camera");
 
   List<PhotonTrackedTarget> lastTargets = List.of();
@@ -22,8 +26,20 @@ public class VisionSubsystem extends SubsystemBase {
   List<Integer> codeTargets = new ArrayList<>();
 
   /** Creates a new VisionSubsystem. */
-  public VisionSubsystem() {
+  public VisionSubsystem(DriveSubsystem driveSubsystem) {
     System.out.println("I AM VISION!");
+  }
+
+  public Command getCommandFromAprilTagID(int id) {
+    // Replace this with your actual logic to return a command based on the AprilTag ID
+    switch (id) {
+      case 3:
+        return new AutoGoCommand(m_driveTrain,0.1,0,0);
+      case 10:
+        return new AutoGoCommand(m_driveTrain, 0, 0, 0.1);
+      default:
+        return null; // Return null or a default command if the ID is not recognized
+    }
   }
 
   @Override
@@ -37,18 +53,25 @@ public class VisionSubsystem extends SubsystemBase {
         if (newTarget.getFiducialId() == 35) {
           System.out.println("ok im running da code now:");
           System.out.println(codeTargets);
+
+          if (codeTargets.size()>0) {
+            Command firstOne = getCommandFromAprilTagID(codeTargets.get(0));
+            // for (int i=1;i<codeTargets.size();i++) {
+            //   firstOne = firstOne.andThen(getCommandFromAprilTagID(codeTargets.get(i)));
+            // }
+            System.out.println(firstOne);
+            firstOne.schedule();
+          }
           
           while (!codeTargets.isEmpty())
             codeTargets.remove(0);
+
         } else {
           codeTargets.add(newTarget.getFiducialId());
           System.out.println(codeTargets);
         }
-
-
       }
     }
-
     lastTargets = result.targets;
   }
 
@@ -59,5 +82,4 @@ public class VisionSubsystem extends SubsystemBase {
     }
     return false;
   }
-
 }
