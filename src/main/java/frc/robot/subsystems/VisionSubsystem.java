@@ -37,9 +37,9 @@ public class VisionSubsystem extends SubsystemBase {
     // Replace this with your actual logic to return a command based on the AprilTag ID
     switch (id) {
       case 3:
-        return new AutoGoCommand(m_driveTrain,0.1,0,0); // drive forward
+        return new AutoGoCommand(m_driveTrain,0.2,0,0); // drive forward
       case 10:
-        return new AutoGoCommand(m_driveTrain, 0, 0, 0.1); // turn right
+        return new AutoGoCommand(m_driveTrain, 0, 0, 0.2); // turn right
       default:
         return null; // Return null or a default command if the ID is not recognized
     }

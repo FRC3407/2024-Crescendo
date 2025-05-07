@@ -19,20 +19,19 @@ public class AutoGoCommand extends Command{
         this.m_driveTrain = subsystem;
         timer = new Timer();
     }
-    public void initialize(){
-        
+    public void initialize() {
         timer.reset();
         timer.start();
     }
     public void execute() {
         System.out.println("im drivven babyyy");
-        m_driveTrain.drive(xs, ys, rs, true, true);
+        m_driveTrain.drive(xs, ys, rs, false, true);
     }
     public void end(boolean interrupted) {
         m_driveTrain.drive(0, 0, 0, true, true);
     }
     public boolean isFinished() {
-        return timer.hasElapsed(0.3);
+        return timer.hasElapsed(1);
         //TODO: nothing, this is perfect
         // if (
         //     timer.hasElapsed(
