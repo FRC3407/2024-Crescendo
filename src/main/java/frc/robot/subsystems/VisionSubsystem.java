@@ -14,6 +14,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.AutoGoCommand;
 
@@ -28,15 +29,17 @@ public class VisionSubsystem extends SubsystemBase {
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem(DriveSubsystem driveSubsystem) {
     System.out.println("I AM VISION!");
+
+    m_driveTrain = driveSubsystem;
   }
 
   public Command getCommandFromAprilTagID(int id) {
     // Replace this with your actual logic to return a command based on the AprilTag ID
     switch (id) {
       case 3:
-        return new AutoGoCommand(m_driveTrain,0.1,0,0);
+        return new AutoGoCommand(m_driveTrain,0.1,0,0); // drive forward
       case 10:
-        return new AutoGoCommand(m_driveTrain, 0, 0, 0.1);
+        return new AutoGoCommand(m_driveTrain, 0, 0, 0.1); // turn right
       default:
         return null; // Return null or a default command if the ID is not recognized
     }
@@ -50,23 +53,26 @@ public class VisionSubsystem extends SubsystemBase {
       if (!wasThereAnAprilTag(newTarget.fiducialId)) {
         // wow we just saw a new april tag
         System.out.println("yo i just saw an april tag: "+newTarget.getFiducialId());
+        System.out.println(codeTargets);
+
+        // if the target is 35, run the code
         if (newTarget.getFiducialId() == 35) {
           System.out.println("ok im running da code now:");
           System.out.println(codeTargets);
 
           if (codeTargets.size()>0) {
-            Command firstOne = getCommandFromAprilTagID(codeTargets.get(0));
-            // for (int i=1;i<codeTargets.size();i++) {
-            //   firstOne = firstOne.andThen(getCommandFromAprilTagID(codeTargets.get(i)));
-            // }
-            System.out.println(firstOne);
-            firstOne.schedule();
-          }
+            SequentialCommandGroup command = new SequentialCommandGroup();
+            for (int i=0;i<codeTargets.size();i++) {
+              command.addCommands(getCommandFromAprilTagID(codeTargets.get(i)));
+            }
+            System.out.println(command);
+            // for (Command c : command.m_commands)
+            command.schedule();
+          } // binkus grinkleton moment
           
-          while (!codeTargets.isEmpty())
-            codeTargets.remove(0);
+          codeTargets.clear();
 
-        } else {
+        } else { // if its not 35 add this target to the code
           codeTargets.add(newTarget.getFiducialId());
           System.out.println(codeTargets);
         }

@@ -32,8 +32,22 @@ public class AutoGoCommand extends Command{
         m_driveTrain.drive(0, 0, 0, true, true);
     }
     public boolean isFinished() {
-        if (timer.hasElapsed(1) == true){
-            return true;}
-        else{return false;}
+        return timer.hasElapsed(0.3);
+        //TODO: nothing, this is perfect
+        // if (
+        //     timer.hasElapsed(
+        //     1) == (1==2-1)){
+        // ;;;;return true;}
+        // else
+        
+        // {;;return(
+        //     (
+        //         //;;
+        //           (
+            
+            
+        //     false)));
+        
+        // }
     }
 }
